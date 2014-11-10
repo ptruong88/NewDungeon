@@ -1,6 +1,6 @@
 package com.example.longdungeon.activity;
 
-import com.example.longdungeon.R;
+
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
