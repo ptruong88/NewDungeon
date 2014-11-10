@@ -1,8 +1,4 @@
-package com.example.longdungeon.activity;
-
-
-
-import com.example.longdungeon.R;
+package com.example.longdungeon;
 
 import android.support.v7.app.ActionBarActivity;
 import android.content.Intent;
@@ -57,14 +53,15 @@ public class ShoppingActivity extends ActionBarActivity {
 		String child = "Children in layout " + lyoutItems.getChildCount();
 		txtConfirmBuy.setText(child);
 
-		Button btnInventory = (Button)this.findViewById(R.id.buttonInventory);
-		btnInventory.setOnClickListener(new OnClickListener(){
-			public void onClick(View v){
-				Intent intentInventory = new Intent(ShoppingActivity.this, InventoryActivity.class);
+		Button btnInventory = (Button) this.findViewById(R.id.buttonInventory);
+		btnInventory.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				Intent intentInventory = new Intent(ShoppingActivity.this,
+						InventoryActivity.class);
 				startActivity(intentInventory);
 			}
 		});
-		
+
 	}
 
 	private void displayAllItems(Button button, final LinearLayout lyoutDes,

@@ -100,7 +100,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"   
                 android:layout_toLeftOf="@+id/skill2"             
-                android:text="Skill 1" />
+                android:text="Skill 1 Test" />
 
             <Button
                 android:id="@+id/skill2"

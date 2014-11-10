@@ -1,39 +1,22 @@
-package com.example.longdungeon.activity;
-
-import com.example.longdungeon.R;
+package com.example.longdungeon;
 
 import android.support.v7.app.ActionBarActivity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 
-public class BattleActivity extends ActionBarActivity {
+public class CongrateActivity extends ActionBarActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_bat);
-
-		Button btnAttack = (Button) this.findViewById(R.id.attackBtn);
-		btnAttack.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				Intent intentShopping = new Intent(BattleActivity.this, ShoppingActivity.class);
-				startActivity(intentShopping);
-			}
-		});
+		setContentView(R.layout.activity_congrate);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.battle, menu);
+		getMenuInflater().inflate(R.menu.congrate, menu);
 		return true;
 	}
 

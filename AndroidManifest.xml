@@ -24,17 +24,17 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.ShoppingActivity"
+            android:name="com.example.longdungeon.ShoppingActivity"
             android:label="@string/title_activity_shopping_screen"
             android:screenOrientation="landscape" >
         </activity>
         <activity
-            android:name=".activity.CongrateActivity"
+            android:name="com.example.longdungeon.CongrateActivity"
             android:label="@string/title_activity_congrate"
             android:screenOrientation="landscape" >
         </activity>
         <activity
-            android:name=".activity.InventoryActivity"
+            android:name="com.example.longdungeon.InventoryActivity"
             android:label="@string/title_activity_inventory"
             android:screenOrientation="landscape" >
         </activity>

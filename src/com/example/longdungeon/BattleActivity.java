@@ -1,8 +1,4 @@
-package com.example.longdungeon.activity;
-
-
-
-import com.example.longdungeon.R;
+package com.example.longdungeon;
 
 import android.support.v7.app.ActionBarActivity;
 import android.content.Intent;
@@ -13,22 +9,21 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-public class InventoryActivity extends ActionBarActivity {
+public class BattleActivity extends ActionBarActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_inventory);
+		setContentView(R.layout.activity_bat);
 
-		Button btnCong = (Button) this.findViewById(R.id.buttonCong);
-		btnCong.setOnClickListener(new OnClickListener() {
+		Button btnAttack = (Button) this.findViewById(R.id.attackBtn);
+		btnAttack.setOnClickListener(new OnClickListener() {
 
 			@Override
-			public void onClick(View v) {
+			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				Intent intentCongrate = new Intent(InventoryActivity.this,
-						CongrateActivity.class);
-				startActivity(intentCongrate);
+				Intent intentShopping = new Intent(BattleActivity.this, ShoppingActivity.class);
+				startActivity(intentShopping);
 			}
 		});
 	}
@@ -36,7 +31,7 @@ public class InventoryActivity extends ActionBarActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.inventory, menu);
+		getMenuInflater().inflate(R.menu.battle, menu);
 		return true;
 	}
 
