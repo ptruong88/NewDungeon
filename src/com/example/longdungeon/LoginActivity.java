@@ -59,8 +59,9 @@ public class LoginActivity extends ActionBarActivity {
 				Intent intentBattle = new Intent(LoginActivity.this,
 						BattleActivity.class);
 				intentBattle.putExtra("namePlayer", edTxtLogin.getText()
-						.toString());
+						.toString());				
 				startActivity(intentBattle);
+				finish();
 			}
 		});
 	}
