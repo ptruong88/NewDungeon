@@ -8,15 +8,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class BattleActivity extends ActionBarActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_bat);
+		setContentView(R.layout.activity_battle);
+		
+		TextView txtViewPlayerName = (TextView)this.findViewById(R.id.textViewPlayerName);
+		Intent intentLogin = getIntent();
+		txtViewPlayerName.setText(intentLogin.getStringExtra("namePlayer"));
 
-		Button btnAttack = (Button) this.findViewById(R.id.attackBtn);
+		Button btnAttack = (Button) this.findViewById(R.id.buttonAttack);
 		btnAttack.setOnClickListener(new OnClickListener() {
 
 			@Override

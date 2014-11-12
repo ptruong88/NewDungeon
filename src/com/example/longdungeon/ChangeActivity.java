@@ -10,7 +10,7 @@ public class ChangeActivity extends ActionBarActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_change);
+		setContentView(R.layout.activity_battle_test);
 	}
 
 	@Override
