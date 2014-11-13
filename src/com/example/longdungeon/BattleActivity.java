@@ -1,5 +1,8 @@
 package com.example.longdungeon;
 
+import com.example.longdungeon.character.Mob;
+import com.example.longdungeon.character.Player;
+
 import android.support.v7.app.ActionBarActivity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -16,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class BattleActivity extends ActionBarActivity {
 
@@ -38,6 +42,17 @@ public class BattleActivity extends ActionBarActivity {
 		setUpButtonMagic();
 		setUpButtonItem();
 		setUpButtonRunaway();
+		
+		Player player = new Player(txtViewPlayerName.toString());
+		Mob mob = new Mob("Gobin");
+		
+		setInfoMob();
+	}
+
+	private void setInfoMob() {
+		// TODO Auto-generated method stub
+		
+		
 	}
 
 	@Override
@@ -49,43 +64,53 @@ public class BattleActivity extends ActionBarActivity {
 
 	private void setUpButtonRunaway() {
 		// TODO Auto-generated method stub
+		final AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(
+				this);
+
+		// Setting Dialog Title
+		alertDialog2.setTitle("Run away...");
+
+		// Setting Dialog Message
+		alertDialog2
+				.setMessage("Are you sure you want to run away?");
+
+		// Setting Positive "Yes" Btn
+		alertDialog2.setPositiveButton("YES",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog,
+							int which) {
+						// Write your code here to execute after dialog
+//						Toast.makeText(getApplicationContext(),
+//								"You clicked on YES",
+//								Toast.LENGTH_SHORT).show();
+						Intent intentShopping = new Intent(BattleActivity.this, ShoppingActivity.class);
+						startActivity(intentShopping);
+						finish();
+					}
+				});
+		// Setting Negative "NO" Btn
+		alertDialog2.setNegativeButton("NO",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog,
+							int which) {
+						// Write your code here to execute after dialog
+//						Toast.makeText(getApplicationContext(),
+//								"You clicked on NO", Toast.LENGTH_SHORT)
+//								.show();
+						dialog.cancel();
+					}
+				});
+		
+		
 		Button btnRun = (Button) this.findViewById(R.id.buttonRun);
 		btnRun.setOnClickListener(new OnClickListener() {
 
 			@Override
-			public void onClick(View arg0) {
+			public void onClick(View arg0) {	
 
-//				final Dialog dialog = new Dialog(getApplicationContext());
-//				dialog.
-//				dialog.setContentView(R.layout.dialog_run);
-//				dialog.setTitle("If you run away, your health won't be restore. Are you sure to run away?");
-//
-//				Button dialogButnOk = (Button) dialog
-//						.findViewById(R.id.dialogButtonOK);
-//				// if button is clicked, close the custom dialog
-//				dialogButnOk.setOnClickListener(new OnClickListener() {
-//					@Override
-//					public void onClick(View v) {
-//						Intent intentShopping = new Intent(BattleActivity.this, ShoppingActivity.class);
-//						startActivity(intentShopping);
-//						finish();
-//					}
-//				});
-//
-//				Button dialogButnCancel = (Button) dialog
-//						.findViewById(R.id.dialogButtonCancel);
-//				// if button is clicked, close the custom dialog
-//				dialogButnCancel.setOnClickListener(new OnClickListener() {
-//					@Override
-//					public void onClick(View v) {
-//						dialog.dismiss();
-//					}
-//				});
-//				
-//				
-//				dialog.show();
+				// Showing Alert Dialog
+				alertDialog2.show();
 
-				
 			}
 		});
 
