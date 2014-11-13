@@ -68,6 +68,7 @@
                 android:layout_height="wrap_content" >
 
                 <LinearLayout
+                    android:id="@+id/itemLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical" >
@@ -118,27 +119,10 @@
                 android:layout_height="wrap_content" >
 
                 <LinearLayout
+                    android:id="@+id/itemSubLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical" >
-
-                    <Button
-                        android:id="@+id/button6"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Button" />
-
-                    <Button
-                        android:id="@+id/button7"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Button" />
-
-                    <Button
-                        android:id="@+id/button8"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Button" />
                 </LinearLayout>
             </ScrollView>
         </LinearLayout>
@@ -165,34 +149,34 @@
             android:orientation="vertical" >
 
             <TextView
-                android:id="@+id/textView1"
+                android:id="@+id/txtHP"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TextView" />
+                android:text="HP" />
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/txtStamina"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TextView" />
+                android:text="Stamina" />
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/txtMana"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TextView" />
+                android:text="Mana" />
 
             <TextView
-                android:id="@+id/textView4"
+                android:id="@+id/txtAttack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TextView" />
+                android:text="Attack" />
 
             <TextView
-                android:id="@+id/textView5"
+                android:id="@+id/txtDefense"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TextView" />
+                android:text="Defense" />
         </LinearLayout>
 
         <LinearLayout
@@ -203,34 +187,34 @@
             android:orientation="vertical" >
 
             <TextView
-                android:id="@+id/textView6"
+                android:id="@+id/txtHPValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TextView" />
+                android:text="100" />
 
             <TextView
-                android:id="@+id/textView7"
+                android:id="@+id/txtStaminaValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TextView" />
+                android:text="100" />
 
             <TextView
-                android:id="@+id/textView8"
+                android:id="@+id/txtManaValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TextView" />
+                android:text="100" />
 
             <TextView
-                android:id="@+id/textView9"
+                android:id="@+id/txtStrengthValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TextView" />
+                android:text="50" />
 
             <TextView
-                android:id="@+id/textView10"
+                android:id="@+id/txtDefenseValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TextView" />
+                android:text="30" />
         </LinearLayout>
 
     </LinearLayout>
