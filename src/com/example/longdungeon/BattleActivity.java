@@ -11,8 +11,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -24,6 +26,7 @@ import android.widget.Toast;
 public class BattleActivity extends ActionBarActivity {
 
 	private ListView listAbility;
+	private View lyoutBattle;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,17 +45,40 @@ public class BattleActivity extends ActionBarActivity {
 		setUpButtonMagic();
 		setUpButtonItem();
 		setUpButtonRunaway();
-		
+
 		Player player = new Player(txtViewPlayerName.toString());
 		Mob mob = new Mob("Gobin");
-		
+
 		setInfoMob();
+
+		setUpHideListView();
+	}
+
+	private void setUpHideListView() {
+		// TODO Auto-generated method stub
+		lyoutBattle = (View) this.findViewById(R.id.layoutBattle);
+		lyoutBattle.setOnTouchListener(new OnTouchListener() {
+			@Override
+			public boolean onTouch(View view, MotionEvent motionEvent) {
+				listAbility.setVisibility(View.INVISIBLE);
+//				listAbility.postDelayed(new Runnable() {
+//					@Override
+//					public void run() {
+//						listAbility.setVisibility(View.GONE); // or
+//																// View.INVISIBLE
+//																// as Jason
+//																// Leung wrote
+//					}
+//				}, 3000);
+				return true;
+			}
+		});
+
 	}
 
 	private void setInfoMob() {
 		// TODO Auto-generated method stub
-		
-		
+
 	}
 
 	@Override
@@ -64,26 +90,24 @@ public class BattleActivity extends ActionBarActivity {
 
 	private void setUpButtonRunaway() {
 		// TODO Auto-generated method stub
-		final AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(
-				this);
+		final AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(this);
 
 		// Setting Dialog Title
 		alertDialog2.setTitle("Run away...");
 
 		// Setting Dialog Message
-		alertDialog2
-				.setMessage("Are you sure you want to run away?");
+		alertDialog2.setMessage("Are you sure you want to run away?");
 
 		// Setting Positive "Yes" Btn
 		alertDialog2.setPositiveButton("YES",
 				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog,
-							int which) {
+					public void onClick(DialogInterface dialog, int which) {
 						// Write your code here to execute after dialog
-//						Toast.makeText(getApplicationContext(),
-//								"You clicked on YES",
-//								Toast.LENGTH_SHORT).show();
-						Intent intentShopping = new Intent(BattleActivity.this, ShoppingActivity.class);
+						// Toast.makeText(getApplicationContext(),
+						// "You clicked on YES",
+						// Toast.LENGTH_SHORT).show();
+						Intent intentShopping = new Intent(BattleActivity.this,
+								ShoppingActivity.class);
 						startActivity(intentShopping);
 						finish();
 					}
@@ -91,22 +115,20 @@ public class BattleActivity extends ActionBarActivity {
 		// Setting Negative "NO" Btn
 		alertDialog2.setNegativeButton("NO",
 				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog,
-							int which) {
+					public void onClick(DialogInterface dialog, int which) {
 						// Write your code here to execute after dialog
-//						Toast.makeText(getApplicationContext(),
-//								"You clicked on NO", Toast.LENGTH_SHORT)
-//								.show();
+						// Toast.makeText(getApplicationContext(),
+						// "You clicked on NO", Toast.LENGTH_SHORT)
+						// .show();
 						dialog.cancel();
 					}
 				});
-		
-		
+
 		Button btnRun = (Button) this.findViewById(R.id.buttonRun);
 		btnRun.setOnClickListener(new OnClickListener() {
 
 			@Override
-			public void onClick(View arg0) {	
+			public void onClick(View arg0) {
 
 				// Showing Alert Dialog
 				alertDialog2.show();
@@ -133,6 +155,7 @@ public class BattleActivity extends ActionBarActivity {
 						android.R.layout.activity_list_item,
 						android.R.id.text1, items);
 				listAbility.setAdapter(adapter);
+				listAbility.setVisibility(View.VISIBLE);
 			}
 		});
 	}
@@ -177,6 +200,7 @@ public class BattleActivity extends ActionBarActivity {
 						android.R.layout.activity_list_item,
 						android.R.id.text1, magics);
 				listAbility.setAdapter(adapter);
+				listAbility.setVisibility(View.VISIBLE);
 			}
 		});
 	}
@@ -196,6 +220,7 @@ public class BattleActivity extends ActionBarActivity {
 						android.R.layout.activity_list_item,
 						android.R.id.text1, attacks);
 				listAbility.setAdapter(adapter);
+				listAbility.setVisibility(View.VISIBLE);
 			}
 		});
 	}
