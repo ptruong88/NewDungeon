@@ -170,14 +170,14 @@ public class BattleActivity extends ActionBarActivity {
 		System.out.println("Layout width " + lyoutX);
 		System.out.println("Layout height " + lyoutY);
 
-		ImageView imgMob = (ImageView) this.findViewById(R.id.picMob);
+		ImageView imgMob = (ImageView) this.findViewById(R.id.imageMob);
 		imgMob.getLayoutParams().width = (int) (lyoutX * 0.6);
 		imgMob.getLayoutParams().height = lyoutY;
 		// RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
 		// (int)(lyoutX*0.6), lyoutY);
 		// imgMob.setLayoutParams(params);
 
-		ImageView imgPlayer = (ImageView) this.findViewById(R.id.picPlayer);
+		ImageView imgPlayer = (ImageView) this.findViewById(R.id.imagePlayer);
 		// params = new RelativeLayout.LayoutParams(
 		// lyoutX/2, lyoutY/2);
 		// imgPlayer.setLayoutParams(params);

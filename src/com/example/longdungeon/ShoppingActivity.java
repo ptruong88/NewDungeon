@@ -23,6 +23,7 @@ public class ShoppingActivity extends ActionBarActivity {
 	private LinearLayout lyoutCategory;
 	private TextView txtConfirmBuy;
 	private String[] listWeapon, listHelmet, listShiled, listCloth, listPotion;
+	private Button btnInventory;
 	ArrayAdapter<String> adapter;
 	ListView listItems;
 	AlertDialog.Builder alertDialog2;
@@ -70,6 +71,8 @@ public class ShoppingActivity extends ActionBarActivity {
 
 		setListItemsOnClick();
 
+		setUpButtonInventory();
+
 		alertDialog2 = new AlertDialog.Builder(this);
 
 		// displayAllItems(btnItemsArray[0], lyoutDes, btnWeapon, btnHelmet,
@@ -95,6 +98,20 @@ public class ShoppingActivity extends ActionBarActivity {
 		// }
 		// });
 
+	}
+
+	private void setUpButtonInventory() {
+		// TODO Auto-generated method stub
+		btnInventory = (Button) this.findViewById(R.id.buttonInventory);
+		btnInventory.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+//				Intent intentInventory = new Intent(ShoppingActivity.this,
+//						InventoryActivity.class);
+				Intent intentInventory = new Intent(ShoppingActivity.this,
+						TestActivity.class);
+				startActivity(intentInventory);
+			}
+		});
 	}
 
 	private void setListItemsOnClick() {

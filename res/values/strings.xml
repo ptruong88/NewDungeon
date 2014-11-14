@@ -10,6 +10,6 @@
     <string name="title_activity_shopping">Shopping Screen</string>
     <string name="title_activity_congrate">Congrate Screen</string>
     <string name="title_activity_inventory">Inventory Screen</string>
-    <string name="title_activity_change">Change Screen</string>
+    <string name="title_activity_test">Change Screen</string>
 
 </resources>

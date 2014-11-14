@@ -43,6 +43,12 @@
             android:label="@string/title_activity_inventory"
             android:screenOrientation="landscape" >
         </activity>
+        
+         <activity
+            android:name="com.example.longdungeon.TestActivity"
+            android:label="@string/title_activity_test"
+            android:screenOrientation="landscape" >
+        </activity>
     </application>
 
 </manifest>
