@@ -7,25 +7,27 @@ import com.example.longdungeon.item.Equipment;
 import com.example.longdungeon.item.Spell;
 import com.example.longdungeon.item.Weapon;
 
-public class Player extends Character {
+public class Player extends Person {
 
-	private ArrayList<Consumable> potions;
+	protected ArrayList<Consumable> potions;
 	// these are the magic, stamina and health potions,
 	// which restore points to the cur values for those stats
-	private int score;
-	private int maxStm;
-	private int curStm;
-	private int maxMgk;
-	private int curMgk;
-	private ArrayList<Equipment> armsAndArmor;// this is all the extra equipment
+	protected int score;
+	protected int maxStm;
+	protected int curStm;
+	protected int maxMana;
+	protected int curMana;
+	protected ArrayList<Equipment> armsAndArmor;// this is all the extra
+												// equipment
 												// you own
-	private Equipment curArmor;// equipped armor
-	private Weapon curWeapon;// the weapon equipped determines physical attacks
-	private Equipment curShield;
-	private Spell[] spells ;// you have 3 available spell slots, each gives an
-							// attack, heal or buff
-	
-	private Equipment curRing;
+	protected Equipment curArmor;// equipped armor
+	protected Weapon curWeapon;// the weapon equipped determines physical
+								// attacks
+	protected Equipment curShield;
+	protected Spell[] spells;// you have 3 available spell slots, each gives an
+								// attack, heal or buff
+
+	protected Equipment curRing;
 
 	public Player() {
 		super();
@@ -35,15 +37,19 @@ public class Player extends Character {
 	public Player(String nameNew) {
 		super(nameNew);
 		defaultStats();
-		
+
 	}
 
 	private void defaultStats() {
 		score = 0;
+		maxHp = 120;
+		curHp = maxHp;
 		maxStm = 100;
-		curStm = 100;
-		maxMgk = 60;
-		curMgk = 60;
+		curStm = maxStm;
+		maxMana = 60;
+		curMana = maxMana;
+		def = 20;
+		atk = 15;
 		curArmor = new Equipment("Knight's Armor",
 				"The full suit of armor of a chivalrous knight", 50, 0, 10);
 		curWeapon = new Weapon("Short Sword", "The basic adventuring sword", 0,
@@ -68,8 +74,6 @@ public class Player extends Character {
 		this.score = score;
 	}
 
-	
-
 	public int getMaxStm() {
 		return maxStm;
 	}
@@ -86,23 +90,21 @@ public class Player extends Character {
 		this.curStm = curStm;
 	}
 
-	public int getMaxMgk() {
-		return maxMgk;
+	public int getMaxMana() {
+		return maxMana;
 	}
 
-	public void setMaxMgk(int maxMgk) {
-		this.maxMgk = maxMgk;
+	public void setMaxMana(int maxMana) {
+		this.maxMana = maxMana;
 	}
 
-	public int getCurMgk() {
-		return curMgk;
+	public int getCurMana() {
+		return curMana;
 	}
 
-	public void setCurMgk(int curMgk) {
-		this.curMgk = curMgk;
+	public void setCurMana(int curMana) {
+		this.curMana = curMana;
 	}
-
-	
 
 	public ArrayList<Equipment> getArmsAndArmor() {
 		return armsAndArmor;
@@ -138,22 +140,24 @@ public class Player extends Character {
 
 	/**
 	 * Get spell base on spell position, start from 1 to 3.
+	 * 
 	 * @param pos
 	 * @return
 	 */
 	public Spell getSpell(int pos) {
-		return spells[pos-1];
+		return spells[pos - 1];
 	}
 
 	/**
 	 * Set spell based on spell position to set, start from 1 to 3.
+	 * 
 	 * @param spell
 	 * @param pos
 	 */
 	public void setSpell(Spell spell, int pos) {
-		this.spells[pos-1] = spell;
+		this.spells[pos - 1] = spell;
 	}
-	
+
 	public Equipment getCurRing() {
 		return curRing;
 	}
@@ -169,6 +173,5 @@ public class Player extends Character {
 	public void setPotions(ArrayList<Consumable> potions) {
 		this.potions = potions;
 	}
-	
 
 }

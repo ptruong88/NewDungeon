@@ -1,21 +1,23 @@
 package com.example.longdungeon.character;
 
-public class Character {
+public class Person {
 
-	private String name;
-	private int XP;
-	private int gold;
-	private int maxHp;
-	private int curHp;
-	private int def;
-	private int atk;
-
-	public Character() {
+	protected String name;
+	protected int XP;
+	protected int gold;
+	protected int maxHp;
+	protected int curHp;
+	protected int def;
+	protected int atk;
+	protected int maxStm;
+	protected int curStm;
+	
+	public Person() {
 		name = "Invisible";
 		defaultStats();
 	}
 
-	public Character(String nameNew) {
+	public Person(String nameNew) {
 		name = nameNew;
 		defaultStats();
 	}
@@ -26,6 +28,8 @@ public class Character {
 		gold = 100;
 		maxHp = 120;
 		curHp = 120;
+		maxStm = 0;
+		curStm = maxStm;
 		def = 40;
 		atk = 35;
 	}

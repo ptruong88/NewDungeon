@@ -15,7 +15,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class TestActivity extends ActionBarActivity implements OnClickListener,
+public class InventoryTestActivity extends ActionBarActivity implements OnClickListener,
 		OnItemClickListener {
 
 	private Button btnAll, btnWeapon, btnHelmet, btnShield, btnCloth,
@@ -29,7 +29,7 @@ public class TestActivity extends ActionBarActivity implements OnClickListener,
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_battle_test);
+		setContentView(R.layout.activity_inventory_test);
 
 		setUpButtonCategory();
 		setUpListItems();

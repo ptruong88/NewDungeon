@@ -16,7 +16,7 @@
         android:scaleType="fitStart"
         android:src="@drawable/banner" />
 
-    <RelativeLayout
+    <com.example.longdungeon.layout.BattleLayout
         android:id="@+id/layoutPic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
             android:layout_toRightOf="@+id/imageMob"
             android:scaleType="fitEnd"
             android:src="@drawable/knight" />
-    </RelativeLayout>
+    </com.example.longdungeon.layout.BattleLayout>
 
     <RelativeLayout
         android:id="@+id/layoutInfo"
@@ -75,22 +75,12 @@
                 android:textSize="@dimen/font_size" />
 
             <TextView
-                android:id="@+id/textViewMobHpName"
+                android:id="@+id/textViewMobHp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_below="@+id/textViewMobName"
-                android:text="HP:"
-                android:textColor="@color/white"
-                android:textSize="@dimen/font_size" />
-
-            <TextView
-                android:id="@+id/textViewMobHpNumber"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/textViewMobName"
-                android:layout_toRightOf="@+id/textViewMobHpName"
-                android:text="76/76"
+                android:text="HP: 76/76"
                 android:textColor="@color/white"
                 android:textSize="@dimen/font_size" />
         </RelativeLayout>
@@ -105,62 +95,12 @@
             android:layout_marginRight="10dp" >
 
             <TextView
-                android:id="@+id/textViewPlayerScoreName"
+                android:id="@+id/textViewPlayerScore"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
-                android:text="Score"
-                android:textColor="@color/white"
-                android:textSize="@dimen/font_size" />
-
-            <TextView
-                android:id="@+id/textViewPlayerScoreNumber"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/textViewPlayerScoreName"
-                android:layout_toRightOf="@+id/textViewPlayerScoreName"
-                android:text=":  0"
-                android:textColor="@color/white"
-                android:textSize="@dimen/font_size" />
-
-            <TextView
-                android:id="@+id/textViewPlayerHpName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/textViewPlayerName"
-                android:text="HP:"
-                android:textColor="@color/white"
-                android:textSize="@dimen/font_size" />
-
-            <TextView
-                android:id="@+id/textViewPlayerHpNumber"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/textViewPlayerName"
-                android:layout_toRightOf="@+id/textViewPlayerHpName"
-                android:text="120/120"
-                android:textColor="@color/white"
-                android:textSize="@dimen/font_size" />
-
-            <TextView
-                android:id="@+id/textViewPlayerManaName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/textViewPlayerHpName"
-                android:text="MGK:"
-                android:textColor="@color/white"
-                android:textSize="@dimen/font_size" />
-
-            <TextView
-                android:id="@+id/textViewPlayerManaNumber"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/textViewPlayerHpName"
-                android:layout_toRightOf="@+id/textViewPlayerManaName"
-                android:text="40/60"
+                android:text="Score: 0"
                 android:textColor="@color/white"
                 android:textSize="@dimen/font_size" />
 
@@ -168,31 +108,41 @@
                 android:id="@+id/textViewPlayerName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/textViewPlayerStmName"
                 android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/textViewPlayerScoreNumber"
+                android:layout_toRightOf="@+id/textViewPlayerScore"
+                android:layout_alignLeft="@+id/textViewPlayerStm"
                 android:text="Sir Awesome"
                 android:textColor="@color/white"
                 android:textSize="@dimen/font_size" />
 
             <TextView
-                android:id="@+id/textViewPlayerStmName"
+                android:id="@+id/textViewPlayerHp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/textViewPlayerHpNumber"
-                android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@+id/textViewPlayerHpNumber"
-                android:text="STM"
+                android:layout_alignLeft="@+id/textViewPlayerScore"
+                android:layout_below="@+id/textViewPlayerScore"
+                android:text="HP: 100/100"
                 android:textColor="@color/white"
                 android:textSize="@dimen/font_size" />
 
             <TextView
-                android:id="@+id/textViewPlayerStmNumber"
+                android:id="@+id/textViewPlayerMana"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/textViewPlayerName"
-                android:layout_toRightOf="@+id/textViewPlayerStmName"
-                android:text="100/100"
+                android:layout_alignLeft="@+id/textViewPlayerScore"
+                android:layout_below="@+id/textViewPlayerHp"
+                android:text="MANA: 100/100"
+                android:textColor="@color/white"
+                android:textSize="@dimen/font_size" />
+
+            <TextView
+                android:id="@+id/textViewPlayerStm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@+id/textViewPlayerMana"
+                android:layout_alignTop="@+id/textViewPlayerHp"
+                android:text="STM: 100/100"
                 android:textColor="@color/white"
                 android:textSize="@dimen/font_size" />
         </RelativeLayout>

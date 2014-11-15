@@ -4,24 +4,37 @@ import java.util.ArrayList;
 
 import com.example.longdungeon.item.Item;
 
-public class Mob extends Character {
+public class Mob extends Person {
 
 	// the array list holds items quality based on normal mobs or boss.
-	private ArrayList<Item> loots;
+	protected ArrayList<Item> loots;
 	
-	private char type; //Normal mob or boss.
+	protected char type; //Normal mob or boss.
 
 	public Mob() {
 		// TODO Auto-generated constructor stub
 		super();
 		loots = new ArrayList<Item>();
 		type = 'n'; // n for normal mob, b for boss.
+		defaultStats();
 	}
 
 	public Mob(String nameNew) {
 		super(nameNew);
 		loots = new ArrayList<Item>();
 		type = 'n';
+		defaultStats();
+	}
+	
+	private void defaultStats(){
+		maxHp = 76;
+		curHp = maxHp;		
+		maxStm = 60;
+		curStm = maxStm;
+		atk = 14;
+		def = 20;
+		gold = 150;
+		XP = 100;
 	}
 	
 	public ArrayList<Item> getLoots() {

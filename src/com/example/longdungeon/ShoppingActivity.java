@@ -108,7 +108,7 @@ public class ShoppingActivity extends ActionBarActivity {
 //				Intent intentInventory = new Intent(ShoppingActivity.this,
 //						InventoryActivity.class);
 				Intent intentInventory = new Intent(ShoppingActivity.this,
-						TestActivity.class);
+						InventoryTestActivity.class);
 				startActivity(intentInventory);
 			}
 		});

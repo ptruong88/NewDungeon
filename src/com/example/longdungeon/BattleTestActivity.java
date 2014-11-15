@@ -18,8 +18,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -29,8 +27,8 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class BattleActivity extends ActionBarActivity implements
-		OnClickListener, OnItemClickListener {
+public class BattleTestActivity extends ActionBarActivity implements
+		OnClickListener {
 
 	private ListView listAbility;
 	private View lyoutBattle;
@@ -38,125 +36,26 @@ public class BattleActivity extends ActionBarActivity implements
 			txtViewPlayerScore, txtViewPlayerHp, txtViewPlayerMana,
 			txtViewStamina;
 	private Person mob, player;
-	private Button btnAttack, btnDenfend, btnMagic, btnItem, btnRun;
-	private String[] listAttack, listMagic, listItem;
-	private ArrayAdapter<String> adapterAttack, adapterMagic, adapterItem;
+	private Button btnAttack;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_battle);
 
+		setUpPic();
+
+		// Define list view for options
+		listAbility = (ListView) this.findViewById(R.id.listViewAbilityOptions);
+
+		setUpButtonAttack();
+		setUpButtonMagic();
+		setUpButtonItem();
+		setUpButtonRunaway();
+
+		setUpHideListView();
 		setUpMob();
 		setUpPlayer();
-		setUpListView();
-		setUpStringForListView();
-		setUpButtonAction();
-		setUpHideListView();
-		setUpDialogForRun();
-	}
-
-	private void setUpListView() {
-		// TODO Auto-generated method stub
-		listAbility = (ListView) this.findViewById(R.id.listViewAbilityOptions);
-		listAbility.setOnItemClickListener(this);
-	}
-
-	private int baseDamage;// Player Attack
-
-	private void setUpStringForListView() {
-		// TODO Auto-generated method stub
-		listAttack = new String[3];
-		// { "Heavy Attack 10DMG/10STM",
-		// "Medium Attack 15DMG/15STM", "Light Attack 20DMG/20STM" };
-		baseDamage = player.getAtk();
-		String attack = "Light Attack " + baseDamage + "DMG/" + baseDamage
-				+ "STM";
-		listAttack[0] = attack;
-		attack = "Medium Attack " + (baseDamage + 5) + "DMG/"
-				+ (baseDamage + 5) + "STM";
-		listAttack[1] = attack;
-		attack = "Heavy Attack " + (baseDamage + 10) + "DMG/"
-				+ (baseDamage + 10) + "STM";
-		listAttack[2] = attack;
-		adapterAttack = new ArrayAdapter<String>(getApplicationContext(),
-				android.R.layout.activity_list_item, android.R.id.text1,
-				listAttack);
-
-		listMagic = new String[] { "Fire Magic 10DMG/10STM",
-				"Ice Magic 15DMG/15STM", "Lightning Magic 20DMG/20STM" };
-		adapterMagic = new ArrayAdapter<String>(getApplicationContext(),
-				android.R.layout.activity_list_item, android.R.id.text1,
-				listMagic);
-
-		listItem = new String[] { "Health Potion 10HP x5",
-				"Health Potion 20HP x5", "Mana Potion 10MN x5",
-				"Mana Potion 20MN x5", "Stamina Potion 10STM x5",
-				"Stamina Potion 20STM x5" };
-		adapterItem = new ArrayAdapter<String>(getApplicationContext(),
-				android.R.layout.activity_list_item, android.R.id.text1,
-				listItem);
-	}
-
-	private void setUpButtonAction() {
-		// TODO Auto-generated method stub
-		this.findViewById(R.id.buttonAttack).setOnClickListener(this);
-		this.findViewById(R.id.buttonDefend).setOnClickListener(this);
-		this.findViewById(R.id.buttonMagic).setOnClickListener(this);
-		this.findViewById(R.id.buttonItem).setOnClickListener(this);
-		this.findViewById(R.id.buttonRun).setOnClickListener(this);
-	}
-
-	public void onClick(View button) {
-		switch (button.getId()) {
-		case R.id.buttonAttack:
-			listAbility.setAdapter(adapterAttack);
-			listAbility.setVisibility(View.VISIBLE);
-			break;
-		case R.id.buttonDefend:
-			break;
-		case R.id.buttonMagic:
-			listAbility.setAdapter(adapterMagic);
-			listAbility.setVisibility(View.VISIBLE);
-			break;
-		case R.id.buttonItem:
-			listAbility.setAdapter(adapterItem);
-			listAbility.setVisibility(View.VISIBLE);
-			break;
-		default:// button run way
-			alertDialog.show();
-			break;
-		}
-
-	}
-
-	int mobMaxHp, mobCurHp;
-
-	// Display what item is click on list view, such attack type, magic item, or
-	// item type.
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position,
-			long id) {
-		// TODO Auto-generated method stub
-		// Toast.makeText(getApplicationContext(),
-		// parent.getItemAtPosition(position).toString(),
-		// Toast.LENGTH_SHORT).show();
-		if (parent.getItemAtPosition(position).toString().contains("DMG")) {
-			mobCurHp -= baseDamage;
-			switch (position) {
-			case 0:
-				txtViewMobHp.setText("HP: " + mobCurHp + "/" + mobMaxHp);
-				break;
-			case 1:
-				mobCurHp -= 5;
-				txtViewMobHp.setText("HP: " + mobCurHp + "/" + mobMaxHp);
-				break;
-			default:
-				mobCurHp -= 10;
-				txtViewMobHp.setText("HP: " + mobCurHp + "/" + mobMaxHp);
-				break;
-			}
-		}
 	}
 
 	private void setUpPlayer() {
@@ -193,8 +92,6 @@ public class BattleActivity extends ActionBarActivity implements
 		txtViewMobName.setText(nameMob);
 		txtViewMobHp = (TextView) this.findViewById(R.id.textViewMobHp);
 		txtViewMobHp.setText("HP: " + mob.getCurHp() + "/" + mob.getMaxHp());
-		mobMaxHp = mob.getMaxHp();
-		mobCurHp = mob.getCurHp();
 	}
 
 	private void setUpHideListView() {
@@ -225,34 +122,33 @@ public class BattleActivity extends ActionBarActivity implements
 	// super.onWindowFocusChanged(hasFocus);
 	// setUpPic();// Set up mob and player picture based on layout.
 	// }
-	private AlertDialog.Builder alertDialog;
 
-	private void setUpDialogForRun() {
+	private void setUpButtonRunaway() {
 		// TODO Auto-generated method stub
-		alertDialog = new AlertDialog.Builder(this);
+		final AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(this);
 
 		// Setting Dialog Title
-		alertDialog.setTitle("Run away...");
+		alertDialog2.setTitle("Run away...");
 
 		// Setting Dialog Message
-		alertDialog.setMessage("Are you sure you want to run away?");
+		alertDialog2.setMessage("Are you sure you want to run away?");
 
 		// Setting Positive "Yes" Btn
-		alertDialog.setPositiveButton("YES",
+		alertDialog2.setPositiveButton("YES",
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						// Write your code here to execute after dialog
 						// Toast.makeText(getApplicationContext(),
 						// "You clicked on YES",
 						// Toast.LENGTH_SHORT).show();
-						Intent intentShopping = new Intent(BattleActivity.this,
+						Intent intentShopping = new Intent(BattleTestActivity.this,
 								ShoppingActivity.class);
 						startActivity(intentShopping);
 						finish();
 					}
 				});
 		// Setting Negative "NO" Btn
-		alertDialog.setNegativeButton("NO",
+		alertDialog2.setNegativeButton("NO",
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						// Write your code here to execute after dialog
@@ -262,6 +158,41 @@ public class BattleActivity extends ActionBarActivity implements
 						dialog.cancel();
 					}
 				});
+
+		Button btnRun = (Button) this.findViewById(R.id.buttonRun);
+		btnRun.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+
+				// Showing Alert Dialog
+				alertDialog2.show();
+
+			}
+		});
+
+	}
+
+	private void setUpButtonItem() {
+		// TODO Auto-generated method stub
+		Button btnItem = (Button) this.findViewById(R.id.buttonItem);
+		btnItem.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// Attack Options
+				String[] items = new String[] { "Health Potion 10HP x5",
+						"Health Potion 20HP x5", "Mana Potion 10MN x5",
+						"Mana Potion 20MN x5", "Stamina Potion 10STM x5",
+						"Stamina Potion 20STM x5" };
+				ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+						getApplicationContext(),
+						android.R.layout.activity_list_item,
+						android.R.id.text1, items);
+				listAbility.setAdapter(adapter);
+				listAbility.setVisibility(View.VISIBLE);
+			}
+		});
 	}
 
 	private void setUpPic() {
@@ -271,6 +202,7 @@ public class BattleActivity extends ActionBarActivity implements
 		int lyoutX = relLyoutPic.getMeasuredWidth();
 		int lyoutY = relLyoutPic.getMeasuredHeight();
 
+		
 		System.out.println("Layout width " + lyoutX);
 		System.out.println("Layout height " + lyoutY);
 
@@ -287,6 +219,45 @@ public class BattleActivity extends ActionBarActivity implements
 		// imgPlayer.setLayoutParams(params);
 		imgPlayer.getLayoutParams().width = (int) (lyoutX * 0.5);
 		imgPlayer.getLayoutParams().height = (int) (lyoutY * 0.8);
+	}
+
+	private void setUpButtonMagic() {
+		// TODO Auto-generated method stub
+		Button btnMagic = (Button) this.findViewById(R.id.buttonMagic);
+		btnMagic.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// Attack Options
+				String[] magics = new String[] { "Fire Magic 10DMG/10STM",
+						"Ice Magic 15DMG/15STM", "Lightning Magic 20DMG/20STM" };
+				ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+						getApplicationContext(),
+						android.R.layout.activity_list_item,
+						android.R.id.text1, magics);
+				listAbility.setAdapter(adapter);
+				listAbility.setVisibility(View.VISIBLE);
+			}
+		});
+	}
+
+	private void setUpButtonAttack() {
+		// TODO Auto-generated method stub
+		btnAttack = (Button) this.findViewById(R.id.buttonAttack);
+		btnAttack.setOnClickListener(this);
+	}
+
+	public void onClick(View button) {
+
+		// Attack Options
+		System.out.print("Button attack pressed");
+		String[] attacks = new String[] { "Heavy Attack 10DMG/10STM",
+				"Medium Attack 15DMG/15STM", "Light Attack 20DMG/20STM" };
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+				getApplicationContext(), android.R.layout.activity_list_item,
+				android.R.id.text1, attacks);
+		listAbility.setAdapter(adapter);
+		listAbility.setVisibility(View.VISIBLE);
 	}
 
 	@Override
@@ -307,5 +278,4 @@ public class BattleActivity extends ActionBarActivity implements
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
 }

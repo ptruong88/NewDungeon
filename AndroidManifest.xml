@@ -45,7 +45,7 @@
         </activity>
         
          <activity
-            android:name="com.example.longdungeon.TestActivity"
+            android:name="com.example.longdungeon.InventoryTestActivity"
             android:label="@string/title_activity_test"
             android:screenOrientation="landscape" >
         </activity>
