@@ -20,7 +20,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ShoppingActivity extends ActionBarActivity implements
+public class ShoppingTestActivity extends ActionBarActivity implements
 		OnClickListener, OnItemClickListener {
 
 	private LinearLayout lyoutCategory;
@@ -36,7 +36,7 @@ public class ShoppingActivity extends ActionBarActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_shopping);
+		setContentView(R.layout.activity_shopping_test);
 
 		getPlayerFromBundle();
 		setUpButtonAction();
@@ -135,8 +135,8 @@ public class ShoppingActivity extends ActionBarActivity implements
 				adapter.add(listPotion[i]);
 			break;
 		default:// Inventory button
-			Intent intentInventory = new Intent(ShoppingActivity.this,
-					InventoryActivity.class);
+			Intent intentInventory = new Intent(ShoppingTestActivity.this,
+					InventoryTestActivity.class);
 			intentInventory.putExtra("com.example.longdungeon.character",
 					player);
 			startActivity(intentInventory);

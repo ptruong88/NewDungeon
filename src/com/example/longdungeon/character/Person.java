@@ -8,7 +8,7 @@ public class Person {
 	protected int maxHp;
 	protected int curHp;
 	protected int def;
-	protected int atk;
+	protected int damage;
 	protected int maxStm;
 	protected int curStm;
 	
@@ -31,7 +31,7 @@ public class Person {
 		maxStm = 0;
 		curStm = maxStm;
 		def = 40;
-		atk = 35;
+		damage = 35;
 	}
 
 	
@@ -84,12 +84,12 @@ public class Person {
 		this.def = def;
 	}
 
-	public int getAtk() {
-		return atk;
+	public int getDamage() {
+		return damage;
 	}
 
-	public void setAtk(int atk) {
-		this.atk = atk;
+	public void setDamge(int damage) {
+		this.damage = damage;
 	}
 
 }

@@ -56,6 +56,8 @@ public class LoginActivity extends ActionBarActivity {
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
 
+//				Intent intentBattle = new Intent(LoginActivity.this,
+//						BattleTestActivity.class);
 				Intent intentBattle = new Intent(LoginActivity.this,
 						BattleActivity.class);
 				intentBattle.putExtra("namePlayer", edTxtLogin.getText()

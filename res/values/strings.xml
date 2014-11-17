@@ -11,5 +11,7 @@
     <string name="title_activity_congrate">Congrate Screen</string>
     <string name="title_activity_inventory">Inventory Screen</string>
     <string name="title_activity_test">Change Screen</string>
+    <string name="title_activity_login_test">LoginTestActivity</string>
+    <string name="title_activity_shopping_test">ShoppingTestActivity</string>
 
 </resources>

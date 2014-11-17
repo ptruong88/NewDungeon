@@ -1,8 +1,11 @@
 package com.example.longdungeon;
 
+import com.example.longdungeon.character.Player;
+
 import android.support.v7.app.ActionBarActivity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,45 +16,77 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-public class InventoryTestActivity extends ActionBarActivity implements OnClickListener,
-		OnItemClickListener {
+public class InventoryTestActivity extends ActionBarActivity implements
+		OnClickListener, OnItemClickListener {
 
-	private Button btnAll, btnWeapon, btnHelmet, btnShield, btnCloth,
-			btnPotion;
+	private TextView txtViewPlayerName, txtViewPlayerHp, txtViewPlayerMana,
+			txtViewPlayerStm, txtViewPlayerDmg, txtViewPlayerDef;
 	private ListView listItems;
 	private String[] listAll, listWeapon, listHelmet, listShield, listCloth,
 			listPotion;
 	private ArrayAdapter<String> adapter;
-	private AlertDialog.Builder alertDialog2;
+	private AlertDialog.Builder alertDialog;
+	private Player player;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_inventory_test);
 
-		setUpButtonCategory();
+		getPlayerFromBundle();
+		setUpButtonAction();
 		setUpListItems();
-		
-		alertDialog2 = new AlertDialog.Builder(this);
+		setUpTextView();
+
+		alertDialog = new AlertDialog.Builder(this);
 	}
 
-	private void setUpButtonCategory() {
+	private void setUpTextView() {
 		// TODO Auto-generated method stub
-		btnAll = (Button) this.findViewById(R.id.buttonAll);
-		btnWeapon = (Button) this.findViewById(R.id.buttonWeapon);
-		btnHelmet = (Button) this.findViewById(R.id.buttonHelmet);
-		btnShield = (Button) this.findViewById(R.id.buttonShield);
-		btnCloth = (Button) this.findViewById(R.id.buttonCloth);
-		btnPotion = (Button) this.findViewById(R.id.buttonPotion);
+		txtViewPlayerName = (TextView) this
+				.findViewById(R.id.textViewPlayerName);
+		txtViewPlayerName.setText(player.getName());
 
-		btnAll.setOnClickListener(this);
-		btnWeapon.setOnClickListener(this);
-		btnHelmet.setOnClickListener(this);
-		btnShield.setOnClickListener(this);
-		btnCloth.setOnClickListener(this);
-		btnPotion.setOnClickListener(this);
+		txtViewPlayerHp = (TextView) this.findViewById(R.id.textViewPlayerHp);
+		txtViewPlayerHp.setText(player.getCurHp() + "/" + player.getMaxHp());
+
+		txtViewPlayerMana = (TextView) this
+				.findViewById(R.id.textViewPlayerMana);
+		txtViewPlayerMana.setText(player.getCurMana() + "/"
+				+ player.getMaxMana());
+
+		txtViewPlayerStm = (TextView) this.findViewById(R.id.textViewPlayerStm);
+		txtViewPlayerStm.setText(player.getCurStm() + "/" + player.getMaxStm());
+
+		txtViewPlayerDmg = (TextView) this
+				.findViewById(R.id.textViewPlayerDamage);
+		txtViewPlayerDmg.setText(player.getDamage() + "");
+
+		txtViewPlayerDef = (TextView) this
+				.findViewById(R.id.textViewPlayerDefend);
+		txtViewPlayerDef.setText(player.getDef() + "");
+	}
+
+	private void getPlayerFromBundle() {
+		// TODO Auto-generated method stub
+		Bundle fromBattle = getIntent().getExtras();
+		player = fromBattle.getParcelable("com.example.longdungeon.character");
+	}
+
+	private void setUpButtonAction() {
+		// TODO Auto-generated method stub
+		this.findViewById(R.id.buttonAll).setOnClickListener(this);
+		this.findViewById(R.id.buttonWeapon).setOnClickListener(this);
+		this.findViewById(R.id.buttonHelmet).setOnClickListener(this);
+		this.findViewById(R.id.buttonShield).setOnClickListener(this);
+		this.findViewById(R.id.buttonCloth).setOnClickListener(this);
+		// this.findViewById(R.id.buttonRing).setOnClickListener(this);
+		this.findViewById(R.id.buttonPotion).setOnClickListener(this);
+		this.findViewById(R.id.buttonShop).setOnClickListener(this);
+		this.findViewById(R.id.buttonBattle).setOnClickListener(this);
 	}
 
 	@Override
@@ -95,6 +130,18 @@ public class InventoryTestActivity extends ActionBarActivity implements OnClickL
 					android.R.layout.activity_list_item, android.R.id.text1,
 					listPotion);
 			listItems.setAdapter(adapter);
+			break;
+		case R.id.buttonShop:
+			Intent intentShop = new Intent(InventoryTestActivity.this,
+					ShoppingActivity.class);
+			intentShop.putExtra("com.example.longdungeon.character", player);
+			startActivity(intentShop);
+			break;
+		case R.id.buttonBattle:
+			Intent intentBattle = new Intent(InventoryTestActivity.this,
+					BattleTestActivity.class);
+			intentBattle.putExtra("com.example.longdungeon.character", player);
+			startActivity(intentBattle);
 			break;
 		}
 
@@ -140,13 +187,13 @@ public class InventoryTestActivity extends ActionBarActivity implements OnClickL
 	private void setUpConfirmBuy(final String message) {
 
 		// Setting Dialog Title
-		alertDialog2.setTitle("Confrim buying");
+		alertDialog.setTitle("Confrim buying");
 
 		// Setting Dialog Message
-		alertDialog2.setMessage(message);
+		alertDialog.setMessage(message);
 
 		// Setting Positive "Yes" Btn
-		alertDialog2.setPositiveButton("YES",
+		alertDialog.setPositiveButton("YES",
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						// Write your code here to execute after dialog
@@ -160,7 +207,7 @@ public class InventoryTestActivity extends ActionBarActivity implements OnClickL
 					}
 				});
 		// Setting Negative "NO" Btn
-		alertDialog2.setNegativeButton("NO",
+		alertDialog.setNegativeButton("NO",
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						// Write your code here to execute after dialog
@@ -170,8 +217,9 @@ public class InventoryTestActivity extends ActionBarActivity implements OnClickL
 						dialog.cancel();
 					}
 				});
-		alertDialog2.show();
+		alertDialog.show();
 	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.

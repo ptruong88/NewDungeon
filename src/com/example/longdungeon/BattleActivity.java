@@ -37,8 +37,8 @@ public class BattleActivity extends ActionBarActivity implements
 	private TextView txtViewMobName, txtViewMobHp, txtViewPlayerName,
 			txtViewPlayerScore, txtViewPlayerHp, txtViewPlayerMana,
 			txtViewStamina;
-	private Person mob, player;
-	private Button btnAttack, btnDenfend, btnMagic, btnItem, btnRun;
+	private Mob mob;
+	private Player player;
 	private String[] listAttack, listMagic, listItem;
 	private ArrayAdapter<String> adapterAttack, adapterMagic, adapterItem;
 
@@ -69,7 +69,7 @@ public class BattleActivity extends ActionBarActivity implements
 		listAttack = new String[3];
 		// { "Heavy Attack 10DMG/10STM",
 		// "Medium Attack 15DMG/15STM", "Light Attack 20DMG/20STM" };
-		baseDamage = player.getAtk();
+		baseDamage = player.getDamage();
 		String attack = "Light Attack " + baseDamage + "DMG/" + baseDamage
 				+ "STM";
 		listAttack[0] = attack;
@@ -169,7 +169,7 @@ public class BattleActivity extends ActionBarActivity implements
 
 		txtViewPlayerScore = (TextView) this
 				.findViewById(R.id.textViewPlayerScore);
-		txtViewPlayerScore.setText("Score: " + ((Player) player).getScore());
+		txtViewPlayerScore.setText("Score: " + player.getScore());
 
 		txtViewPlayerHp = (TextView) this.findViewById(R.id.textViewPlayerHp);
 		txtViewPlayerHp.setText("HP: " + player.getCurHp() + "/"
@@ -177,12 +177,12 @@ public class BattleActivity extends ActionBarActivity implements
 
 		txtViewPlayerMana = (TextView) this
 				.findViewById(R.id.textViewPlayerMana);
-		txtViewPlayerMana.setText("Mana: " + ((Player) player).getCurMana()
-				+ "/" + ((Player) player).getMaxMana());
+		txtViewPlayerMana.setText("Mana: " + player.getCurMana()
+				+ "/" + player.getMaxMana());
 
 		txtViewStamina = (TextView) this.findViewById(R.id.textViewPlayerStm);
-		txtViewStamina.setText("Stamina: " + ((Player) player).getCurStm()
-				+ "/" + ((Player) player).getMaxStm());
+		txtViewStamina.setText("Stamina: " + player.getCurStm()
+				+ "/" + player.getMaxStm());
 	}
 
 	private void setUpMob() {
@@ -247,6 +247,7 @@ public class BattleActivity extends ActionBarActivity implements
 						// Toast.LENGTH_SHORT).show();
 						Intent intentShopping = new Intent(BattleActivity.this,
 								ShoppingActivity.class);
+						intentShopping.putExtra("com.example.longdungeon.character", player);
 						startActivity(intentShopping);
 						finish();
 					}
