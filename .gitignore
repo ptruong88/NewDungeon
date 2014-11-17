@@ -16,3 +16,7 @@ gen/com/example/longdungeon/R.java
 gen/com/example/longdungeon/BuildConfig.java
 project.properties
 BattleLoop.java
+res/menu/login_test.xml
+res/layout/activity_shopping_test.xml
+res/menu/shopping_test.xml
+src/com/example/longdungeon/LoginTestActivity.java
