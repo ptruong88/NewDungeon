@@ -31,7 +31,7 @@ public class Mob extends Person {
 		curHp = maxHp;		
 		maxStm = 60;
 		curStm = maxStm;
-		damage = 14;
+		atk = 14;
 		def = 20;
 		gold = 150;
 		XP = 100;

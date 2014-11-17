@@ -8,7 +8,7 @@
     <ImageView
         android:id="@+id/imageLogo"
         android:layout_width="150dp"
-        android:layout_height="50dp"
+        android:layout_height="30dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:scaleType="fitXY"
@@ -56,11 +56,11 @@
             android:textSize="@dimen/font_size" />
 
         <TextView
-            android:id="@+id/textViewPlayerHp"
+            android:id="@+id/textViewPlayerHpNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/textViewPlayerHpName"
-            android:layout_alignLeft="@+id/textViewPlayerDefend"
+            android:layout_alignLeft="@+id/textViewPlayerDefendNumber"
             android:layout_alignParentRight="true"
             android:layout_alignTop="@+id/textViewPlayerHpName"
             android:layout_toRightOf="@+id/textViewPlayerHpName"
@@ -80,11 +80,11 @@
             android:textSize="@dimen/font_size" />
 
         <TextView
-            android:id="@+id/textViewPlayerStm"
+            android:id="@+id/textViewPlayerStmNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/textViewPlayerStmName"
-            android:layout_alignLeft="@+id/textViewPlayerDefend"
+            android:layout_alignLeft="@+id/textViewPlayerDefendNumber"
             android:layout_alignTop="@+id/textViewPlayerStmName"
             android:layout_toRightOf="@+id/textViewPlayerStmName"
             android:text="100/100"
@@ -103,11 +103,11 @@
             android:textSize="@dimen/font_size" />
 
         <TextView
-            android:id="@+id/textViewPlayerMana"
+            android:id="@+id/textViewPlayerManaNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/textViewPlayerManaName"
-            android:layout_alignLeft="@+id/textViewPlayerDefend"
+            android:layout_alignLeft="@+id/textViewPlayerDefendNumber"
             android:layout_alignTop="@+id/textViewPlayerManaName"
             android:layout_toRightOf="@+id/textViewPlayerManaName"
             android:text="100/100"
@@ -126,11 +126,11 @@
             android:textSize="@dimen/font_size" />
 
         <TextView
-            android:id="@+id/textViewPlayerDamage"
+            android:id="@+id/textViewPlayerDamageNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/textViewPlayerDamageName"
-            android:layout_alignLeft="@+id/textViewPlayerDefend"
+            android:layout_alignLeft="@+id/textViewPlayerDefendNumber"
             android:layout_alignTop="@+id/textViewPlayerDamageName"
             android:layout_toRightOf="@+id/textViewPlayerDamageName"
             android:text="100"
@@ -149,7 +149,7 @@
             android:textSize="@dimen/font_size" />
 
         <TextView
-            android:id="@+id/textViewPlayerDefend"
+            android:id="@+id/textViewPlayerDefendNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/textViewPlayerDefendName"
@@ -277,15 +277,6 @@
                 android:textColor="@color/white" />
 
             <Button
-                android:id="@+id/buttonRing"
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.1"
-                android:text="Ring"
-                android:textColor="@color/white" />
-
-            <Button
                 android:id="@+id/buttonPotion"
                 style="?android:attr/buttonStyleSmall"
                 android:layout_width="match_parent"
@@ -300,8 +291,8 @@
         android:id="@+id/listViewItems"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
         android:layout_alignTop="@+id/scrollViewCategory"
         android:layout_toRightOf="@+id/scrollViewCategory"
         android:background="@drawable/colorbox" >
