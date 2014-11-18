@@ -20,3 +20,8 @@ res/menu/login_test.xml
 res/layout/activity_shopping_test.xml
 res/menu/shopping_test.xml
 src/com/example/longdungeon/LoginTestActivity.java
+res/layout/activity_inventory_test.xml
+res/layout/activity_inventory_test.xml
+src/com/example/longdungeon/InventoryTestActivity.java
+res/layout/activity_inventory_test.xml
+src/com/example/longdungeon/InventoryTestActivity.java

@@ -16,7 +16,7 @@
         android:scaleType="fitStart"
         android:src="@drawable/banner" />
 
-    <com.example.longdungeon.layout.BattleLayout
+    <RelativeLayout
         android:id="@+id/layoutPic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
             android:layout_toRightOf="@+id/imageMob"
             android:scaleType="fitEnd"
             android:src="@drawable/knight" />
-    </com.example.longdungeon.layout.BattleLayout>
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/layoutInfo"

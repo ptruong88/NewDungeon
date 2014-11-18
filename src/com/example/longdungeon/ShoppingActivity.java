@@ -1,5 +1,7 @@
 package com.example.longdungeon;
 
+import com.example.longdungeon.character.Player;
+
 import android.support.v7.app.ActionBarActivity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -18,128 +20,143 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ShoppingActivity extends ActionBarActivity {
+public class ShoppingActivity extends ActionBarActivity implements
+		OnClickListener, OnItemClickListener {
 
 	private LinearLayout lyoutCategory;
-	private TextView txtConfirmBuy;
-	private String[] listWeapon, listHelmet, listShiled, listCloth, listPotion;
-	private Button btnInventory;
-	ArrayAdapter<String> adapter;
-	ListView listItems;
-	AlertDialog.Builder alertDialog2;
+	private TextView txtViewGold;
+	private String[] listWeapon, listHelmet, listShield, listCloth, listPotion,
+			listRing;
+
+	private ArrayAdapter<String> adapter;
+	private ListView listItems;
+	private AlertDialog.Builder alertDialog;
+	private Player player;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_shopping);
 
-		String[] items = { "All", "Weapon", "Helmet", "Shield", "Cloth",
-				"Potion" };
+		getPlayerFromBundle();
+		setUpButtonAction();
+		setUpListItem();
+		setUpPlayerInfo();
+	}
 
-		int sizeBtn = 6;
-		Button[] btnItemsArray = new Button[sizeBtn];
-		for (int i = 0; i < sizeBtn; ++i) {
-			btnItemsArray[i] = new Button(this);
-			btnItemsArray[i].setText(items[i]);
-		}
+	private void setUpPlayerInfo() {
+		// TODO Auto-generated method stub
+		txtViewGold = (TextView) this.findViewById(R.id.textViewGold);
+		txtViewGold.setText("Gold: " + player.getGold());
+	}
 
-		lyoutCategory = (LinearLayout) this.findViewById(R.id.layoutCategory);
-		if (lyoutCategory.getChildCount() > 0) {
-			lyoutCategory.removeAllViews();
-		}
-		for (int i = 0; i < sizeBtn; ++i) {
-			lyoutCategory.addView(btnItemsArray[i]);
-		}
+	private void setUpListItem() {
+		// TODO Auto-generated method stub
+		listItems = (ListView) this.findViewById(R.id.listViewItems);
+		listItems.setOnItemClickListener(this);
+		// Set up for buy confirm dialog.
+		alertDialog = new AlertDialog.Builder(this);
+		// Setting Dialog Title
+		alertDialog.setTitle("Confrim buying...");
 
 		listWeapon = items("weapon");
 		listHelmet = items("helmet");
-		listShiled = items("shiled");
+		listShield = items("shiled");
 		listCloth = items("cloth");
+		listRing = items("ring");
 		listPotion = items("potion");
 
-		// Button[] btnWeapon = createItems("weapon");
-		// Button[] btnHelmet = createItems("helmet");
+		adapter = new ArrayAdapter<String>(getApplicationContext(),
+				android.R.layout.activity_list_item, android.R.id.text1);
+		listItems.setAdapter(adapter);
+	}
 
-		listItems = (ListView) this.findViewById(R.id.listViewItems);
-
-		displayItems(btnItemsArray[0], 0);
-		displayItems(btnItemsArray[1], 1);
-		displayItems(btnItemsArray[2], 2);
-		displayItems(btnItemsArray[3], 3);
-		displayItems(btnItemsArray[4], 4);
-		displayItems(btnItemsArray[5], 5);
-
-		setListItemsOnClick();
-
-		setUpButtonInventory();
-
-		alertDialog2 = new AlertDialog.Builder(this);
-
-		// displayAllItems(btnItemsArray[0], lyoutDes, btnWeapon, btnHelmet,
-		// "all");
-		// displayAllItems(btnItemsArray[1], lyoutDes, btnWeapon, btnHelmet,
-		// "weapon");
-		// displayAllItems(btnItemsArray[2], lyoutDes, btnWeapon, btnHelmet,
-		// "helmet");
-		//
-		// txtConfirmBuy = (TextView)
-		// this.findViewById(R.id.textViewConfirmBuy);
-		//
-		// String child = "Children in layout " + lyoutCategory.getChildCount();
-		// txtConfirmBuy.setText(child);
-		//
-		// Button btnInventory = (Button)
-		// this.findViewById(R.id.buttonInventory);
-		// btnInventory.setOnClickListener(new OnClickListener() {
-		// public void onClick(View v) {
-		// Intent intentInventory = new Intent(ShoppingActivity.this,
-		// InventoryActivity.class);
-		// startActivity(intentInventory);
-		// }
-		// });
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+		setUpConfirmBuy(parent.getItemAtPosition(position).toString());
 
 	}
 
-	private void setUpButtonInventory() {
+	private void setUpButtonAction() {
 		// TODO Auto-generated method stub
-		btnInventory = (Button) this.findViewById(R.id.buttonInventory);
-		btnInventory.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-//				Intent intentInventory = new Intent(ShoppingActivity.this,
-//						InventoryActivity.class);
-				Intent intentInventory = new Intent(ShoppingActivity.this,
-						InventoryTestActivity.class);
-				startActivity(intentInventory);
-			}
-		});
+		this.findViewById(R.id.buttonAll).setOnClickListener(this);
+		this.findViewById(R.id.buttonWeapon).setOnClickListener(this);
+		this.findViewById(R.id.buttonHelmet).setOnClickListener(this);
+		this.findViewById(R.id.buttonShield).setOnClickListener(this);
+		this.findViewById(R.id.buttonCloth).setOnClickListener(this);
+//		this.findViewById(R.id.buttonRing).setOnClickListener(this);
+		this.findViewById(R.id.buttonPotion).setOnClickListener(this);
+		this.findViewById(R.id.buttonInventory).setOnClickListener(this);
 	}
 
-	private void setListItemsOnClick() {
+	@Override
+	public void onClick(View button) {
 		// TODO Auto-generated method stub
-		listItems.setOnItemClickListener(new OnItemClickListener() {
+		if (adapter.getCount() > 0)
+			adapter.clear();
+		switch (button.getId()) {
+		case R.id.buttonAll:
+			for (int i = 0; i < listWeapon.length; ++i)
+				adapter.add(listWeapon[i]);
+			for (int i = 0; i < listHelmet.length; ++i)
+				adapter.add(listHelmet[i]);
+			for (int i = 0; i < listShield.length; ++i)
+				adapter.add(listShield[i]);
+			for (int i = 0; i < listCloth.length; ++i)
+				adapter.add(listCloth[i]);
+			for (int i = 0; i < listRing.length; ++i)
+				adapter.add(listRing[i]);
+			for (int i = 0; i < listPotion.length; ++i)
+				adapter.add(listPotion[i]);
+			break;
+		case R.id.buttonWeapon:
+			for (int i = 0; i < listWeapon.length; ++i)
+				adapter.add(listWeapon[i]);
+			break;
+		case R.id.buttonHelmet:
+			for (int i = 0; i < listHelmet.length; ++i)
+				adapter.add(listHelmet[i]);
+			break;
+		case R.id.buttonShield:
+			for (int i = 0; i < listShield.length; ++i)
+				adapter.add(listShield[i]);
+			break;
+		case R.id.buttonCloth:
+			for (int i = 0; i < listCloth.length; ++i)
+				adapter.add(listCloth[i]);
+			break;
+		case R.id.buttonRing:
+			for (int i = 0; i < listRing.length; ++i)
+				adapter.add(listRing[i]);
+			break;
+		case R.id.buttonPotion:
+			for (int i = 0; i < listPotion.length; ++i)
+				adapter.add(listPotion[i]);
+			break;
+		default:// Inventory button
+			Intent intentInventory = new Intent(ShoppingActivity.this,
+					InventoryActivity.class);
+			intentInventory.putExtra("com.example.longdungeon.character",
+					player);
+			startActivity(intentInventory);
+			break;
+		}
+		listItems.setAdapter(adapter);
+	}
 
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				String value = (String) parent.getItemAtPosition(position);
-				// Toast.makeText(getApplicationContext(), value,
-				// Toast.LENGTH_SHORT).show();
-				setUpConfirmBuy(value);
-
-			}
-		});
+	private void getPlayerFromBundle() {
+		// TODO Auto-generated method stub
+		Bundle fromBattle = getIntent().getExtras();
+		player = fromBattle.getParcelable("com.example.longdungeon.character");
 	}
 
 	private void setUpConfirmBuy(final String message) {
-
-		// Setting Dialog Title
-		alertDialog2.setTitle("Confrim buying");
-
 		// Setting Dialog Message
-		alertDialog2.setMessage(message);
+		alertDialog.setMessage(message);
 
 		// Setting Positive "Yes" Btn
-		alertDialog2.setPositiveButton("YES",
+		alertDialog.setPositiveButton("YES",
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						// Write your code here to execute after dialog
@@ -153,7 +170,7 @@ public class ShoppingActivity extends ActionBarActivity {
 					}
 				});
 		// Setting Negative "NO" Btn
-		alertDialog2.setNegativeButton("NO",
+		alertDialog.setNegativeButton("NO",
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
 						// Write your code here to execute after dialog
@@ -163,81 +180,7 @@ public class ShoppingActivity extends ActionBarActivity {
 						dialog.cancel();
 					}
 				});
-		alertDialog2.show();
-	}
-
-	private void displayItems(Button button, final int des) {
-		// TODO Auto-generated method stub
-		button.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				switch (des) {
-				case 0:
-					// String all = {listWeapon, listHelmet, listShiled,
-					// listCloth,
-					// listPotion};
-					int num = listWeapon.length + listHelmet.length
-							+ listShiled.length + listCloth.length
-							+ listPotion.length;
-					String[] all = new String[num];
-					int i = 0;
-					for (int j = 0; j < listWeapon.length; ++i, ++j) {
-						all[i] = listWeapon[j];
-					}
-					for (int j = 0; j < listHelmet.length; ++i, ++j) {
-						all[i] = listHelmet[j];
-					}
-					for (int j = 0; j < listShiled.length; ++i, ++j) {
-						all[i] = listShiled[j];
-					}
-					for (int j = 0; j < listCloth.length; ++i, ++j) {
-						all[i] = listCloth[j];
-					}
-					for (int j = 0; j < listPotion.length; ++i, ++j) {
-						all[i] = listPotion[j];
-					}
-
-					adapter = new ArrayAdapter<String>(getApplicationContext(),
-							android.R.layout.activity_list_item,
-							android.R.id.text1, all);
-					listItems.setAdapter(adapter);
-					break;
-				case 1:
-					adapter = new ArrayAdapter<String>(getApplicationContext(),
-							android.R.layout.activity_list_item,
-							android.R.id.text1, listWeapon);
-					listItems.setAdapter(adapter);
-					break;
-				case 2:
-					adapter = new ArrayAdapter<String>(getApplicationContext(),
-							android.R.layout.activity_list_item,
-							android.R.id.text1, listHelmet);
-					listItems.setAdapter(adapter);
-					break;
-				case 3:
-					adapter = new ArrayAdapter<String>(getApplicationContext(),
-							android.R.layout.activity_list_item,
-							android.R.id.text1, listShiled);
-					listItems.setAdapter(adapter);
-					break;
-				case 4:
-					adapter = new ArrayAdapter<String>(getApplicationContext(),
-							android.R.layout.activity_list_item,
-							android.R.id.text1, listCloth);
-					listItems.setAdapter(adapter);
-					break;
-				default:
-					adapter = new ArrayAdapter<String>(getApplicationContext(),
-							android.R.layout.activity_list_item,
-							android.R.id.text1, listPotion);
-					listItems.setAdapter(adapter);
-					break;
-				}
-			}
-		});
-
+		alertDialog.show();
 	}
 
 	private String[] items(String des) {
@@ -253,6 +196,8 @@ public class ShoppingActivity extends ActionBarActivity {
 			item = "DEF Shield";
 		else if (des == "cloth")
 			item = "DEF Cloth";
+		else if (des == "ring")
+			item = "DMG Ring";
 		else if (des == "potion")
 			item = "HP Potion";
 
@@ -261,56 +206,6 @@ public class ShoppingActivity extends ActionBarActivity {
 			num += 50;
 		}
 		return listItem;
-	}
-
-	private void displayAllItems(Button button, final LinearLayout lyoutDes,
-			final Button[] btnWeapon, final Button[] btnHelmet, final String org) {
-		// TODO Auto-generated method stub
-
-		button.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-
-				if (lyoutDes.getChildCount() > 0) {
-					lyoutDes.removeAllViews();
-				}
-				if (org.equals("all") || org.equals("weapon")) {
-					for (int i = 0; i < btnWeapon.length; ++i) {
-						lyoutDes.addView(btnWeapon[i]);
-					}
-				}
-				if (org.equals("all") || org.equals("helmet")) {
-					for (int i = 0; i < btnHelmet.length; ++i) {
-						lyoutDes.addView(btnHelmet[i]);
-					}
-				}
-			}
-		});
-
-	}
-
-	private Button[] createItems(String des) {
-		// TODO Auto-generated method stub
-		Button[] items = new Button[3];
-		int num = 50;
-		String item = "";
-		if (des == "weapon")
-			item = "DMG Sword";
-		else if (des == "helmet")
-			item = "DEF Helmet";
-		else if (des == "shiled")
-			item = "DEF Shield";
-		else if (des == "clothes")
-			item = "DEF Clothes";
-
-		for (int i = 0; i < 3; ++i) {
-			items[i] = new Button(this);
-			items[i].setText("+" + num + " " + item + " (" + num + " Gold)");
-			num += 50;
-		}
-		return items;
 	}
 
 	@Override
@@ -331,4 +226,5 @@ public class ShoppingActivity extends ActionBarActivity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
 }

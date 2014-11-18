@@ -1,5 +1,6 @@
 package com.example.longdungeon.character;
-
+import android.os.Parcel;
+import android.os.Parcelable;
 import java.util.ArrayList;
 
 import com.example.longdungeon.item.Consumable;
@@ -7,7 +8,7 @@ import com.example.longdungeon.item.Equipment;
 import com.example.longdungeon.item.Spell;
 import com.example.longdungeon.item.Weapon;
 
-public class Player extends Person {
+public class Player extends Person implements Parcelable {
 
 	protected ArrayList<Consumable> potions;
 	// these are the magic, stamina and health potions,
@@ -17,6 +18,7 @@ public class Player extends Person {
 	protected int curStm;
 	protected int maxMana;
 	protected int curMana;
+	private int level;
 	protected ArrayList<Equipment> armsAndArmor;// this is all the extra
 												// equipment
 												// you own
@@ -39,8 +41,13 @@ public class Player extends Person {
 		defaultStats();
 
 	}
+	
+	public Player(Parcel in) {
+		readFromParcel(in);
+	}
 
 	private void defaultStats() {
+		gold = 0;
 		score = 0;
 		maxHp = 120;
 		curHp = maxHp;
@@ -49,7 +56,8 @@ public class Player extends Person {
 		maxMana = 60;
 		curMana = maxMana;
 		def = 20;
-		atk = 15;
+		damage = 15;
+		level = 0;
 		curArmor = new Equipment("Knight's Armor",
 				"The full suit of armor of a chivalrous knight", 50, 0, 10);
 		curWeapon = new Weapon("Short Sword", "The basic adventuring sword", 0,
@@ -173,5 +181,61 @@ public class Player extends Person {
 	public void setPotions(ArrayList<Consumable> potions) {
 		this.potions = potions;
 	}
+	public int getLevel() {
+		return level;
+	}
 
+	public void setLevel(int level) {
+		this.level = level;
+	}
+
+	@Override
+	public int describeContents() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		// TODO Auto-generated method stub
+		dest.writeString(name);
+		dest.writeInt(XP);
+		dest.writeInt(gold);
+		dest.writeInt(maxHp);
+		dest.writeInt(curHp);
+		dest.writeInt(def);
+		dest.writeInt(damage);
+		dest.writeInt(maxStm);
+		dest.writeInt(curStm);
+		dest.writeInt(score);
+		dest.writeInt(maxMana);
+		dest.writeInt(curMana);
+		dest.writeInt(level);
+	}
+
+	public void readFromParcel(Parcel in) {
+		name = in.readString();
+		XP = in.readInt();
+		gold = in.readInt();
+		maxHp = in.readInt();
+		curHp = in.readInt();
+		def = in.readInt();
+		damage = in.readInt();
+		maxStm = in.readInt();
+		curStm = in.readInt();
+		score = in.readInt();
+		maxMana = in.readInt();
+		curMana = in.readInt();
+		level = in.readInt();
+	}
+
+	public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+		public Player createFromParcel(Parcel in) {
+			return new Player(in);
+		}
+
+		public Player[] newArray(int size) {
+			return new Player[size];
+		}
+	};
 }
