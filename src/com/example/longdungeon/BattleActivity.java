@@ -42,6 +42,36 @@ public class BattleActivity extends ActionBarActivity implements
 	private Button btnAttack, btnDenfend, btnMagic, btnItem, btnRun;
 	private String[] listAttack, listMagic, listItem;
 	private ArrayAdapter<String> adapterAttack, adapterMagic, adapterItem;
+	
+	//gordon's variables for the game loop
+			// player vars
+			int playerMaxHp = 120;
+			int playerHp =120;
+			int playerMana = 60;
+			int playerMaxMana = 60;
+			int playerMaxStm = 100; 
+			int playerStm = 100;
+			int playerDef = 20;
+			int playerBaseAtk=15;
+			
+			//enemyVars
+			int enemyMaxHp = 76;
+			int enemyHp =76;
+			int enemyMana = 0;
+			int enemyMaxMana = 0;
+			int enemyMaxStm = 60; 
+			int enemyStm = 60;
+			int enemyDef = 20;
+			int enemyBaseAtk=14;
+			
+			//gameLoopVars
+			int playerChoice = 0;
+			boolean playerDefending = false;
+			boolean enemyDefending = false;
+			boolean ranAway = false;
+			int d10Roll = 0;
+			int atkVal;
+	//gordon's variables for the game loop
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -145,14 +175,14 @@ public class BattleActivity extends ActionBarActivity implements
 		if (parent.getItemAtPosition(position).toString().contains("DMG")) {
 			mobCurHp -= baseDamage;
 			switch (position) {
-			case 0:
+			case 0:// basic attack case based on it being in the 0th position
 				txtViewMobHp.setText("HP: " + mobCurHp + "/" + mobMaxHp);
 				break;
-			case 1:
+			case 1:// medium attack case based on it being in the 1st position
 				mobCurHp -= 5;
 				txtViewMobHp.setText("HP: " + mobCurHp + "/" + mobMaxHp);
 				break;
-			default:
+			default://  heavy attack case based on it being in the 2nd position
 				mobCurHp -= 10;
 				txtViewMobHp.setText("HP: " + mobCurHp + "/" + mobMaxHp);
 				break;
@@ -291,6 +321,547 @@ public class BattleActivity extends ActionBarActivity implements
 		imgPlayer.getLayoutParams().width = (int) (lyoutX * 0.5);
 		imgPlayer.getLayoutParams().height = (int) (lyoutY * 0.8);
 	}
+	
+	public void startGame()
+	{
+		System.out.println("A fearsome goblin approaches!");
+		while (playerHp>0 && enemyHp>0 && ranAway ==false)
+		{
+			System.out.println("What will you do?\n" +
+					"1:Attack\n" +
+					"2:Defend\n" +
+					"3:Magic\n" +
+					"4:Item\n" +
+					"5:Run away\n");
+			playerChoice = sc.nextInt();
+//attack================================================================================
+			if((playerChoice==1)&&(playerStm>0))
+			{
+				playerChoice =0;
+				System.out.println("Choose your attack\n" +
+						"1:slash\n" +
+						"2:thrust\n" +
+						"3:Helm breaker\n");
+				playerChoice = sc.nextInt();
+				if(playerChoice ==1)
+				{
+					atkVal = playerBaseAtk;
+					if((playerStm - 10)>0)
+					{
+						playerStm-=10;//costs 10 stamina
+					}
+					else if((playerStm - 10)<0)
+					{
+						playerStm = 0;//can't have negative stamina
+					}
+					d10Roll =randomWithRange(1,10);
+					if((d10Roll==1)||(d10Roll==2))
+					{System.out.println("Your attack missed!");}
+					
+					else if((d10Roll==2)||(d10Roll==3)||(d10Roll==4))
+					{
+						atkVal = (playerBaseAtk/2);
+						
+						if(enemyDefending)
+						{atkVal =  atkVal/2;}
+						
+						System.out.println("Glancing blow for"+atkVal+"damage!");
+						enemyHp-=atkVal;						
+					}
+					else if((d10Roll==5)||(d10Roll==6)||(d10Roll==7)||(d10Roll==8))
+					{
+						atkVal = (playerBaseAtk);
+						
+						if(enemyDefending)
+						{atkVal =  atkVal/2;}
+						
+						System.out.println("Attack hits for"+atkVal+"damage!");
+						enemyHp-=atkVal;						
+					}
+					else if((d10Roll==9)||(d10Roll==10))
+					{
+						atkVal = (((playerBaseAtk)*3)/2);
+						
+						if(enemyDefending)
+						{atkVal =  atkVal/2;}
+						
+						System.out.println("Critical hit for"+atkVal+"damage!");
+						enemyHp-=atkVal;						
+					}
+					atkVal = 0;
+					d10Roll = 0;
+					
+				}
+				else if(playerChoice ==2)
+				{
+					atkVal = playerBaseAtk+10;
+					if((playerStm - 10)>0)
+					{
+						playerStm-=15;//costs 10 stamina
+					}
+					else if((playerStm - 15)<0)
+					{
+						playerStm = 0;//can't have negative stamina
+					}
+					d10Roll =randomWithRange(1,10);
+					if((d10Roll==1)||(d10Roll==2))
+					{System.out.println("Your attack missed!");}
+					
+					else if((d10Roll==2)||(d10Roll==3)||(d10Roll==4))
+					{
+						atkVal = (playerBaseAtk/2);
+						
+						if(enemyDefending)
+						{atkVal =  atkVal/2;}
+						
+						System.out.println("Glancing blow for"+atkVal+"damage!");
+						enemyHp-=atkVal;						
+					}
+					else if((d10Roll==5)||(d10Roll==6)||(d10Roll==7)||(d10Roll==8))
+					{
+						atkVal = (playerBaseAtk);
+						
+						if(enemyDefending)
+						{atkVal =  atkVal/2;}
+						
+						System.out.println("Attack hits for"+atkVal+"damage!");
+						enemyHp-=atkVal;						
+					}
+					else if((d10Roll==9)||(d10Roll==10))
+					{
+						atkVal = (((playerBaseAtk)*3)/2);
+						
+						if(enemyDefending)
+						{atkVal =  atkVal/2;}
+						
+						System.out.println("Critical hit for"+atkVal+"damage!");
+						enemyHp-=atkVal;						
+					}
+					atkVal = 0;
+					d10Roll = 0;
+				}
+				else if(playerChoice ==3)
+				{
+					atkVal = playerBaseAtk+15;
+					if((playerStm - 20)>0)
+					{
+						playerStm-=15;//costs 10 stamina
+					}
+					else if((playerStm - 20)<0)
+					{
+						playerStm = 0;//can't have negative stamina
+					}
+					d10Roll =randomWithRange(1,10);
+					if((d10Roll==1)||(d10Roll==2))
+					{System.out.println("Your attack missed!");}
+					
+					else if((d10Roll==2)||(d10Roll==3)||(d10Roll==4))
+					{
+						atkVal = (playerBaseAtk/2);
+						
+						if(enemyDefending)
+						{atkVal =  atkVal/2;}
+						
+						System.out.println("Glancing blow for"+atkVal+"damage!");
+						enemyHp-=atkVal;						
+					}
+					else if((d10Roll==5)||(d10Roll==6)||(d10Roll==7)||(d10Roll==8))
+					{
+						atkVal = (playerBaseAtk);
+						
+						if(enemyDefending)
+						{atkVal =  atkVal/2;}
+						
+						System.out.println("Attack hits for"+atkVal+"damage!");
+						enemyHp-=atkVal;						
+					}
+					else if((d10Roll==9)||(d10Roll==10))
+					{
+						atkVal = (((playerBaseAtk)*3)/2);
+						
+						if(enemyDefending)
+						{atkVal =  atkVal/2;}
+						
+						System.out.println("Critical hit for"+atkVal+"damage!");
+						enemyHp-=atkVal;						
+					}
+					atkVal = 0;
+					d10Roll = 0;
+				}
+				playerChoice=0;
+			}
+			else if ( (playerChoice ==1) && playerStm<=0)
+			{
+				System.out.println("You are all out of stamina! you must forfeit a turn to catch your breath!");
+				playerStm = playerMaxStm;
+				playerChoice=0;
+			}
+//attack================================================================================
+			
+//defend================================================================================
+			else if(playerChoice==2)
+			{
+				playerDefending =true;
+				playerStm = playerMaxStm;
+				playerChoice=0;
+			}
+//defend================================================================================
+			
+//magic================================================================================
+			else if(playerChoice==3&&(playerMana>0))
+			{
+				playerChoice =0;
+				System.out.println("Choose your spell\n" +
+						"1:Fireball\n" +
+						"2:Heal\n" +
+						"3:Thunderbolt\n");
+				playerChoice = sc.nextInt();
+				if(playerChoice ==1)
+				{
+					atkVal = 15;
+					if((playerStm - 15)>0)
+					{
+						playerMana-=15;//costs 10 mana
+					}
+					else if((playerStm - 15)<0)
+					{
+						playerMana = 0;//can't have negative stamina
+					}
+					d10Roll =randomWithRange(1,10);
+					if((d10Roll==1)||(d10Roll==2))
+					{System.out.println("Your spell missed!");}
+					
+					else if((d10Roll==2)||(d10Roll==3)||(d10Roll==4))
+					{
+						atkVal = (atkVal/2);
+						
+						if(enemyDefending)
+						{atkVal =  atkVal/2;}
+						
+						System.out.println("Glancing blow for"+atkVal+"damage!");
+						enemyHp-=atkVal;						
+					}
+					else if((d10Roll==5)||(d10Roll==6)||(d10Roll==7)||(d10Roll==8))
+					{	
+						if(enemyDefending)
+						{atkVal =  atkVal/2;}
+						
+						System.out.println("Spell hits for"+atkVal+"damage!");
+						enemyHp-=atkVal;						
+					}
+					else if((d10Roll==9)||(d10Roll==10))
+					{
+						atkVal = (((atkVal)*3)/2);
+						
+						if(enemyDefending)
+						{atkVal =  atkVal/2;}
+						
+						System.out.println("Critical hit for"+atkVal+"damage!");
+						enemyHp-=atkVal;						
+					}
+					atkVal = 0;
+					d10Roll = 0;
+					
+				}
+				else if(playerChoice ==2)
+				{
+					int plusHealth = 30;
+					if((playerMana - 20)>0)
+					{
+						playerStm-=20;//costs 20 mana
+					}
+					else if((playerStm -20)<0)
+					{
+						playerStm = 0;//can't have negative mana
+					}
+					d10Roll =randomWithRange(1,10);
+					if((d10Roll==1)||(d10Roll==2))
+					{System.out.println("Your spell missed!");}
+					
+					else if((d10Roll==2)||(d10Roll==3)||(d10Roll==4))
+					{
+						plusHealth = (plusHealth/2);
+						
+						System.out.println("Spell restores "+plusHealth+" health!");
+						playerHp+=plusHealth;						
+					}
+					else if((d10Roll==5)||(d10Roll==6)||(d10Roll==7)||(d10Roll==8))
+					{	
+						System.out.println("Spell restores "+plusHealth+" health!");
+						playerHp+=plusHealth;						
+					}
+					else if((d10Roll==9)||(d10Roll==10))
+					{
+						plusHealth = (plusHealth/2);
+						System.out.println("Perfect Casting! You gain "+plusHealth+"health! ");
+						playerHp+=plusHealth;						
+					}
+					plusHealth = 0;
+					d10Roll = 0;
+				}
+				else if(playerChoice ==3)
+				{
+					atkVal = 35;
+					if((playerStm - 25)>0)
+					{
+						playerMana-=25;//costs 10 mana
+					}
+					else if((playerStm - 25)<0)
+					{
+						playerMana = 0;//can't have negative stamina
+					}
+					d10Roll =randomWithRange(1,10);
+					if((d10Roll==1)||(d10Roll==2))
+					{System.out.println("Your spell missed!");}
+					
+					else if((d10Roll==2)||(d10Roll==3)||(d10Roll==4))
+					{
+						atkVal = (atkVal/2);
+						
+						if(enemyDefending)
+						{atkVal =  atkVal/2;}
+						
+						System.out.println("Glancing blow for"+atkVal+"damage!");
+						enemyHp-=atkVal;						
+					}
+					else if((d10Roll==5)||(d10Roll==6)||(d10Roll==7)||(d10Roll==8))
+					{	
+						if(enemyDefending)
+						{atkVal =  atkVal/2;}
+						
+						System.out.println("Spell hits for"+atkVal+"damage!");
+						enemyHp-=atkVal;						
+					}
+					else if((d10Roll==9)||(d10Roll==10))
+					{
+						atkVal = (((atkVal)*3)/2);
+						
+						if(enemyDefending)
+						{atkVal =  atkVal/2;}
+						
+						System.out.println("Critical hit for"+atkVal+"damage!");
+						enemyHp-=atkVal;						
+					}
+					atkVal = 0;
+					d10Roll = 0;
+				}
+				playerChoice=0;
+			}
+			else if ( (playerChoice ==3) && playerMana<=0)
+			{
+				System.out.println("You are all out of Mana! you must forfeit a turn to regain your composure");
+				playerMana = playerMaxMana;
+				playerChoice=0;
+			}
+//magic================================================================================================
+
+//item=================================================================================================
+
+			else if(playerChoice==4)
+			{
+				playerChoice =0;
+				System.out.println("Choose your item\n" +
+						"1:Health Potion\n" +
+						"2:Mana Potion\n" +
+						"3:Stamina Potion\n");
+				playerChoice = sc.nextInt();
+				if(playerChoice==1)
+				{
+					playerHp+=50;
+				}
+				if(playerChoice==2)
+				{
+					playerMana+=70;
+				}
+				if(playerChoice==2)
+				{
+					playerStm+=80;
+				}
+			}
+			
+			
+//end player turn=====================================================================================
+
+//begin enemy turn=====================================================================================
+			if(enemyStm<=0)
+			{
+				System.out.println("The goblin wheezes and stops to catch it's breath");
+				enemyStm=enemyMaxStm;
+			}
+			else if(enemyStm>0)
+			{
+				System.out.println("The goblin attacks!");
+				int enemyAtk=randomWithRange(1,3);
+				if(enemyAtk ==1)
+				{
+					atkVal = enemyBaseAtk;
+					if((enemyStm - 10)>0)
+					{
+						enemyStm-=10;//costs 10 stamina
+					}
+					else if((enemyStm - 10)<0)
+					{
+						enemyStm = 0;//can't have negative stamina
+					}
+					d10Roll =randomWithRange(1,10);
+					if((d10Roll==1)||(d10Roll==2))
+					{System.out.println("The Goblin's attack missed!");}
+					
+					else if((d10Roll==2)||(d10Roll==3)||(d10Roll==4))
+					{
+						atkVal = (enemyBaseAtk/2);
+						
+						if(playerDefending)
+						{atkVal =  atkVal/2;}
+						
+						System.out.println("The goblin lands a glancing blow for"+atkVal+"damage!");
+						playerHp-=atkVal;						
+					}
+					else if((d10Roll==5)||(d10Roll==6)||(d10Roll==7)||(d10Roll==8))
+					{
+						atkVal = (enemyBaseAtk);
+						
+						if(playerDefending)
+						{atkVal =  atkVal/2;}
+						
+						System.out.println("The goblin's attack hits for"+atkVal+"damage!");
+						enemyHp-=atkVal;						
+					}
+					else if((d10Roll==9)||(d10Roll==10))
+					{
+						atkVal = (((enemyBaseAtk)*3)/2);
+						
+						if(playerDefending)
+						{atkVal =  atkVal/2;}
+						
+						System.out.println("The goblin lands a critical hit for "+atkVal+" damage!");
+						playerHp-=atkVal;						
+					}
+					atkVal = 0;
+					d10Roll = 0;
+					
+				}
+				else if(enemyAtk ==2)
+				{
+					atkVal = enemyBaseAtk+10;
+					if((enemyStm - 10)>0)
+					{
+						enemyStm-=10;//costs 10 stamina
+					}
+					else if((enemyStm - 10)<0)
+					{
+						enemyStm = 0;//can't have negative stamina
+					}
+					d10Roll =randomWithRange(1,10);
+					if((d10Roll==1)||(d10Roll==2))
+					{System.out.println("The Goblin's attack missed!");}
+					
+					else if((d10Roll==2)||(d10Roll==3)||(d10Roll==4))
+					{
+						atkVal = (atkVal/2);
+						
+						if(playerDefending)
+						{atkVal =  atkVal/2;}
+						
+						System.out.println("The goblin lands a glancing blow for"+atkVal+"damage!");
+						playerHp-=atkVal;						
+					}
+					else if((d10Roll==5)||(d10Roll==6)||(d10Roll==7)||(d10Roll==8))
+					{
+						
+						if(playerDefending)
+						{atkVal =  atkVal/2;}
+						
+						System.out.println("The goblin's attack hits for"+atkVal+"damage!");
+						enemyHp-=atkVal;						
+					}
+					else if((d10Roll==9)||(d10Roll==10))
+					{
+						atkVal = (((atkVal)*3)/2);
+						
+						if(playerDefending)
+						{atkVal =  atkVal/2;}
+						
+						System.out.println("The goblin lands a critical hit for "+atkVal+" damage!");
+						playerHp-=atkVal;						
+					}
+					atkVal = 0;
+					d10Roll = 0;
+				}
+				else if(playerChoice ==3)
+				{
+					atkVal = enemyBaseAtk+20;
+					if((enemyStm - 10)>0)
+					{
+						enemyStm-=10;//costs 10 stamina
+					}
+					else if((enemyStm - 10)<0)
+					{
+						enemyStm = 0;//can't have negative stamina
+					}
+					d10Roll =randomWithRange(1,10);
+					if((d10Roll==1)||(d10Roll==2))
+					{System.out.println("The Goblin's attack missed!");}
+					
+					else if((d10Roll==2)||(d10Roll==3)||(d10Roll==4))
+					{
+						atkVal = (atkVal/2);
+						
+						if(playerDefending)
+						{atkVal =  atkVal/2;}
+						
+						System.out.println("The goblin lands a glancing blow for"+atkVal+"damage!");
+						playerHp-=atkVal;						
+					}
+					else if((d10Roll==5)||(d10Roll==6)||(d10Roll==7)||(d10Roll==8))
+					{
+						atkVal = (atkVal);
+						
+						if(playerDefending)
+						{atkVal =  atkVal/2;}
+						
+						System.out.println("The goblin's attack hits for"+atkVal+"damage!");
+						enemyHp-=atkVal;						
+					}
+					else if((d10Roll==9)||(d10Roll==10))
+					{
+						atkVal = (((atkVal)*3)/2);
+						
+						if(playerDefending)
+						{atkVal =  atkVal/2;}
+						
+						System.out.println("The goblin lands a critical hit for "+atkVal+" damage!");
+						playerHp-=atkVal;						
+					}
+					atkVal = 0;
+					d10Roll = 0;
+				}
+			
+			}
+		}
+		if (playerHp==0)
+		{
+			System.out.println("You have been defeated...");
+		}
+		else if(ranAway==true)
+		{System.out.println("You run away screaming...");}
+		else
+		{
+			System.out.println("You are victorious!");
+		}
+		
+		
+		
+		
+
+	}
+	
+	public int randomWithRange(int min, int max)
+	{
+		   int range = (max - min) + 1;     
+		   return (int)(Math.random() * range) + min;
+	}
+	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
