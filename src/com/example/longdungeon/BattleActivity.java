@@ -145,6 +145,17 @@ public class BattleActivity extends ActionBarActivity implements
 			listAbility.setVisibility(View.VISIBLE);
 			break;
 		case R.id.buttonDefend:
+			{
+				playerDefending = true;
+				if(player.getCurStm()<player.getMaxStm())
+				{
+					int stmRegen = (player.getCurStm()/5);
+					player.setCurStm(stmRegen+player.getCurStm());//get back 1/5 of your stamina
+					txtViewStamina.setText("Stamina: " + player.getCurStm() + "/"+ player.getMaxStm());
+					playerTurn=false;//defending uses your turn
+				}
+				
+			}
 			break;
 		case R.id.buttonMagic:
 			listAbility.setAdapter(adapterMagic);
@@ -471,23 +482,6 @@ public class BattleActivity extends ActionBarActivity implements
 /*
 		while ((player.getCurHp())>0 && (mob.getCurHp())>0 && ranAway ==false)
 		{
-			System.out.println("What will you do?\n" +
-					"1:Attack\n" +
-					"2:Defend\n" +
-					"3:Magic\n" +
-					"4:Item\n" +
-					"5:Run away\n");
-			
-//attack================================================================================
-			if((playerChoice==1)&&(playerStm>0))
-			{
-				playerChoice =0;
-				System.out.println("Choose your attack\n" +
-						"1:slash\n" +
-						"2:thrust\n" +
-						"3:Helm breaker\n");
-				
-//attack================================================================================
 			
 //defend================================================================================
 			else if(playerChoice==2)
