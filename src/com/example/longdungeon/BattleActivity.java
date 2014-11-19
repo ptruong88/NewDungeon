@@ -620,7 +620,7 @@ public class BattleActivity extends ActionBarActivity implements
 						if(playerDefending)
 						{atkVal =  atkVal/2;}
 						Toast.makeText(getApplicationContext(), "The goblin lands a glancing blow for"+atkVal+"damage!" ,Toast.LENGTH_SHORT).show();
-						player.setCurHp(player.getMaxHp()-atkVal);
+						player.setCurHp(player.getCurHp()-atkVal);
 						txtViewPlayerHp.setText("HP: " + player.getCurHp() + "/" + player.getMaxHp());
 					}
 					else if((d10Roll==5)||(d10Roll==6)||(d10Roll==7)||(d10Roll==8))
@@ -630,7 +630,7 @@ public class BattleActivity extends ActionBarActivity implements
 						{atkVal =  atkVal/2;}
 		
 						Toast.makeText(getApplicationContext(), "The goblin's attack hits for"+atkVal+"damage!",Toast.LENGTH_SHORT).show();
-						player.setCurHp(player.getMaxHp()-atkVal);
+						player.setCurHp(player.getCurHp()-atkVal);
 						txtViewPlayerHp.setText("HP: " + player.getCurHp() + "/" + player.getMaxHp());
 					}
 					else if((d10Roll==9)||(d10Roll==10))
@@ -641,7 +641,7 @@ public class BattleActivity extends ActionBarActivity implements
 						{atkVal =  atkVal/2;}
 						
 						Toast.makeText(getApplicationContext(), "The goblin lands a critical hit for "+atkVal+" damage!",Toast.LENGTH_SHORT).show();
-						player.setCurHp(player.getMaxHp()-atkVal);
+						player.setCurHp(player.getCurHp()-atkVal);
 						txtViewPlayerHp.setText("HP: " + player.getCurHp() + "/" + player.getMaxHp());						
 					}
 					atkVal = 0;
@@ -675,7 +675,7 @@ public class BattleActivity extends ActionBarActivity implements
 						if(playerDefending)
 						{atkVal =  atkVal/2;}
 						Toast.makeText(getApplicationContext(), "The goblin lands a glancing blow for"+atkVal+"damage!" ,Toast.LENGTH_SHORT).show();
-						player.setCurHp(player.getMaxHp()-atkVal);
+						player.setCurHp(player.getCurHp()-atkVal);
 						txtViewPlayerHp.setText("HP: " + player.getCurHp() + "/" + player.getMaxHp());
 					}
 					else if((d10Roll==5)||(d10Roll==6)||(d10Roll==7)||(d10Roll==8))
@@ -685,7 +685,7 @@ public class BattleActivity extends ActionBarActivity implements
 						{atkVal =  atkVal/2;}
 		
 						Toast.makeText(getApplicationContext(), "The goblin's attack hits for"+atkVal+"damage!",Toast.LENGTH_SHORT).show();
-						player.setCurHp(player.getMaxHp()-atkVal);
+						player.setCurHp(player.getCurHp()-atkVal);
 						txtViewPlayerHp.setText("HP: " + player.getCurHp() + "/" + player.getMaxHp());
 					}
 					else if((d10Roll==9)||(d10Roll==10))
@@ -696,7 +696,7 @@ public class BattleActivity extends ActionBarActivity implements
 						{atkVal =  atkVal/2;}
 						
 						Toast.makeText(getApplicationContext(), "The goblin lands a critical hit for "+atkVal+" damage!",Toast.LENGTH_SHORT).show();
-						player.setCurHp(player.getMaxHp()-atkVal);
+						player.setCurHp(player.getCurHp()-atkVal);
 						txtViewPlayerHp.setText("HP: " + player.getCurHp() + "/" + player.getMaxHp());						
 					}
 					atkVal = 0;
@@ -729,7 +729,7 @@ public class BattleActivity extends ActionBarActivity implements
 						if(playerDefending)
 						{atkVal =  atkVal/2;}
 						Toast.makeText(getApplicationContext(), "The goblin lands a glancing blow for"+atkVal+"damage!" ,Toast.LENGTH_SHORT).show();
-						player.setCurHp(player.getMaxHp()-atkVal);
+						player.setCurHp(player.getCurHp()-atkVal);
 						txtViewPlayerHp.setText("HP: " + player.getCurHp() + "/" + player.getMaxHp());
 					}
 					else if((d10Roll==5)||(d10Roll==6)||(d10Roll==7)||(d10Roll==8))
@@ -739,7 +739,7 @@ public class BattleActivity extends ActionBarActivity implements
 						{atkVal =  atkVal/2;}
 		
 						Toast.makeText(getApplicationContext(), "The goblin's attack hits for"+atkVal+"damage!",Toast.LENGTH_SHORT).show();
-						player.setCurHp(player.getMaxHp()-atkVal);
+						player.setCurHp(player.getCurHp()-atkVal);
 						txtViewPlayerHp.setText("HP: " + player.getCurHp() + "/" + player.getMaxHp());
 					}
 					else if((d10Roll==9)||(d10Roll==10))
@@ -750,7 +750,7 @@ public class BattleActivity extends ActionBarActivity implements
 						{atkVal =  atkVal/2;}
 						
 						Toast.makeText(getApplicationContext(), "The goblin lands a critical hit for "+atkVal+" damage!",Toast.LENGTH_SHORT).show();
-						player.setCurHp(player.getMaxHp()-atkVal);
+						player.setCurHp(player.getCurHp()-atkVal);
 						txtViewPlayerHp.setText("HP: " + player.getCurHp() + "/" + player.getMaxHp());						
 					}
 					atkVal = 0;
