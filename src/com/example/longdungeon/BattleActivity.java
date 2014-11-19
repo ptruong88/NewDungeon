@@ -36,7 +36,7 @@ public class BattleActivity extends ActionBarActivity implements
 	private View lyoutBattle;
 	private TextView txtViewMobName, txtViewMobHp, txtViewPlayerName,
 			txtViewPlayerScore, txtViewPlayerHp, txtViewPlayerMana,
-			txtViewStamina;
+			txtViewStamina,txtViewMobStamina;
 	private Mob mob;
 	private Player player;
 	private Button btnAttack, btnDenfend, btnMagic, btnItem, btnRun;
@@ -44,28 +44,7 @@ public class BattleActivity extends ActionBarActivity implements
 	private ArrayAdapter<String> adapterAttack, adapterMagic, adapterItem;
 	
 	//gordon's variables for the game loop
-			/* player vars
-			int playerMaxHp = 120;
-			int playerHp =120;
-			int playerMana = 60;
-			int playerMaxMana = 60;
-			int playerMaxStm = 100; 
-			int playerStm = 100;
-			int playerDef = 20;
-			int playerBaseAtk=15;
-			
-			//enemyVars
-			int enemyMaxHp = 76;
-			int enemyHp =76;
-			int enemyMana = 0;
-			int enemyMaxMana = 0;
-			int enemyMaxStm = 60; 
-			int enemyStm = 60;
-			int enemyDef = 20;
-			int enemyBaseAtk=14;
-	*/		
-			//gameLoopVars
-			boolean playerTurn = true;
+			//boolean playerTurn = true;
 			boolean playerDefending = false;
 			boolean enemyDefending = false;
 			boolean ranAway = false;
@@ -85,6 +64,7 @@ public class BattleActivity extends ActionBarActivity implements
 		setUpButtonAction();
 		setUpHideListView();
 		setUpDialogForRun();
+		
 	}
 
 	private void setUpListView() {
@@ -152,9 +132,9 @@ public class BattleActivity extends ActionBarActivity implements
 					int stmRegen = (player.getCurStm()/5);
 					player.setCurStm(stmRegen+player.getCurStm());//get back 1/5 of your stamina
 					txtViewStamina.setText("Stamina: " + player.getCurStm() + "/"+ player.getMaxStm());
-					playerTurn=false;//defending uses your turn
+					
 				}
-				
+				enemyTurn();//defending uses your turn
 			}
 			break;
 		case R.id.buttonMagic:
@@ -232,7 +212,7 @@ public class BattleActivity extends ActionBarActivity implements
 						txtViewMobHp.setText("HP: " + mob.getCurHp() + "/" + mob.getMaxHp());
 					}
 					atkVal=0;//clear attack val;
-					playerTurn = false;//once you've attacked the enemy gets a turn
+					enemyTurn();//once you've attacked the enemy gets a turn
 				}
 				else{
 						Toast.makeText(getApplicationContext(), "not enough stamina!",Toast.LENGTH_SHORT).show();
@@ -284,7 +264,7 @@ public class BattleActivity extends ActionBarActivity implements
 						txtViewMobHp.setText("HP: " + mob.getCurHp() + "/" + mob.getMaxHp());
 					}
 					atkVal=0;
-					playerTurn = false;//once you've attacked the enemy gets a turn
+					enemyTurn();//once you've attacked the enemy gets a turn
 				}
 				else{Toast.makeText(getApplicationContext(), "not enough stamina!",
 						Toast.LENGTH_SHORT).show();}
@@ -334,7 +314,7 @@ public class BattleActivity extends ActionBarActivity implements
 						txtViewMobHp.setText("HP: " + mob.getCurHp() + "/" + mob.getMaxHp());
 					}
 					atkVal=0;
-					playerTurn = false;//once you've attacked the enemy gets a turn
+					enemyTurn();//once you've attacked the enemy gets a turn
 				}
 				else{Toast.makeText(getApplicationContext(), "not enough stamina!",
 						Toast.LENGTH_SHORT).show();}
@@ -377,6 +357,10 @@ public class BattleActivity extends ActionBarActivity implements
 		txtViewMobName.setText(nameMob);
 		txtViewMobHp = (TextView) this.findViewById(R.id.textViewMobHp);
 		txtViewMobHp.setText("HP: " + mob.getCurHp() + "/" + mob.getMaxHp());
+		
+		txtViewMobStamina = (TextView) this.findViewById(R.id.textViewMobStamina);
+		txtViewMobStamina.setText("Stamina: " + mob.getCurStm() + "/" + mob.getMaxStm());
+		
 		mobMaxHp = mob.getMaxHp();
 		mobCurHp = mob.getCurHp();
 	}
@@ -475,271 +459,95 @@ public class BattleActivity extends ActionBarActivity implements
 		imgPlayer.getLayoutParams().height = (int) (lyoutY * 0.8);
 	}
 	
-	public void startGame()
-	{
-		Toast.makeText(getApplicationContext(), "A fearsome goblin approaches!",
-				Toast.LENGTH_SHORT).show();
-/*
-		while ((player.getCurHp())>0 && (mob.getCurHp())>0 && ranAway ==false)
+	public void enemyTurn()
+	{		
 		{
-			
-//defend================================================================================
-			else if(playerChoice==2)
-			{
-				playerDefending =true;
-				playerStm = playerMaxStm;
-				playerChoice=0;
-			}
-//defend================================================================================
-			
-//magic================================================================================
-			else if(playerChoice==3&&(playerMana>0))
-			{
-				playerChoice =0;
-				System.out.println("Choose your spell\n" +
-						"1:Fireball\n" +
-						"2:Heal\n" +
-						"3:Thunderbolt\n");
-				playerChoice = sc.nextInt();
-				if(playerChoice ==1)
-				{
-					atkVal = 15;
-					if((playerStm - 15)>0)
-					{
-						playerMana-=15;//costs 10 mana
-					}
-					else if((playerStm - 15)<0)
-					{
-						playerMana = 0;//can't have negative stamina
-					}
-					d10Roll =randomWithRange(1,10);
-					if((d10Roll==1)||(d10Roll==2))
-					{System.out.println("Your spell missed!");}
-					
-					else if((d10Roll==2)||(d10Roll==3)||(d10Roll==4))
-					{
-						atkVal = (atkVal/2);
-						
-						if(enemyDefending)
-						{atkVal =  atkVal/2;}
-						
-						System.out.println("Glancing blow for"+atkVal+"damage!");
-						enemyHp-=atkVal;						
-					}
-					else if((d10Roll==5)||(d10Roll==6)||(d10Roll==7)||(d10Roll==8))
-					{	
-						if(enemyDefending)
-						{atkVal =  atkVal/2;}
-						
-						System.out.println("Spell hits for"+atkVal+"damage!");
-						enemyHp-=atkVal;						
-					}
-					else if((d10Roll==9)||(d10Roll==10))
-					{
-						atkVal = (((atkVal)*3)/2);
-						
-						if(enemyDefending)
-						{atkVal =  atkVal/2;}
-						
-						System.out.println("Critical hit for"+atkVal+"damage!");
-						enemyHp-=atkVal;						
-					}
-					atkVal = 0;
-					d10Roll = 0;
-					
-				}
-				else if(playerChoice ==2)
-				{
-					int plusHealth = 30;
-					if((playerMana - 20)>0)
-					{
-						playerStm-=20;//costs 20 mana
-					}
-					else if((playerStm -20)<0)
-					{
-						playerStm = 0;//can't have negative mana
-					}
-					d10Roll =randomWithRange(1,10);
-					if((d10Roll==1)||(d10Roll==2))
-					{System.out.println("Your spell missed!");}
-					
-					else if((d10Roll==2)||(d10Roll==3)||(d10Roll==4))
-					{
-						plusHealth = (plusHealth/2);
-						
-						System.out.println("Spell restores "+plusHealth+" health!");
-						playerHp+=plusHealth;						
-					}
-					else if((d10Roll==5)||(d10Roll==6)||(d10Roll==7)||(d10Roll==8))
-					{	
-						System.out.println("Spell restores "+plusHealth+" health!");
-						playerHp+=plusHealth;						
-					}
-					else if((d10Roll==9)||(d10Roll==10))
-					{
-						plusHealth = (plusHealth/2);
-						System.out.println("Perfect Casting! You gain "+plusHealth+"health! ");
-						playerHp+=plusHealth;						
-					}
-					plusHealth = 0;
-					d10Roll = 0;
-				}
-				else if(playerChoice ==3)
-				{
-					atkVal = 35;
-					if((playerStm - 25)>0)
-					{
-						playerMana-=25;//costs 10 mana
-					}
-					else if((playerStm - 25)<0)
-					{
-						playerMana = 0;//can't have negative stamina
-					}
-					d10Roll =randomWithRange(1,10);
-					if((d10Roll==1)||(d10Roll==2))
-					{System.out.println("Your spell missed!");}
-					
-					else if((d10Roll==2)||(d10Roll==3)||(d10Roll==4))
-					{
-						atkVal = (atkVal/2);
-						
-						if(enemyDefending)
-						{atkVal =  atkVal/2;}
-						
-						System.out.println("Glancing blow for"+atkVal+"damage!");
-						enemyHp-=atkVal;						
-					}
-					else if((d10Roll==5)||(d10Roll==6)||(d10Roll==7)||(d10Roll==8))
-					{	
-						if(enemyDefending)
-						{atkVal =  atkVal/2;}
-						
-						System.out.println("Spell hits for"+atkVal+"damage!");
-						enemyHp-=atkVal;						
-					}
-					else if((d10Roll==9)||(d10Roll==10))
-					{
-						atkVal = (((atkVal)*3)/2);
-						
-						if(enemyDefending)
-						{atkVal =  atkVal/2;}
-						
-						System.out.println("Critical hit for"+atkVal+"damage!");
-						enemyHp-=atkVal;						
-					}
-					atkVal = 0;
-					d10Roll = 0;
-				}
-				playerChoice=0;
-			}
-			else if ( (playerChoice ==3) && playerMana<=0)
-			{
-				System.out.println("You are all out of Mana! you must forfeit a turn to regain your composure");
-				playerMana = playerMaxMana;
-				playerChoice=0;
-			}
-//magic================================================================================================
 
-//item=================================================================================================
-
-			else if(playerChoice==4)
+			if((mob.getCurStm()<=0))
 			{
-				playerChoice =0;
-				System.out.println("Choose your item\n" +
-						"1:Health Potion\n" +
-						"2:Mana Potion\n" +
-						"3:Stamina Potion\n");
-				playerChoice = sc.nextInt();
-				if(playerChoice==1)
-				{
-					playerHp+=50;
-				}
-				if(playerChoice==2)
-				{
-					playerMana+=70;
-				}
-				if(playerChoice==2)
-				{
-					playerStm+=80;
-				}
+				Toast.makeText(getApplicationContext(), "The goblin wheezes and stops to catch it's breath" ,Toast.LENGTH_SHORT).show();
+				mob.setCurStm(mob.getMaxStm());//enemy regains all stamina but is open for a free hit
+				txtViewMobStamina.setText("Stamina: " + mob.getCurStm() + "/" + mob.getMaxStm());
+				playerDefending=false;//player's defense lasts only 1 turn
+				
 			}
-			
-			
-//end player turn=====================================================================================
-
-//begin enemy turn=====================================================================================
-			if(enemyStm<=0)
+			else
 			{
-				System.out.println("The goblin wheezes and stops to catch it's breath");
-				enemyStm=enemyMaxStm;
-			}
-			else if(enemyStm>0)
-			{
-				System.out.println("The goblin attacks!");
+				Toast.makeText(getApplicationContext(), "The goblin attacks!" ,Toast.LENGTH_SHORT).show();
 				int enemyAtk=randomWithRange(1,3);
 				if(enemyAtk ==1)
 				{
-					atkVal = enemyBaseAtk;
-					if((enemyStm - 10)>0)
+					atkVal = mob.getDamage();
+					if((mob.getCurStm() - 10)>=0)
 					{
-						enemyStm-=10;//costs 10 stamina
+						mob.setCurStm(mob.getCurStm()-10);//costs 10 stamina
+						txtViewMobStamina.setText("Stamina: " + mob.getCurStm() + "/" + mob.getMaxStm());
 					}
-					else if((enemyStm - 10)<0)
+					else if((mob.getCurStm() - 10)<0)
 					{
-						enemyStm = 0;//can't have negative stamina
+						mob.setCurStm(0);//can't have negative stamina
+						txtViewMobStamina.setText("Stamina: " + mob.getCurStm() + "/" + mob.getMaxStm());
 					}
 					d10Roll =randomWithRange(1,10);
 					if((d10Roll==1)||(d10Roll==2))
-					{System.out.println("The Goblin's attack missed!");}
+					{
+						Toast.makeText(getApplicationContext(), "The goblin's attack missed!" ,Toast.LENGTH_SHORT).show();
+					}
 					
 					else if((d10Roll==2)||(d10Roll==3)||(d10Roll==4))
 					{
-						atkVal = (enemyBaseAtk/2);
+						atkVal = (atkVal/2);
 						
 						if(playerDefending)
 						{atkVal =  atkVal/2;}
-						
-						System.out.println("The goblin lands a glancing blow for"+atkVal+"damage!");
-						playerHp-=atkVal;						
+						Toast.makeText(getApplicationContext(), "The goblin lands a glancing blow for"+atkVal+"damage!" ,Toast.LENGTH_SHORT).show();
+						player.setCurHp(player.getMaxHp()-atkVal);
+						txtViewPlayerHp.setText("HP: " + player.getCurHp() + "/" + player.getMaxHp());
 					}
 					else if((d10Roll==5)||(d10Roll==6)||(d10Roll==7)||(d10Roll==8))
 					{
-						atkVal = (enemyBaseAtk);
-						
+						//no modification to base damage
 						if(playerDefending)
 						{atkVal =  atkVal/2;}
-						
-						System.out.println("The goblin's attack hits for"+atkVal+"damage!");
-						enemyHp-=atkVal;						
+		
+						Toast.makeText(getApplicationContext(), "The goblin's attack hits for"+atkVal+"damage!",Toast.LENGTH_SHORT).show();
+						player.setCurHp(player.getMaxHp()-atkVal);
+						txtViewPlayerHp.setText("HP: " + player.getCurHp() + "/" + player.getMaxHp());
 					}
 					else if((d10Roll==9)||(d10Roll==10))
 					{
-						atkVal = (((enemyBaseAtk)*3)/2);
+						atkVal = (((atkVal)*3)/2);
 						
 						if(playerDefending)
 						{atkVal =  atkVal/2;}
 						
-						System.out.println("The goblin lands a critical hit for "+atkVal+" damage!");
-						playerHp-=atkVal;						
+						Toast.makeText(getApplicationContext(), "The goblin lands a critical hit for "+atkVal+" damage!",Toast.LENGTH_SHORT).show();
+						player.setCurHp(player.getMaxHp()-atkVal);
+						txtViewPlayerHp.setText("HP: " + player.getCurHp() + "/" + player.getMaxHp());						
 					}
 					atkVal = 0;
 					d10Roll = 0;
+					playerDefending = false;
 					
 				}
 				else if(enemyAtk ==2)
 				{
-					atkVal = enemyBaseAtk+10;
-					if((enemyStm - 10)>0)
+					atkVal = (mob.getDamage()*4)/3;
+					if((mob.getCurStm() - 20)>=0)
 					{
-						enemyStm-=10;//costs 10 stamina
+						mob.setCurStm(mob.getCurStm()-20);//costs 20 stamina
+						txtViewMobStamina.setText("Stamina: " + mob.getCurStm() + "/" + mob.getMaxStm());
 					}
-					else if((enemyStm - 10)<0)
+					else if((mob.getCurStm() - 20)<0)
 					{
-						enemyStm = 0;//can't have negative stamina
+						mob.setCurStm(0);//can't have negative stamina
+						txtViewMobStamina.setText("Stamina: " + mob.getCurStm() + "/" + mob.getMaxStm());
 					}
 					d10Roll =randomWithRange(1,10);
 					if((d10Roll==1)||(d10Roll==2))
-					{System.out.println("The Goblin's attack missed!");}
+					{
+						Toast.makeText(getApplicationContext(), "The goblin's attack missed!" ,Toast.LENGTH_SHORT).show();
+					}
 					
 					else if((d10Roll==2)||(d10Roll==3)||(d10Roll==4))
 					{
@@ -747,18 +555,19 @@ public class BattleActivity extends ActionBarActivity implements
 						
 						if(playerDefending)
 						{atkVal =  atkVal/2;}
-						
-						System.out.println("The goblin lands a glancing blow for"+atkVal+"damage!");
-						playerHp-=atkVal;						
+						Toast.makeText(getApplicationContext(), "The goblin lands a glancing blow for"+atkVal+"damage!" ,Toast.LENGTH_SHORT).show();
+						player.setCurHp(player.getMaxHp()-atkVal);
+						txtViewPlayerHp.setText("HP: " + player.getCurHp() + "/" + player.getMaxHp());
 					}
 					else if((d10Roll==5)||(d10Roll==6)||(d10Roll==7)||(d10Roll==8))
 					{
-						
+						//no modification to base damage
 						if(playerDefending)
 						{atkVal =  atkVal/2;}
-						
-						System.out.println("The goblin's attack hits for"+atkVal+"damage!");
-						enemyHp-=atkVal;						
+		
+						Toast.makeText(getApplicationContext(), "The goblin's attack hits for"+atkVal+"damage!",Toast.LENGTH_SHORT).show();
+						player.setCurHp(player.getMaxHp()-atkVal);
+						txtViewPlayerHp.setText("HP: " + player.getCurHp() + "/" + player.getMaxHp());
 					}
 					else if((d10Roll==9)||(d10Roll==10))
 					{
@@ -767,26 +576,32 @@ public class BattleActivity extends ActionBarActivity implements
 						if(playerDefending)
 						{atkVal =  atkVal/2;}
 						
-						System.out.println("The goblin lands a critical hit for "+atkVal+" damage!");
-						playerHp-=atkVal;						
+						Toast.makeText(getApplicationContext(), "The goblin lands a critical hit for "+atkVal+" damage!",Toast.LENGTH_SHORT).show();
+						player.setCurHp(player.getMaxHp()-atkVal);
+						txtViewPlayerHp.setText("HP: " + player.getCurHp() + "/" + player.getMaxHp());						
 					}
 					atkVal = 0;
 					d10Roll = 0;
+					playerDefending=false;
 				}
-				else if(playerChoice ==3)
+				else if(enemyAtk ==3)
 				{
-					atkVal = enemyBaseAtk+20;
-					if((enemyStm - 10)>0)
+					atkVal = mob.getDamage()*2;//heavy attack is twice the base value
+					if((mob.getCurStm() - 30)>=0)
 					{
-						enemyStm-=10;//costs 10 stamina
+						mob.setCurStm(mob.getCurStm()-30);//costs 30 stamina
+						txtViewMobStamina.setText("Stamina: " + mob.getCurStm() + "/" + mob.getMaxStm());
 					}
-					else if((enemyStm - 10)<0)
+					else if((mob.getCurStm() - 30)<0)
 					{
-						enemyStm = 0;//can't have negative stamina
+						mob.setCurStm(0);//can't have negative stamina
+						txtViewMobStamina.setText("Stamina: " + mob.getCurStm() + "/" + mob.getMaxStm());
 					}
 					d10Roll =randomWithRange(1,10);
 					if((d10Roll==1)||(d10Roll==2))
-					{System.out.println("The Goblin's attack missed!");}
+					{
+						Toast.makeText(getApplicationContext(), "The goblin's attack missed!" ,Toast.LENGTH_SHORT).show();
+					}
 					
 					else if((d10Roll==2)||(d10Roll==3)||(d10Roll==4))
 					{
@@ -794,19 +609,19 @@ public class BattleActivity extends ActionBarActivity implements
 						
 						if(playerDefending)
 						{atkVal =  atkVal/2;}
-						
-						System.out.println("The goblin lands a glancing blow for"+atkVal+"damage!");
-						playerHp-=atkVal;						
+						Toast.makeText(getApplicationContext(), "The goblin lands a glancing blow for"+atkVal+"damage!" ,Toast.LENGTH_SHORT).show();
+						player.setCurHp(player.getMaxHp()-atkVal);
+						txtViewPlayerHp.setText("HP: " + player.getCurHp() + "/" + player.getMaxHp());
 					}
 					else if((d10Roll==5)||(d10Roll==6)||(d10Roll==7)||(d10Roll==8))
 					{
-						atkVal = (atkVal);
-						
+						//no modification to base damage
 						if(playerDefending)
 						{atkVal =  atkVal/2;}
-						
-						System.out.println("The goblin's attack hits for"+atkVal+"damage!");
-						enemyHp-=atkVal;						
+		
+						Toast.makeText(getApplicationContext(), "The goblin's attack hits for"+atkVal+"damage!",Toast.LENGTH_SHORT).show();
+						player.setCurHp(player.getMaxHp()-atkVal);
+						txtViewPlayerHp.setText("HP: " + player.getCurHp() + "/" + player.getMaxHp());
 					}
 					else if((d10Roll==9)||(d10Roll==10))
 					{
@@ -815,28 +630,21 @@ public class BattleActivity extends ActionBarActivity implements
 						if(playerDefending)
 						{atkVal =  atkVal/2;}
 						
-						System.out.println("The goblin lands a critical hit for "+atkVal+" damage!");
-						playerHp-=atkVal;						
+						Toast.makeText(getApplicationContext(), "The goblin lands a critical hit for "+atkVal+" damage!",Toast.LENGTH_SHORT).show();
+						player.setCurHp(player.getMaxHp()-atkVal);
+						txtViewPlayerHp.setText("HP: " + player.getCurHp() + "/" + player.getMaxHp());						
 					}
 					atkVal = 0;
 					d10Roll = 0;
+					playerDefending=false;
 				}
 			
 			}
 		}
-		if (playerHp==0)
+		if (player.getCurHp()==0)
 		{
-			System.out.println("You have been defeated...");
-		}
-		else if(ranAway==true)
-		{System.out.println("You run away screaming...");}
-		else
-		{
-			System.out.println("You are victorious!");
-		}
-		
-		
-		*/
+			Toast.makeText(getApplicationContext(), "You died!",Toast.LENGTH_SHORT).show();
+		}	
 		
 
 	}
