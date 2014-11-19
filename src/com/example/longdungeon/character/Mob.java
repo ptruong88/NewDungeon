@@ -52,5 +52,21 @@ public class Mob extends Person {
 	public void setType(char type) {
 		this.type = type;
 	}
+	
+	public int getMaxStm() {
+		return maxStm;
+	}
+
+	public void setMaxStm(int maxStm) {
+		this.maxStm = maxStm;
+	}
+
+	public int getCurStm() {
+		return curStm;
+	}
+
+	public void setCurStm(int curStm) {
+		this.curStm = curStm;
+	}
 
 }
