@@ -20,11 +20,11 @@ public class Player extends Person implements Parcelable {
 	private Item[] playerInventory;
 	private int inventoryMaxSpace, inventoryCurSpace;
 	private int curEquipment;// Track to know how many equipment player has.
-	private final static int POSITION_SWORD = 0;
-	private final static int POSITION_HELMET = 1;
-	private final static int POSITION_SHIELD = 2;
-	private final static int POSITION_CLOTH = 3;
-	private final static int POSITION_RING = 4;
+	public final static int POSITION_SWORD = 0;
+	public final static int POSITION_HELMET = 1;
+	public final static int POSITION_SHIELD = 2;
+	public final static int POSITION_CLOTH = 3;
+	public final static int POSITION_RING = 4;
 
 	public Player() {
 		super();
@@ -119,6 +119,9 @@ public class Player extends Person implements Parcelable {
 		this.curMana = curMana;
 	}
 
+	public Equipment getPlayeOneEquip(int position){
+		return playerEquip[position];
+	}
 	public Equipment[] getPlayerEquip() {
 		return playerEquip;
 	}

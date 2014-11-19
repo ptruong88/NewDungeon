@@ -30,6 +30,7 @@ public class Potion extends Item implements Parcelable {
 			plusMGK = 10;
 			break;
 		}
+		cost = 5;
 	}
 
 	public void setPlusHP(int plusHP) {
@@ -61,6 +62,21 @@ public class Potion extends Item implements Parcelable {
 		default:
 			return plusSTM;
 		}
+	}
+
+	public String getStatPotionName() {
+		switch (itemType) {
+		case ITEM_HEALTH_POTION:
+			return "HP";
+		case ITEM_MANA_POTION:
+			return "MANA";
+		default:
+			return "STM";
+		}
+	}
+
+	public String getName() {
+		return name+" x"+size;
 	}
 
 	public int getSize() {
@@ -105,6 +121,7 @@ public class Potion extends Item implements Parcelable {
 			dest.writeInt(plusMGK);
 			break;
 		}
+		dest.writeInt(cost);
 	}
 
 	public void readFromParcel(Parcel in) {
@@ -122,6 +139,7 @@ public class Potion extends Item implements Parcelable {
 			plusMGK = in.readInt();
 			break;
 		}
+		cost = in.readInt();
 	}
 
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {

@@ -93,8 +93,8 @@ public class BattleActivity extends ActionBarActivity implements
 				android.R.layout.activity_list_item, android.R.id.text1,
 				listAttack);
 
-		listMagic = new String[] { "Fire Magic 10DMG/10MANA",
-				"Ice Magic 15DMG/15MANA", "Lightning Magic 20DMG/20MANA" };
+		listMagic = new String[] { "Fire Magic 10 DMG/10 MANA",
+				"Ice Magic 15 DMG/15 MANA", "Lightning Magic 20 DMG/20 MANA" };
 		adapterMagic = new ArrayAdapter<String>(getApplicationContext(),
 				android.R.layout.activity_list_item, android.R.id.text1,
 				listMagic);
