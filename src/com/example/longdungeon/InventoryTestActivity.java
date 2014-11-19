@@ -133,13 +133,13 @@ public class InventoryTestActivity extends ActionBarActivity implements
 			break;
 		case R.id.buttonShop:
 			Intent intentShop = new Intent(InventoryTestActivity.this,
-					ShoppingActivity.class);
+					ShoppingTestActivity.class);
 			intentShop.putExtra("com.example.longdungeon.character", player);
 			startActivity(intentShop);
 			break;
 		case R.id.buttonBattle:
 			Intent intentBattle = new Intent(InventoryTestActivity.this,
-					BattleActivity.class);
+					BattleTestActivity.class);
 			intentBattle.putExtra("com.example.longdungeon.character", player);
 			startActivity(intentBattle);
 			break;

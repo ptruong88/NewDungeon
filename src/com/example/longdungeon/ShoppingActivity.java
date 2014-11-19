@@ -1,6 +1,9 @@
 package com.example.longdungeon;
 
 import com.example.longdungeon.character.Player;
+import com.example.longdungeon.item.Equipment;
+import com.example.longdungeon.item.Item;
+import com.example.longdungeon.item.Potion;
 
 import android.support.v7.app.ActionBarActivity;
 import android.app.AlertDialog;
@@ -85,7 +88,7 @@ public class ShoppingActivity extends ActionBarActivity implements
 		this.findViewById(R.id.buttonHelmet).setOnClickListener(this);
 		this.findViewById(R.id.buttonShield).setOnClickListener(this);
 		this.findViewById(R.id.buttonCloth).setOnClickListener(this);
-//		this.findViewById(R.id.buttonRing).setOnClickListener(this);
+		this.findViewById(R.id.buttonRing).setOnClickListener(this);
 		this.findViewById(R.id.buttonPotion).setOnClickListener(this);
 		this.findViewById(R.id.buttonInventory).setOnClickListener(this);
 	}
@@ -97,18 +100,44 @@ public class ShoppingActivity extends ActionBarActivity implements
 			adapter.clear();
 		switch (button.getId()) {
 		case R.id.buttonAll:
-			for (int i = 0; i < listWeapon.length; ++i)
-				adapter.add(listWeapon[i]);
-			for (int i = 0; i < listHelmet.length; ++i)
-				adapter.add(listHelmet[i]);
-			for (int i = 0; i < listShield.length; ++i)
-				adapter.add(listShield[i]);
-			for (int i = 0; i < listCloth.length; ++i)
-				adapter.add(listCloth[i]);
-			for (int i = 0; i < listRing.length; ++i)
-				adapter.add(listRing[i]);
-			for (int i = 0; i < listPotion.length; ++i)
-				adapter.add(listPotion[i]);
+			Equipment[] playerEquip = player.getPlayerEquip();
+			Item[] playerInventory = player.getPlayerInventory();
+			System.out.println("Player Equipment "
+					+ player.getPlayerEquip()[0].getName());
+			System.out.println("Player Inventory "
+					+ player.getInventoryCurSpace());
+			String[] list = new String[player.getPlayerEquip().length
+					+ player.getInventoryCurSpace()];
+			list[0] = "+" + playerEquip[0].getStat() + "DMG "
+					+ playerEquip[0].getName();
+			for (int i = 1; i < 4; ++i) {
+				list[i] = "+" + playerEquip[i].getStat() + "DEF "
+						+ playerEquip[i].getName();
+			}
+			list[4] = "+" + playerEquip[4].getStat() + "MANA "
+					+ playerEquip[4].getName();
+			for (int i = 5, j=0; i < list.length; ++i,++j) {
+				switch (playerInventory[j].getItemType()) {
+				case Item.ITEM_HEALTH_POTION:
+					list[i] = "+"
+							+ ((Potion) playerInventory[j]).getStatPotion()
+							+ "HP " + ((Potion) playerInventory[j]).getName();
+					break;
+				case Item.ITEM_MANA_POTION:
+					list[i] = "+"
+							+ ((Potion) playerInventory[j]).getStatPotion()
+							+ "MANA " + ((Potion) playerInventory[j]).getName();
+					break;
+				default:
+					list[i] = "+"
+							+ ((Potion) playerInventory[j]).getStatPotion()
+							+ "STM " + ((Potion) playerInventory[j]).getName();
+					break;
+				}
+			}
+
+			for (int i = 0; i < list.length; ++i)
+				adapter.add(list[i]);
 			break;
 		case R.id.buttonWeapon:
 			for (int i = 0; i < listWeapon.length; ++i)

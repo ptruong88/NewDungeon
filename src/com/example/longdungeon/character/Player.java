@@ -1,35 +1,30 @@
 package com.example.longdungeon.character;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 import java.util.ArrayList;
 
-import com.example.longdungeon.item.Consumable;
+import com.example.longdungeon.item.Item;
+import com.example.longdungeon.item.Potion;
 import com.example.longdungeon.item.Equipment;
-import com.example.longdungeon.item.Spell;
-import com.example.longdungeon.item.Weapon;
 
 public class Player extends Person implements Parcelable {
 
-	protected ArrayList<Consumable> potions;
 	// these are the magic, stamina and health potions,
 	// which restore points to the cur values for those stats
-	protected int score;
-	protected int maxStm;
-	protected int curStm;
-	protected int maxMana;
-	protected int curMana;
+	private int score;
+	private int maxMana;
+	private int curMana;
 	private int level;
-	protected ArrayList<Equipment> armsAndArmor;// this is all the extra
-												// equipment
-												// you own
-	protected Equipment curArmor;// equipped armor
-	protected Weapon curWeapon;// the weapon equipped determines physical
-								// attacks
-	protected Equipment curShield;
-	protected Spell[] spells;// you have 3 available spell slots, each gives an
-								// attack, heal or buff
-
-	protected Equipment curRing;
+	private Equipment[] playerEquip;
+	private Item[] playerInventory;
+	private int inventoryMaxSpace, inventoryCurSpace;
+	private int curEquipment;// Track to know how many equipment player has.
+	private final static int POSITION_SWORD = 0;
+	private final static int POSITION_HELMET = 1;
+	private final static int POSITION_SHIELD = 2;
+	private final static int POSITION_CLOTH = 3;
+	private final static int POSITION_RING = 4;
 
 	public Player() {
 		super();
@@ -40,10 +35,6 @@ public class Player extends Person implements Parcelable {
 		super(nameNew);
 		defaultStats();
 
-	}
-	
-	public Player(Parcel in) {
-		readFromParcel(in);
 	}
 
 	private void defaultStats() {
@@ -58,20 +49,34 @@ public class Player extends Person implements Parcelable {
 		def = 20;
 		damage = 15;
 		level = 0;
-		curArmor = new Equipment("Knight's Armor",
-				"The full suit of armor of a chivalrous knight", 50, 0, 10);
-		curWeapon = new Weapon("Short Sword", "The basic adventuring sword", 0,
-				0, 0, "Slash", 15, 10, "Thrust", 20, 15, "Helm Splitter", 60,
-				50);
-		curShield = new Equipment(
-				"Star Shield",
-				"The shining star on the front is said to bring luck to adventurers",
-				15, 0, 0);
-		spells = new Spell[3];
-		spells[0] = new Spell("fireball",
-				"a mystical ball of flame that burns one's foes", 25, 0, 0, 15);
-		curRing = new Equipment("Old Copper Ring",
-				"a worn old copper ring that is warm to the touch", 4, 0, 15);
+		setUpPlayerEquip();
+		setUpPlayerInventory();
+	}
+
+	private void setUpPlayerEquip() {
+		playerEquip = new Equipment[5];
+		playerEquip[POSITION_SWORD] = new Equipment("Wood Sword", Item.ITEM_SWORD);
+		playerEquip[POSITION_HELMET] = new Equipment("Wood Helmet", Item.ITEM_HELMET);
+		playerEquip[POSITION_SHIELD] = new Equipment("Wood Shield", Item.ITEM_SHIELD);
+		playerEquip[POSITION_CLOTH] = new Equipment("Wood Cloth", Item.ITEM_CLOTH);
+		playerEquip[POSITION_RING] = new Equipment("Wood Ring", Item.ITEM_RING);
+		curEquipment = 5;
+	}
+
+	private void setUpPlayerInventory() {
+		inventoryCurSpace = 0;
+		inventoryMaxSpace = 20;
+		playerInventory = new Item[inventoryMaxSpace];
+
+		playerInventory[0] = new Potion("Small Heal Potion", Item.ITEM_HEALTH_POTION);
+		((Potion) playerInventory[0]).setSize(5);
+
+		playerInventory[1] = new Potion("Small Stamina Potion", Item.ITEM_STAMINA_POTION);
+		((Potion) playerInventory[1]).setSize(5);
+
+		playerInventory[2] = new Potion("Small Mana Potion", Item.ITEM_MANA_POTION);
+		((Potion) playerInventory[2]).setSize(5);
+		inventoryCurSpace = 3;
 	}
 
 	public int getScore() {
@@ -114,79 +119,109 @@ public class Player extends Person implements Parcelable {
 		this.curMana = curMana;
 	}
 
-	public ArrayList<Equipment> getArmsAndArmor() {
-		return armsAndArmor;
+	public Equipment[] getPlayerEquip() {
+		return playerEquip;
 	}
 
-	public void setArmsAndArmor(ArrayList<Equipment> armsAndArmor) {
-		this.armsAndArmor = armsAndArmor;
+	// ************************************
+	// REMOVE EQUIPMENT FROM PLAYER
+	public void removeSword() {
+		playerEquip[POSITION_SWORD] = null;
+		--curEquipment;
 	}
 
-	public Equipment getCurArmor() {
-		return curArmor;
+	public void removeHelmet() {
+		playerEquip[POSITION_HELMET] = null;
+		--curEquipment;
 	}
 
-	public void setCurArmor(Equipment curArmor) {
-		this.curArmor = curArmor;
+	public void removeShield() {
+		playerEquip[POSITION_SHIELD] = null;
+		--curEquipment;
 	}
 
-	public Weapon getCurWeapon() {
-		return curWeapon;
+	public void removeCloth() {
+		playerEquip[POSITION_CLOTH] = null;
+		--curEquipment;
 	}
 
-	public void setCurWeapon(Weapon curWeapon) {
-		this.curWeapon = curWeapon;
+	public void removeRing() {
+		playerEquip[POSITION_RING] = null;
+		--curEquipment;
 	}
 
-	public Equipment getCurShield() {
-		return curShield;
+	// END REMOVE EQUIPMENT METHODS
+	// ********************************
+
+	// *******************************
+	// EQUIP NEW ITEM TO PLAYER
+	public void equipSword(Equipment swordNew) {
+		playerEquip[POSITION_SWORD] = swordNew;
+		++curEquipment;
 	}
 
-	public void setCurShield(Equipment curShield) {
-		this.curShield = curShield;
+	public void equipHelmet(Equipment helmetNew) {
+		playerEquip[POSITION_HELMET] = helmetNew;
+		++curEquipment;
 	}
 
-	/**
-	 * Get spell base on spell position, start from 1 to 3.
-	 * 
-	 * @param pos
-	 * @return
-	 */
-	public Spell getSpell(int pos) {
-		return spells[pos - 1];
+	public void equipShield(Equipment shieldNew) {
+		playerEquip[POSITION_SHIELD] = shieldNew;
+		++curEquipment;
 	}
 
-	/**
-	 * Set spell based on spell position to set, start from 1 to 3.
-	 * 
-	 * @param spell
-	 * @param pos
-	 */
-	public void setSpell(Spell spell, int pos) {
-		this.spells[pos - 1] = spell;
+	public void equipCloth(Equipment clothNew) {
+		playerEquip[POSITION_CLOTH] = clothNew;
+		++curEquipment;
 	}
 
-	public Equipment getCurRing() {
-		return curRing;
+	public void equipRing(Equipment ringNew) {
+		playerEquip[POSITION_RING] = ringNew;
+		++curEquipment;
 	}
 
-	public void setCurRing(Equipment curRing) {
-		this.curRing = curRing;
+	// END EQUIP ITEM METHODS
+	// ***********************************
+
+	public int getCurEquipment() {
+		return curEquipment;
 	}
 
-	public ArrayList<Consumable> getPotions() {
-		return potions;
+	public Item[] getPlayerInventory() {
+		return playerInventory;
 	}
 
-	public void setPotions(ArrayList<Consumable> potions) {
-		this.potions = potions;
+	public void setPlayerInventory(Item[] playerInventory) {
+		this.playerInventory = playerInventory;
 	}
+
+	public int getInventoryMaxSpace() {
+		return inventoryMaxSpace;
+	}
+
+	public void setInventoryMaxSpace(int inventoryMaxSpace) {
+		this.inventoryMaxSpace = inventoryMaxSpace;
+	}
+
+	public int getInventoryCurSpace() {
+		return inventoryCurSpace;
+	}
+
+	public void setInventoryCurSpace(int inventoryCurSpace) {
+		this.inventoryCurSpace = inventoryCurSpace;
+	}
+
 	public int getLevel() {
 		return level;
 	}
 
 	public void setLevel(int level) {
 		this.level = level;
+	}
+
+	public Player(Parcel in) {
+		playerEquip = new Equipment[5];
+		readFromParcel(in);
 	}
 
 	@Override
@@ -211,6 +246,15 @@ public class Player extends Person implements Parcelable {
 		dest.writeInt(maxMana);
 		dest.writeInt(curMana);
 		dest.writeInt(level);
+		for (int i = 0; i < playerEquip.length; ++i) {
+			dest.writeParcelable(playerEquip[i], flags);
+		}
+		dest.writeInt(inventoryCurSpace);
+		dest.writeInt(inventoryMaxSpace);
+		for (int i = 0; i < inventoryCurSpace; ++i) {
+			dest.writeParcelable(playerInventory[i], flags);
+		}
+
 	}
 
 	public void readFromParcel(Parcel in) {
@@ -227,6 +271,16 @@ public class Player extends Person implements Parcelable {
 		maxMana = in.readInt();
 		curMana = in.readInt();
 		level = in.readInt();
+		for (int i = 0; i < 5; ++i) {
+			playerEquip[i] = in
+					.readParcelable(Equipment.class.getClassLoader());
+		}
+		inventoryCurSpace = in.readInt();
+		inventoryMaxSpace = in.readInt();
+		playerInventory = new Item[inventoryMaxSpace];
+		for (int i = 0; i < inventoryCurSpace; ++i) {
+			playerInventory[i] = in.readParcelable(Item.class.getClassLoader());
+		}
 	}
 
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
@@ -238,4 +292,5 @@ public class Player extends Person implements Parcelable {
 			return new Player[size];
 		}
 	};
+
 }

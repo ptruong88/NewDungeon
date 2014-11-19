@@ -25,3 +25,6 @@ res/layout/activity_inventory_test.xml
 src/com/example/longdungeon/InventoryTestActivity.java
 res/layout/activity_inventory_test.xml
 src/com/example/longdungeon/InventoryTestActivity.java
+src/com/example/longdungeon/ShoppingTestActivity.java
+src/com/example/longdungeon/InventoryTestActivity.java
+AndroidManifest.xml

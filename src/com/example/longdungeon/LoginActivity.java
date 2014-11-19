@@ -1,5 +1,7 @@
 package com.example.longdungeon;
 
+import com.example.longdungeon.character.Player;
+
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -54,12 +56,11 @@ public class LoginActivity extends ActionBarActivity {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-
+				Player player = new Player(edTxtLogin.getText().toString());
 				Intent intentBattle = new Intent(LoginActivity.this,
 						BattleActivity.class);
-				intentBattle.putExtra("namePlayer", edTxtLogin.getText()
-						.toString());				
+				intentBattle.putExtra("com.example.longdungeon.character",
+						player);
 				startActivity(intentBattle);
 				finish();
 			}
