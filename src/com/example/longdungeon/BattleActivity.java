@@ -94,8 +94,8 @@ public class BattleActivity extends ActionBarActivity implements
 				android.R.layout.activity_list_item, android.R.id.text1,
 				listAttack);
 
-		listMagic = new String[] { "Fire Magic 10DMG/10STM",
-				"Ice Magic 15DMG/15STM", "Lightning Magic 20DMG/20STM" };
+		listMagic = new String[] { "Fire Magic 10 DMG/10 MANA",
+				"Ice Magic 15 DMG/15 MANA", "Lightning Magic 20 DMG/20 MANA" };
 		adapterMagic = new ArrayAdapter<String>(getApplicationContext(),
 				android.R.layout.activity_list_item, android.R.id.text1,
 				listMagic);
@@ -321,6 +321,125 @@ public class BattleActivity extends ActionBarActivity implements
 				break;
 			}
 		}
+		else if(parent.getItemAtPosition(position).toString().contains("MANA"))
+		{
+			switch (position) {
+			case 0:// Fireball
+				if(player.getCurMana()>=10)
+				{
+					player.setCurMana((player.getCurMana())-10);
+					txtViewPlayerMana.setText("Mana: " + player.getCurMana() + "/"+ player.getMaxMana());;//attacks always cost stamina, if they miss or not
+					
+					int d3Roll =randomWithRange(1,3);
+					if(d3Roll==1)
+					{Toast.makeText(getApplicationContext(), "Your spell missed!",Toast.LENGTH_SHORT).show();}
+					
+					
+					else if(d3Roll==2)
+					{
+						atkVal= (player.getDamage());
+						//spells ignore defense
+						String atkString="Spell hits for "+atkVal+" damage!";
+						Toast.makeText(getApplicationContext(), atkString ,Toast.LENGTH_SHORT).show();
+						mob.setCurHp(mob.getCurHp()-atkVal);
+						txtViewMobHp.setText("HP: " + mob.getCurHp() + "/" + mob.getMaxHp());						
+					}
+					
+					else if(d3Roll==3)
+					{
+						atkVal= (player.getDamage());
+						atkVal= atkVal*2;//critical attack doubles damage
+						//spells ignore defense
+						String atkString="Critical attack hits for "+atkVal+" damage!";
+						Toast.makeText(getApplicationContext(), atkString ,Toast.LENGTH_SHORT).show();
+						mob.setCurHp(mob.getCurHp()-atkVal);
+						txtViewMobHp.setText("HP: " + mob.getCurHp() + "/" + mob.getMaxHp());
+					}
+					atkVal=0;//clear attack val;
+					enemyTurn();//once you've attacked the enemy gets a turn
+				}
+				else{
+						Toast.makeText(getApplicationContext(), "not enough Mana!",Toast.LENGTH_SHORT).show();
+					}
+				break;
+			case 1:// Ice spell
+				if(player.getCurMana()>=20)
+				{
+					player.setCurMana((player.getCurMana())-20);
+					txtViewPlayerMana.setText("Mana: " + player.getCurMana() + "/"+ player.getMaxMana());;//attacks always cost stamina, if they miss or not
+					
+					int d3Roll =randomWithRange(1,3);
+					if(d3Roll==1)
+					{Toast.makeText(getApplicationContext(), "Your spell missed!",Toast.LENGTH_SHORT).show();}
+					
+					
+					else if(d3Roll==2)
+					{
+						atkVal= ((player.getDamage()*4)/3);
+						//spells ignore defense
+						String atkString="Spell hits for "+atkVal+" damage!";
+						Toast.makeText(getApplicationContext(), atkString ,Toast.LENGTH_SHORT).show();
+						mob.setCurHp(mob.getCurHp()-atkVal);
+						txtViewMobHp.setText("HP: " + mob.getCurHp() + "/" + mob.getMaxHp());						
+					}
+					
+					else if(d3Roll==3)
+					{
+						atkVal= ((player.getDamage()*4)/3);
+						atkVal= atkVal*2;//critical attack doubles damage
+						//spells ignore defense
+						String atkString="Critical attack hits for "+atkVal+" damage!";
+						Toast.makeText(getApplicationContext(), atkString ,Toast.LENGTH_SHORT).show();
+						mob.setCurHp(mob.getCurHp()-atkVal);
+						txtViewMobHp.setText("HP: " + mob.getCurHp() + "/" + mob.getMaxHp());
+					}
+					atkVal=0;//clear attack val;
+					enemyTurn();//once you've attacked the enemy gets a turn
+				}
+				else{
+						Toast.makeText(getApplicationContext(), "not enough Mana!",Toast.LENGTH_SHORT).show();
+					}
+				break;
+			default://  lightning storm
+				if(player.getCurMana()>=30)
+				{
+					player.setCurMana((player.getCurMana())-30);
+					txtViewPlayerMana.setText("Mana: " + player.getCurMana() + "/"+ player.getMaxMana());;//attacks always cost stamina, if they miss or not
+					
+					int d3Roll =randomWithRange(1,3);
+					if(d3Roll==1)
+					{Toast.makeText(getApplicationContext(), "Your spell missed!",Toast.LENGTH_SHORT).show();}
+					
+					
+					else if(d3Roll==2)
+					{
+						atkVal= ((player.getDamage()*2));
+						//spells ignore defense
+						String atkString="Spell hits for "+atkVal+" damage!";
+						Toast.makeText(getApplicationContext(), atkString ,Toast.LENGTH_SHORT).show();
+						mob.setCurHp(mob.getCurHp()-atkVal);
+						txtViewMobHp.setText("HP: " + mob.getCurHp() + "/" + mob.getMaxHp());						
+					}
+					
+					else if(d3Roll==3)
+					{
+						atkVal= ((player.getDamage()*2));
+						atkVal= atkVal*2;//critical attack doubles damage
+						//spells ignore defense
+						String atkString="Critical attack hits for "+atkVal+" damage!";
+						Toast.makeText(getApplicationContext(), atkString ,Toast.LENGTH_SHORT).show();
+						mob.setCurHp(mob.getCurHp()-atkVal);
+						txtViewMobHp.setText("HP: " + mob.getCurHp() + "/" + mob.getMaxHp());
+					}
+					atkVal=0;//clear attack val;
+					enemyTurn();//once you've attacked the enemy gets a turn
+				}
+				else{
+						Toast.makeText(getApplicationContext(), "not enough Mana!",Toast.LENGTH_SHORT).show();
+					}
+				break;
+			}
+		}//
 	}
 
 	private void setUpPlayer() {
