@@ -17,43 +17,47 @@ public class Potion extends Item implements Parcelable {
 
 	public Potion(String name, int itemType) {
 		super(name, itemType);
-		size = 0;
+		size = 5;
 		// this.potionType = potionType;
 		switch (itemType) {
 		case ITEM_HEALTH_POTION:
 			plusHP = 10;
+			cost = plusHP;
+			statName = "HP";
 			break;
 		case ITEM_STAMINA_POTION:
 			plusSTM = 10;
+			cost = plusSTM;
+			statName = "MANA";
 			break;
 		default:
 			plusMGK = 10;
+			cost = plusMGK;
+			statName = "STM";
 			break;
 		}
-		cost = 5;
 	}
 
-	public void setPlusHP(int plusHP) {
-		// if (!potionType.equals("heal"))
-		// plusHP = 0;
-		this.plusHP = plusHP;
-	}
-
-	public void setPlusSTM(int plusSTM) {
-		// if (!potionType.equals("stamina"))
-		// plusSTM = 0;
-		this.plusSTM = plusSTM;
-	}
-
-	public void setPlusMGK(int plusMGK) {
-		// if (!potionType.equals("mana"))
-		// plusMGK = 0;
-		this.plusMGK = plusMGK;
+	public void setStatNumber(int number) {
+		switch (itemType) {
+		case ITEM_HEALTH_POTION:
+			plusHP = number;
+			cost = number;
+			break;
+		case ITEM_MANA_POTION:
+			plusMGK = number;
+			cost = number;
+			break;
+		default:
+			plusSTM = number;
+			cost = number;
+			break;
+		}
 	}
 
 	// Depend on what kind of potion is, getStatPotion returns
 	// heal, mana, or stamina.
-	public int getStatPotion() {
+	public int getStatNumber() {
 		switch (itemType) {
 		case ITEM_HEALTH_POTION:
 			return plusHP;
@@ -64,19 +68,9 @@ public class Potion extends Item implements Parcelable {
 		}
 	}
 
-	public String getStatPotionName() {
-		switch (itemType) {
-		case ITEM_HEALTH_POTION:
-			return "HP";
-		case ITEM_MANA_POTION:
-			return "MANA";
-		default:
-			return "STM";
-		}
-	}
-
-	public String getName() {
-		return name+" x"+size;
+	public String toString() {
+		return "+" + getStatNumber() + " " + getStatName() + " " + name + " x"
+				+ size;
 	}
 
 	public int getSize() {

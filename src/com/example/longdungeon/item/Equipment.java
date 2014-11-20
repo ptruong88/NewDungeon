@@ -18,36 +18,41 @@ public class Equipment extends Item implements Parcelable {
 		switch (itemType) {
 		case ITEM_SWORD:
 			damage = 10;
+			cost = damage;
+			statName = "DMG";
 			break;
 		case ITEM_RING:
 			mana = 10;
+			cost = mana;
+			statName = "MANA";
 			break;
 		default:
 			defend = 10;
+			cost = defend;
+			statName = "DEF";
 			break;
 		}
 	}
 
-	public void setDamage(int damage) {
-		// if (!itemType.equals("sword"))
-		// damage = 0;
-		this.damage = damage;
-	}
-
-	public void setDefend(int defend) {
-		// if (itemType.equals("sword") || itemType.equals("ring"))
-		// defend = 0;
-		this.defend = defend;
-	}
-
-	public void setMana(int mana) {
-		// if (!itemType.equals("ring"))
-		// mana = 0;
-		this.mana = mana;
+	public void setStatNumber(int number) {
+		switch (itemType) {
+		case ITEM_SWORD:
+			damage = number;
+			cost = number;
+			break;
+		case ITEM_RING:
+			mana = number;
+			cost = number;
+			break;
+		default:
+			defend = number;
+			cost = number;
+			break;
+		}
 	}
 
 	// Depend on what item is, getStat will get damage, defend, or stamina.
-	public int getStat() {
+	public int getStatNumber() {
 		switch (itemType) {
 		case ITEM_SWORD:
 			return damage;
@@ -57,16 +62,11 @@ public class Equipment extends Item implements Parcelable {
 			return defend;
 		}
 	}
-	public String getStatName(){
-		switch (itemType) {
-		case ITEM_SWORD:
-			return "DMG";
-		case ITEM_RING:
-			return "MANA";
-		default:
-			return "DEF";
-		}
+
+	public String toString() {
+		return "+" + getStatNumber() + " " + getStatName() + " " + name;
 	}
+
 	public Equipment(Parcel in) {
 		readFromParcel(in);
 	}
