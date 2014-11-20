@@ -9,7 +9,7 @@ public class Item implements Parcelable {
 	protected String description;// some story info about the item
 	protected int itemType;
 	protected int cost;// gold from sell item or value from buy item.
-	private String statName;
+	protected String statName;
 	public final static int ITEM_SWORD = 0;
 	public final static int ITEM_HELMET = 1;
 	public final static int ITEM_SHIELD = 2;
@@ -47,7 +47,12 @@ public class Item implements Parcelable {
 			break;
 		}
 	}
+	
+	public String getStatName(){
+		return statName;
+	}
 
+	
 	public String getName() {
 		return name;
 	}
