@@ -197,6 +197,11 @@ public class Player extends Person implements Parcelable {
 	public void setPlayerInventory(Item[] playerInventory) {
 		this.playerInventory = playerInventory;
 	}
+	
+	public void insertItemToInventory(Item item){
+		playerInventory[inventoryCurSpace] = item;
+		++inventoryCurSpace;
+	}
 
 	public int getInventoryMaxSpace() {
 		return inventoryMaxSpace;
