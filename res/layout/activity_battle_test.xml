@@ -83,6 +83,7 @@
                 android:text="HP: 76/76"
                 android:textColor="@color/white"
                 android:textSize="@dimen/font_size" />
+
         </RelativeLayout>
 
         <RelativeLayout
@@ -146,6 +147,17 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/font_size" />
         </RelativeLayout>
+
+        <TextView
+            android:id="@+id/textViewMobStamina"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/layoutMobInfo"
+            android:layout_below="@+id/layoutMobInfo"
+            android:text="Stamina: 60/60"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_size" />
+
     </RelativeLayout>
 
     <ScrollView
@@ -177,7 +189,7 @@
                 android:layout_margin="0dp"
                 android:layout_weight="0.1"
                 android:padding="0dp"
-                android:text="Denfend"
+                android:text="Defend"
                 android:textColor="@color/white" />
 
             <Button

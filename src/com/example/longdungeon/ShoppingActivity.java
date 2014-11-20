@@ -108,29 +108,29 @@ public class ShoppingActivity extends ActionBarActivity implements
 					+ player.getInventoryCurSpace());
 			String[] list = new String[player.getPlayerEquip().length
 					+ player.getInventoryCurSpace()];
-			list[0] = "+" + playerEquip[0].getStat() + "DMG "
+			list[0] = "+" + playerEquip[0].getStatNumber() + "DMG "
 					+ playerEquip[0].getName();
 			for (int i = 1; i < 4; ++i) {
-				list[i] = "+" + playerEquip[i].getStat() + "DEF "
+				list[i] = "+" + playerEquip[i].getStatNumber() + "DEF "
 						+ playerEquip[i].getName();
 			}
-			list[4] = "+" + playerEquip[4].getStat() + "MANA "
+			list[4] = "+" + playerEquip[4].getStatNumber() + "MANA "
 					+ playerEquip[4].getName();
 			for (int i = 5, j=0; i < list.length; ++i,++j) {
 				switch (playerInventory[j].getItemType()) {
 				case Item.ITEM_HEALTH_POTION:
 					list[i] = "+"
-							+ ((Potion) playerInventory[j]).getStatPotion()
+							+ ((Potion) playerInventory[j]).getStatNumber()
 							+ "HP " + ((Potion) playerInventory[j]).getName();
 					break;
 				case Item.ITEM_MANA_POTION:
 					list[i] = "+"
-							+ ((Potion) playerInventory[j]).getStatPotion()
+							+ ((Potion) playerInventory[j]).getStatNumber()
 							+ "MANA " + ((Potion) playerInventory[j]).getName();
 					break;
 				default:
 					list[i] = "+"
-							+ ((Potion) playerInventory[j]).getStatPotion()
+							+ ((Potion) playerInventory[j]).getStatNumber()
 							+ "STM " + ((Potion) playerInventory[j]).getName();
 					break;
 				}

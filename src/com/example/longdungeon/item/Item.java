@@ -10,11 +10,11 @@ public class Item implements Parcelable {
 	protected int itemType;
 	protected int cost;// gold from sell item or value from buy item.
 	protected String statName;
-	public final static int ITEM_SWORD = 0;
-	public final static int ITEM_HELMET = 1;
-	public final static int ITEM_SHIELD = 2;
-	public final static int ITEM_CLOTH = 3;
-	public final static int ITEM_RING = 4;
+	public static final int ITEM_SWORD = 0;
+	public static final int ITEM_HELMET = 1;
+	public static final int ITEM_SHIELD = 2;
+	public static final int ITEM_CLOTH = 3;
+	public static final int ITEM_RING = 4;
 	public static final int ITEM_HEALTH_POTION = 5;
 	public static final int ITEM_MANA_POTION = 6;
 	public static final int ITEM_STAMINA_POTION = 7;

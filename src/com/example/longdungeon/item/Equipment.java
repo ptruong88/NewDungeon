@@ -62,6 +62,18 @@ public class Equipment extends Item implements Parcelable {
 			return defend;
 		}
 	}
+	
+	public String getStatName() {
+		switch (itemType) {
+		case ITEM_SWORD:
+			return "DMG";
+		case ITEM_RING:
+			return  "MANA";
+		default:
+			return "DEF";			
+		}
+	}
+
 
 	public String toString() {
 		return "+" + getStatNumber() + " " + getStatName() + " " + name;

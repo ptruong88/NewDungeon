@@ -67,6 +67,17 @@ public class Potion extends Item implements Parcelable {
 			return plusSTM;
 		}
 	}
+	
+	public String getStatName(){
+		switch (itemType) {
+		case ITEM_HEALTH_POTION:
+			return "HP";
+		case ITEM_MANA_POTION:
+			return "MANA";
+		default:
+			return "DEF";
+		}
+	}
 
 	public String toString() {
 		return "+" + getStatNumber() + " " + getStatName() + " " + name + " x"
