@@ -63,7 +63,8 @@ public class BattleActivity extends ActionBarActivity implements
 		setUpButtonAction();
 		setUpHideListView();
 		setUpDialogForRun();
-
+		setUpWinDialog();
+		setLoseDialog();
 	}
 
 	private void setUpListView() {
@@ -163,12 +164,13 @@ public class BattleActivity extends ActionBarActivity implements
 		// Toast.makeText(getApplicationContext(),
 		// parent.getItemAtPosition(position).toString(),
 		// Toast.LENGTH_SHORT).show();
-		if (parent.getItemAtPosition(position).toString().contains("DMG")) {
+		if (parent.getItemAtPosition(position).toString().contains("STM")) {
 
 			// mobCurHp -= baseDamage;
 			switch (position) {
 			case 0:// basic attack case based on it being in the 0th position
-				if (player.getCurStm() >= 10) {
+				if (player.getCurStm() >= 10) 
+				{
 					player.setCurStm((player.getCurStm()) - 10);
 					txtViewStamina.setText("Stamina: " + player.getCurStm()
 							+ "/" + player.getMaxStm());// attacks always cost
@@ -176,24 +178,22 @@ public class BattleActivity extends ActionBarActivity implements
 														// or not
 
 					d10Roll = randomWithRange(1, 10);
-					if ((d10Roll == 1) || (d10Roll == 2)) {
-						Toast.makeText(getApplicationContext(),
-								"Your attack missed!", Toast.LENGTH_SHORT)
-								.show();
+					if ((d10Roll == 1) || (d10Roll == 2)) 
+					{
+						Toast.makeText(getApplicationContext(),"Your attack missed!", Toast.LENGTH_SHORT).show();
 					}
 
-					else if ((d10Roll == 2) || (d10Roll == 3) || (d10Roll == 4)) {
+					else if ((d10Roll == 2) || (d10Roll == 3) || (d10Roll == 4)) 
+					{
 						atkVal = (player.getDamage()) / 2;
-						if (enemyDefending == true) {
+						if (enemyDefending == true) 
+						{
 							atkVal = atkVal / 2;
 						}
-						String atkString = "Glancing hit for " + atkVal
-								+ " damage!";
-						Toast.makeText(getApplicationContext(), atkString,
-								Toast.LENGTH_SHORT).show();
+						String atkString = "Glancing hit for " + atkVal+ " damage!";
+						Toast.makeText(getApplicationContext(), atkString,Toast.LENGTH_SHORT).show();
 						mob.setCurHp(mob.getCurHp() - atkVal);
-						txtViewMobHp.setText("HP: " + mob.getCurHp() + "/"
-								+ mob.getMaxHp());
+						txtViewMobHp.setText("HP: " + mob.getCurHp() + "/"+ mob.getMaxHp());
 
 					}
 
@@ -227,8 +227,11 @@ public class BattleActivity extends ActionBarActivity implements
 								+ mob.getMaxHp());
 					}
 					atkVal = 0;// clear attack val;
+					if(mob.getCurHp()<=0)
+					{
+						winDialog.show();
+					}
 					enemyTurn();// once you've attacked the enemy gets a turn
-
 				}
 				break;
 			case 1:// medium attack case based on it being in the 1st position
@@ -301,6 +304,10 @@ public class BattleActivity extends ActionBarActivity implements
 								+ mob.getMaxHp());
 					}
 					atkVal = 0;
+					if(mob.getCurHp()<=0)
+					{
+						winDialog.show();
+					}
 					enemyTurn();// once you've attacked the enemy gets a turn
 				}
 				break;
@@ -370,7 +377,12 @@ public class BattleActivity extends ActionBarActivity implements
 								+ mob.getMaxHp());
 					}
 					atkVal = 0;
+					if(mob.getCurHp()<=0)
+					{
+						winDialog.show();
+					}
 					enemyTurn();// once you've attacked the enemy gets a turn
+					
 
 				}
 				break;
@@ -417,6 +429,10 @@ public class BattleActivity extends ActionBarActivity implements
 								+ mob.getMaxHp());
 					}
 					atkVal = 0;// clear attack val;
+					if(mob.getCurHp()<=0)
+					{
+						winDialog.show();
+					}
 					enemyTurn();// once you've attacked the enemy gets a turn
 				} else {
 					Toast.makeText(getApplicationContext(), "not enough Mana!",
@@ -462,6 +478,10 @@ public class BattleActivity extends ActionBarActivity implements
 								+ mob.getMaxHp());
 					}
 					atkVal = 0;// clear attack val;
+					if(mob.getCurHp()<=0)
+					{
+						winDialog.show();
+					}
 					enemyTurn();// once you've attacked the enemy gets a turn
 				} else {
 					Toast.makeText(getApplicationContext(), "not enough Mana!",
@@ -507,6 +527,10 @@ public class BattleActivity extends ActionBarActivity implements
 								+ mob.getMaxHp());
 					}
 					atkVal = 0;// clear attack val;
+					if(mob.getCurHp()<=0)
+					{
+						winDialog.show();
+					}
 					enemyTurn();// once you've attacked the enemy gets a turn
 				} else {
 					Toast.makeText(getApplicationContext(), "not enough Mana!",
@@ -631,6 +655,68 @@ public class BattleActivity extends ActionBarActivity implements
 				});
 	}
 
+	
+	private AlertDialog.Builder winDialog;
+
+	private void setUpWinDialog() {
+		// TODO Auto-generated method stub
+		winDialog = new AlertDialog.Builder(this);
+
+		// Setting Dialog Title
+		winDialog.setTitle("YOU WIN!");
+
+		
+		ImageView imageV = new ImageView(this);
+        imageV.setImageResource(R.drawable.victory);
+		winDialog.setView(imageV);
+
+		// Setting Positive "Yes" Btn
+		winDialog.setPositiveButton("OK",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						// Write your code here to execute after dialog
+						// Toast.makeText(getApplicationContext(),
+						// "You clicked on YES",
+						// Toast.LENGTH_SHORT).show();
+						Intent intentShopping = new Intent(BattleActivity.this,
+								ShoppingActivity.class);
+						intentShopping.putExtra(
+								"com.example.longdungeon.character", player);
+						startActivity(intentShopping);
+						finish();
+					}
+				});
+	}
+	
+	private AlertDialog.Builder loseDialog;
+
+	private void setLoseDialog() {
+		// TODO Auto-generated method stub
+		loseDialog = new AlertDialog.Builder(this);
+
+		// Setting Dialog Title
+		loseDialog.setTitle("YOU LOSE!");
+
+		ImageView imageL = new ImageView(this);
+        imageL.setImageResource(R.drawable.defeat);
+		loseDialog.setView(imageL);
+
+		// Setting Positive "Yes" Btn
+		loseDialog.setPositiveButton("OK",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						// Write your code here to execute after dialog
+						// Toast.makeText(getApplicationContext(),
+						// "You clicked on YES",
+						// Toast.LENGTH_SHORT).show();
+						Intent intentLogin = new Intent(BattleActivity.this,
+								LoginActivity.class);
+						startActivity(intentLogin);
+						finish();
+					}
+				});
+	}
+	
 	private void setUpPic() {
 		// TODO Auto-generated method stub
 		BattleLayout relLyoutPic = (BattleLayout) this
@@ -667,7 +753,12 @@ public class BattleActivity extends ActionBarActivity implements
 												// is open for a free hit
 				txtViewMobStamina.setText("Stamina: " + mob.getCurStm() + "/"
 						+ mob.getMaxStm());
+				if(player.getCurHp()<=0)
+				{
+					loseDialog.show();
+				}
 				playerDefending = false;// player's defense lasts only 1 turn
+				
 
 			} else {
 				Toast.makeText(getApplicationContext(), "The goblin attacks!",
@@ -737,6 +828,12 @@ public class BattleActivity extends ActionBarActivity implements
 					atkVal = 0;
 					d10Roll = 0;
 					playerDefending = false;
+					if(player.getCurHp()<=0)
+					{
+						loseDialog.show();
+					}
+					
+
 
 				} else if (enemyAtk == 2) {
 					atkVal = (mob.getDamage() * 4) / 3;
@@ -802,6 +899,10 @@ public class BattleActivity extends ActionBarActivity implements
 					atkVal = 0;
 					d10Roll = 0;
 					playerDefending = false;
+					if(player.getCurHp()<=0)
+					{
+						loseDialog.show();
+					}
 				} else if (enemyAtk == 3) {
 					atkVal = mob.getDamage() * 2;// heavy attack is twice the
 													// base value
@@ -867,6 +968,11 @@ public class BattleActivity extends ActionBarActivity implements
 					atkVal = 0;
 					d10Roll = 0;
 					playerDefending = false;
+					if(player.getCurHp()<=0)
+					{
+						loseDialog.show();
+					}
+					
 				}
 
 			}
