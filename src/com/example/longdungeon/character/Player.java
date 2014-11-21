@@ -20,11 +20,11 @@ public class Player extends Person implements Parcelable {
 	private Item[] playerInventory;
 	private int inventoryMaxSpace, inventoryCurSpace;
 	private int curEquipment;// Track to know how many equipment player has.
-	private final static int POSITION_SWORD = 0;
-	private final static int POSITION_HELMET = 1;
-	private final static int POSITION_SHIELD = 2;
-	private final static int POSITION_CLOTH = 3;
-	private final static int POSITION_RING = 4;
+	// public final static int POSITION_SWORD = 0;
+	// public final static int POSITION_HELMET = 1;
+	// public final static int POSITION_SHIELD = 2;
+	// public final static int POSITION_CLOTH = 3;
+	// public final static int POSITION_RING = 4;
 
 	public Player() {
 		super();
@@ -55,11 +55,15 @@ public class Player extends Person implements Parcelable {
 
 	private void setUpPlayerEquip() {
 		playerEquip = new Equipment[5];
-		playerEquip[POSITION_SWORD] = new Equipment("Wood Sword", Item.ITEM_SWORD);
-		playerEquip[POSITION_HELMET] = new Equipment("Wood Helmet", Item.ITEM_HELMET);
-		playerEquip[POSITION_SHIELD] = new Equipment("Wood Shield", Item.ITEM_SHIELD);
-		playerEquip[POSITION_CLOTH] = new Equipment("Wood Cloth", Item.ITEM_CLOTH);
-		playerEquip[POSITION_RING] = new Equipment("Wood Ring", Item.ITEM_RING);
+		playerEquip[Item.ITEM_SWORD] = new Equipment("Wood Sword",
+				Item.ITEM_SWORD);
+		playerEquip[Item.ITEM_HELMET] = new Equipment("Wood Helmet",
+				Item.ITEM_HELMET);
+		playerEquip[Item.ITEM_SHIELD] = new Equipment("Wood Shield",
+				Item.ITEM_SHIELD);
+		playerEquip[Item.ITEM_CLOTH] = new Equipment("Wood Cloth",
+				Item.ITEM_CLOTH);
+		playerEquip[Item.ITEM_RING] = new Equipment("Wood Ring", Item.ITEM_RING);
 		curEquipment = 5;
 	}
 
@@ -68,13 +72,16 @@ public class Player extends Person implements Parcelable {
 		inventoryMaxSpace = 20;
 		playerInventory = new Item[inventoryMaxSpace];
 
-		playerInventory[0] = new Potion("Small Heal Potion", Item.ITEM_HEALTH_POTION);
+		playerInventory[0] = new Potion("Small Heal Potion",
+				Item.ITEM_HEALTH_POTION);
 		((Potion) playerInventory[0]).setSize(5);
 
-		playerInventory[1] = new Potion("Small Stamina Potion", Item.ITEM_STAMINA_POTION);
+		playerInventory[1] = new Potion("Small Stamina Potion",
+				Item.ITEM_STAMINA_POTION);
 		((Potion) playerInventory[1]).setSize(5);
 
-		playerInventory[2] = new Potion("Small Mana Potion", Item.ITEM_MANA_POTION);
+		playerInventory[2] = new Potion("Small Mana Potion",
+				Item.ITEM_MANA_POTION);
 		((Potion) playerInventory[2]).setSize(5);
 		inventoryCurSpace = 3;
 	}
@@ -119,34 +126,26 @@ public class Player extends Person implements Parcelable {
 		this.curMana = curMana;
 	}
 
+	public Equipment getPlayeOneEquip(int position) {
+		return playerEquip[position];
+	}
+
 	public Equipment[] getPlayerEquip() {
 		return playerEquip;
 	}
 
 	// ************************************
 	// REMOVE EQUIPMENT FROM PLAYER
-	public void removeSword() {
-		playerEquip[POSITION_SWORD] = null;
-		--curEquipment;
-	}
-
-	public void removeHelmet() {
-		playerEquip[POSITION_HELMET] = null;
-		--curEquipment;
-	}
-
-	public void removeShield() {
-		playerEquip[POSITION_SHIELD] = null;
-		--curEquipment;
-	}
-
-	public void removeCloth() {
-		playerEquip[POSITION_CLOTH] = null;
-		--curEquipment;
-	}
-
-	public void removeRing() {
-		playerEquip[POSITION_RING] = null;
+	/**
+	 * Remove Equipment based on itemType. For itemType use Item.ITEM_SWORD,
+	 * Item.ITEM_HELMET, and so on.
+	 * 
+	 * @param itemType
+	 */
+	public void removeEquipment(int itemType) {
+		// Because equipment can't be null, so change its name to XXX. That
+		// means that equipment is removed.
+		playerEquip[itemType].setName("XXX");
 		--curEquipment;
 	}
 
@@ -155,28 +154,13 @@ public class Player extends Person implements Parcelable {
 
 	// *******************************
 	// EQUIP NEW ITEM TO PLAYER
-	public void equipSword(Equipment swordNew) {
-		playerEquip[POSITION_SWORD] = swordNew;
-		++curEquipment;
-	}
-
-	public void equipHelmet(Equipment helmetNew) {
-		playerEquip[POSITION_HELMET] = helmetNew;
-		++curEquipment;
-	}
-
-	public void equipShield(Equipment shieldNew) {
-		playerEquip[POSITION_SHIELD] = shieldNew;
-		++curEquipment;
-	}
-
-	public void equipCloth(Equipment clothNew) {
-		playerEquip[POSITION_CLOTH] = clothNew;
-		++curEquipment;
-	}
-
-	public void equipRing(Equipment ringNew) {
-		playerEquip[POSITION_RING] = ringNew;
+	/**
+	 * Insert Equipment based on new equipment's itemType.
+	 * 
+	 * @param newEquipment
+	 */
+	public void insertNewEquipment(Equipment newEquipment) {
+		playerEquip[newEquipment.getItemType()] = newEquipment;
 		++curEquipment;
 	}
 
@@ -193,6 +177,11 @@ public class Player extends Person implements Parcelable {
 
 	public void setPlayerInventory(Item[] playerInventory) {
 		this.playerInventory = playerInventory;
+	}
+
+	public void insertItemToInventory(Item item) {
+		playerInventory[inventoryCurSpace] = item;
+		++inventoryCurSpace;
 	}
 
 	public int getInventoryMaxSpace() {

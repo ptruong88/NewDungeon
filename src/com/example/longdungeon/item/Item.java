@@ -3,16 +3,18 @@ package com.example.longdungeon.item;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Item implements Parcelable{
+public class Item implements Parcelable {
 
 	protected String name;
 	protected String description;// some story info about the item
 	protected int itemType;
-	public final static int ITEM_SWORD = 0;
-	public final static int ITEM_HELMET = 1;
-	public final static int ITEM_SHIELD = 2;
-	public final static int ITEM_CLOTH = 3;
-	public final static int ITEM_RING = 4;
+	protected int cost;// gold from sell item or value from buy item.
+	protected String statName;
+	public static final int ITEM_SWORD = 0;
+	public static final int ITEM_HELMET = 1;
+	public static final int ITEM_SHIELD = 2;
+	public static final int ITEM_CLOTH = 3;
+	public static final int ITEM_RING = 4;
 	public static final int ITEM_HEALTH_POTION = 5;
 	public static final int ITEM_MANA_POTION = 6;
 	public static final int ITEM_STAMINA_POTION = 7;
@@ -20,12 +22,37 @@ public class Item implements Parcelable{
 	public Item() {
 		// TODO Auto-generated constructor stub
 	}
-	
-	public Item(String name, int itemType){
+
+	public Item(String name, int itemType) {
 		this.name = name;
 		this.itemType = itemType;
+		this.cost = 10;
+		switch (itemType) {
+		case ITEM_SWORD:
+			statName = "DMG";
+			break;
+		case ITEM_RING:
+			statName = "MANA";
+			break;
+		case ITEM_HEALTH_POTION:
+			statName = "HP";
+			break;
+		case ITEM_MANA_POTION:
+			statName = "MANA";
+			break;
+		case ITEM_STAMINA_POTION:
+			statName = "STM";
+		default:
+			statName = "DEF";
+			break;
+		}
+	}
+	
+	public String getStatName(){
+		return statName;
 	}
 
+	
 	public String getName() {
 		return name;
 	}
@@ -41,7 +68,15 @@ public class Item implements Parcelable{
 	public void setItemType(int itemType) {
 		this.itemType = itemType;
 	}
-	
+
+	public int getCost() {
+		return cost;
+	}
+
+	public void setCost(int cost) {
+		this.cost = cost;
+	}
+
 	public Item(Parcel in) {
 		readFromParcel(in);
 	}

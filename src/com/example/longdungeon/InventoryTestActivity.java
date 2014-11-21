@@ -1,6 +1,9 @@
 package com.example.longdungeon;
 
 import com.example.longdungeon.character.Player;
+import com.example.longdungeon.item.Equipment;
+import com.example.longdungeon.item.Item;
+import com.example.longdungeon.item.Potion;
 
 import android.support.v7.app.ActionBarActivity;
 import android.app.AlertDialog;
@@ -23,7 +26,8 @@ public class InventoryTestActivity extends ActionBarActivity implements
 		OnClickListener, OnItemClickListener {
 
 	private TextView txtViewPlayerName, txtViewPlayerHp, txtViewPlayerMana,
-			txtViewPlayerStm, txtViewPlayerDmg, txtViewPlayerDef;
+			txtViewPlayerStm, txtViewPlayerDmg, txtViewPlayerDef, txtViewGold,
+			txtViewScore;
 	private ListView listItems;
 	private String[] listAll, listWeapon, listHelmet, listShield, listCloth,
 			listPotion;
@@ -68,6 +72,12 @@ public class InventoryTestActivity extends ActionBarActivity implements
 		txtViewPlayerDef = (TextView) this
 				.findViewById(R.id.textViewPlayerDefend);
 		txtViewPlayerDef.setText(player.getDef() + "");
+
+		txtViewGold = (TextView) this.findViewById(R.id.textViewGold);
+		txtViewGold.setText("Gold: " + player.getGold());
+
+		txtViewScore = (TextView) this.findViewById(R.id.textViewScore);
+		txtViewScore.setText("Score: " + player.getScore());
 	}
 
 	private void getPlayerFromBundle() {
@@ -83,7 +93,7 @@ public class InventoryTestActivity extends ActionBarActivity implements
 		this.findViewById(R.id.buttonHelmet).setOnClickListener(this);
 		this.findViewById(R.id.buttonShield).setOnClickListener(this);
 		this.findViewById(R.id.buttonCloth).setOnClickListener(this);
-		// this.findViewById(R.id.buttonRing).setOnClickListener(this);
+		this.findViewById(R.id.buttonRing).setOnClickListener(this);
 		this.findViewById(R.id.buttonPotion).setOnClickListener(this);
 		this.findViewById(R.id.buttonShop).setOnClickListener(this);
 		this.findViewById(R.id.buttonBattle).setOnClickListener(this);
@@ -92,44 +102,31 @@ public class InventoryTestActivity extends ActionBarActivity implements
 	@Override
 	public void onClick(View button) {
 		// TODO Auto-generated method stub
+		if (adapter.getCount() > 0)
+			adapter.clear();
 		switch (button.getId()) {
 		case R.id.buttonAll:
-			adapter = new ArrayAdapter<String>(getApplicationContext(),
-					android.R.layout.activity_list_item, android.R.id.text1,
-					listAll);
-			listItems.setAdapter(adapter);
+			displayAll();
 			break;
-
 		case R.id.buttonWeapon:
-			adapter = new ArrayAdapter<String>(getApplicationContext(),
-					android.R.layout.activity_list_item, android.R.id.text1,
-					listWeapon);
-			listItems.setAdapter(adapter);
+			displayWeapon();
 			break;
-
 		case R.id.buttonHelmet:
-			adapter = new ArrayAdapter<String>(getApplicationContext(),
-					android.R.layout.activity_list_item, android.R.id.text1,
-					listHelmet);
-			listItems.setAdapter(adapter);
+			displayHelmet();
 			break;
 		case R.id.buttonShield:
-			adapter = new ArrayAdapter<String>(getApplicationContext(),
-					android.R.layout.activity_list_item, android.R.id.text1,
-					listShield);
-			listItems.setAdapter(adapter);
+			displayShield();
 			break;
 		case R.id.buttonCloth:
-			adapter = new ArrayAdapter<String>(getApplicationContext(),
-					android.R.layout.activity_list_item, android.R.id.text1,
-					listCloth);
-			listItems.setAdapter(adapter);
+			displayCloth();
 			break;
+
+		case R.id.buttonRing:
+			displayRing();
+			break;
+
 		case R.id.buttonPotion:
-			adapter = new ArrayAdapter<String>(getApplicationContext(),
-					android.R.layout.activity_list_item, android.R.id.text1,
-					listPotion);
-			listItems.setAdapter(adapter);
+			displayPotion();
 			break;
 		case R.id.buttonShop:
 			Intent intentShop = new Intent(InventoryTestActivity.this,
@@ -144,11 +141,155 @@ public class InventoryTestActivity extends ActionBarActivity implements
 			startActivity(intentBattle);
 			break;
 		}
+		listItems.setAdapter(adapter);
+	}
 
+	/*
+	 * Display player equipment and inventory to list view if player presses All
+	 * button.
+	 */
+	private void displayAll() {
+		Equipment[] equipments = player.getPlayerEquip();
+		String name;
+		for (int i = 0; i < equipments.length; ++i) {
+			if (equipments[i] != null) {
+				name = "+" + equipments[i].getStatNumber()
+						+ equipments[i].getStatName() + " "
+						+ equipments[i].getName();
+				adapter.add(name);
+			}
+		}
+		Item[] inventory = player.getPlayerInventory();
+		for (int i = 0; i < player.getInventoryCurSpace(); ++i) {
+			switch (inventory[i].getItemType()) {
+			case Item.ITEM_HEALTH_POTION:
+			case Item.ITEM_MANA_POTION:
+			case Item.ITEM_STAMINA_POTION:
+				Potion potion = (Potion) inventory[i];
+				name = "+" + potion.getStatNumber()
+						+ potion.getStatName() + " " + potion.getName();
+				break;
+			default:
+				Equipment equip = (Equipment) inventory[i];
+				name = "+" + equip.getStatNumber() + equip.getStatName() + " "
+						+ equip.getName();
+				break;
+			}
+			adapter.add(name);
+		}
+	}
+
+	private void displayWeapon() {
+		Equipment equipments = player.getPlayerEquip()[Item.ITEM_SWORD];
+		String name;
+
+		name = "+" + equipments.getStatNumber() + " " + equipments.getStatName()
+				+ " " + equipments.getName();
+		adapter.add(name);
+
+		Item[] inventory = player.getPlayerInventory();
+		for (int i = 0; i < player.getInventoryCurSpace(); ++i) {
+			if (inventory[i].getItemType() == Item.ITEM_SWORD) {
+				name = "+" + equipments.getStatNumber() + " "
+						+ equipments.getStatName() + " " + equipments.getName();
+				adapter.add(name);
+			}
+		}
+	}
+
+	private void displayHelmet() {
+		Equipment equipments = player.getPlayerEquip()[Item.ITEM_HELMET];
+		String name;
+
+		name = "+" + equipments.getStatNumber() + " " + equipments.getStatName()
+				+ " " + equipments.getName();
+		adapter.add(name);
+
+		Item[] inventory = player.getPlayerInventory();
+		for (int i = 0; i < player.getInventoryCurSpace(); ++i) {
+			if (inventory[i].getItemType() == Item.ITEM_HELMET) {
+				name = "+" + equipments.getStatNumber() + " "
+						+ equipments.getStatName() + " " + equipments.getName();
+				adapter.add(name);
+			}
+		}
+	}
+
+	private void displayShield() {
+		Equipment equipments = player.getPlayerEquip()[Item.ITEM_SHIELD];
+		String name;
+
+		name = "+" + equipments.getStatNumber() + " " + equipments.getStatName()
+				+ " " + equipments.getName();
+		adapter.add(name);
+
+		Item[] inventory = player.getPlayerInventory();
+		for (int i = 0; i < player.getInventoryCurSpace(); ++i) {
+			if (inventory[i].getItemType() == Item.ITEM_SHIELD) {
+				name = "+" + equipments.getStatNumber() + " "
+						+ equipments.getStatName() + " " + equipments.getName();
+				adapter.add(name);
+			}
+		}
+	}
+
+	private void displayCloth() {
+		Equipment equipments = player.getPlayerEquip()[Item.ITEM_CLOTH];
+		String name;
+
+		name = "+" + equipments.getStatNumber() + " " + equipments.getStatName()
+				+ " " + equipments.getName();
+		adapter.add(name);
+
+		Item[] inventory = player.getPlayerInventory();
+		for (int i = 0; i < player.getInventoryCurSpace(); ++i) {
+			if (inventory[i].getItemType() == Item.ITEM_CLOTH) {
+				name = "+" + equipments.getStatNumber() + " "
+						+ equipments.getStatName() + " " + equipments.getName();
+				adapter.add(name);
+			}
+		}
+	}
+
+	private void displayRing() {
+		Equipment equipments = player.getPlayerEquip()[Item.ITEM_RING];
+		String name;
+
+		name = "+" + equipments.getStatNumber() + " " + equipments.getStatName()
+				+ " " + equipments.getName();
+		adapter.add(name);
+
+		Item[] inventory = player.getPlayerInventory();
+		for (int i = 0; i < player.getInventoryCurSpace(); ++i) {
+			if (inventory[i].getItemType() == Item.ITEM_RING) {
+				name = "+" + equipments.getStatNumber() + " "
+						+ equipments.getStatName() + " " + equipments.getName();
+				adapter.add(name);
+			}
+		}
+	}
+
+	private void displayPotion() {
+		Item[] inventory = player.getPlayerInventory();
+		Potion potion;
+		String name;
+		for (int i = 0; i < player.getInventoryCurSpace(); ++i) {
+			if (inventory[i].getItemType() == Item.ITEM_HEALTH_POTION
+					|| inventory[i].getItemType() == Item.ITEM_MANA_POTION
+					|| inventory[i].getItemType() == Item.ITEM_STAMINA_POTION) {
+				potion = (Potion) inventory[i];
+				name = "+" + potion.getStatNumber() + " "
+						+ potion.getStatName() + " " + potion.getName();
+				adapter.add(name);
+			}
+		}
 	}
 
 	private void setUpListItems() {
 		// TODO Auto-generated method stub
+		adapter = new ArrayAdapter<String>(getApplicationContext(),
+				android.R.layout.activity_list_item, android.R.id.text1);
+
 		listItems = (ListView) this.findViewById(R.id.listViewItems);
 		listItems.setVisibility(View.VISIBLE);
 		listItems.setOnItemClickListener(this);

@@ -172,7 +172,7 @@
         android:background="@drawable/colorbox" >
 
         <TextView
-            android:id="@+id/textViewScoreName"
+            android:id="@+id/textViewScore"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -188,7 +188,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
-            android:layout_toRightOf="@+id/textViewScoreName"
+            android:layout_toRightOf="@+id/textViewScore"
             android:text="Gold: 1000"
             android:textColor="@color/white"
             android:textSize="@dimen/font_size" />
