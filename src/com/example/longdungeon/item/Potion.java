@@ -64,10 +64,6 @@ public class Potion extends Item implements Parcelable {
 			return plusSTM;
 		}
 	}
-	
-	public String getStatName(){
-		return statName;
-	}
 
 	public String toString() {
 		return "+" + getStatNumber() + " " + getStatName() + " " + name + " x"

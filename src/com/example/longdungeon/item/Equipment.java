@@ -59,11 +59,6 @@ public class Equipment extends Item implements Parcelable {
 			return defend;
 		}
 	}
-	
-	public String getStatName() {
-		return statName;
-	}
-
 
 	public String toString() {
 		return "+" + getStatNumber() + " " + getStatName() + " " + name;

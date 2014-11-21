@@ -10,6 +10,7 @@ public class Item implements Parcelable {
 	protected int itemType;
 	protected int cost;// gold from sell item or value from buy item.
 	protected String statName;
+	protected int position; //position in shopping activity.
 	public static final int ITEM_SWORD = 0;
 	public static final int ITEM_HELMET = 1;
 	public static final int ITEM_SHIELD = 2;
@@ -27,6 +28,7 @@ public class Item implements Parcelable {
 		this.name = name;
 		this.itemType = itemType;
 		this.cost = 10;
+		this.position = 0;
 		switch (itemType) {
 		case ITEM_SWORD:
 			statName = "DMG";
@@ -42,6 +44,7 @@ public class Item implements Parcelable {
 			break;
 		case ITEM_STAMINA_POTION:
 			statName = "STM";
+			break;
 		default:
 			statName = "DEF";
 			break;
@@ -75,6 +78,14 @@ public class Item implements Parcelable {
 
 	public void setCost(int cost) {
 		this.cost = cost;
+	}
+
+	public int getPosition() {
+		return position;
+	}
+
+	public void setPosition(int postion) {
+		this.position = postion;
 	}
 
 	public Item(Parcel in) {
