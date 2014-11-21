@@ -91,11 +91,13 @@ public class Item implements Parcelable {
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(name);
 		dest.writeInt(itemType);
+		dest.writeString(statName);
 	}
 
 	public void readFromParcel(Parcel in) {
 		name = in.readString();
 		itemType = in.readInt();
+		statName = in.readString();
 	}
 
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {

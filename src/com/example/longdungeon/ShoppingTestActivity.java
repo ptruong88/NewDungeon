@@ -294,27 +294,34 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 	}
 
 	private void buyingStuff(String message, int pos) {
-		if (adapter.getCount() > 0)
-			adapter.clear();
+//		if (adapter.getCount() > 0)
+//			adapter.clear();
 		if (message.contains("Sword")) {
 			putUpdateSellItemToListView(pos, sellWeapon);
+			updateEquipmentListToSell(sellWeapon, pos);	
+			adapter.remove(message);
 		} else if (message.contains("Helmet")) {
 			putUpdateSellItemToListView(pos, sellHelmet);
+			updateEquipmentListToSell(sellHelmet, pos);	
+			adapter.remove(message);
 		} else if (message.contains("Shield")) {
 			putUpdateSellItemToListView(pos, sellShield);
+			updateEquipmentListToSell(sellShield, pos);	
+			adapter.remove(message);
 		} else if (message.contains("Cloth")) {
 			putUpdateSellItemToListView(pos, sellCloth);
-			displayEquipToList(sellCloth);
+			updateEquipmentListToSell(sellCloth, pos);	
+			adapter.remove(message);
 		} else if (message.contains("Ring")) {
-			putUpdateSellItemToListView(pos, sellRing);
+//			putUpdateSellItemToListView(pos, sellRing);
 		} else if (message.contains("HP")) {
-			putUpdateSellItemToListView(pos, sellHealPotion);
+//			putUpdateSellItemToListView(pos, sellHealPotion);
 		} else if (message.contains("STM") && message.contains("Potion")) {
-			putUpdateSellItemToListView(pos, sellStaminaPotion);
+//			putUpdateSellItemToListView(pos, sellStaminaPotion);
 		} else if (message.contains("MANA") && message.contains("Potion")) {
-			putUpdateSellItemToListView(pos, sellManaPotion);
+//			putUpdateSellItemToListView(pos, sellManaPotion);
 		}
-		listItems.setAdapter(adapter);
+//		listItems.setAdapter(adapter);
 	}
 
 	// ***********************************
@@ -325,20 +332,15 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 			if (sellEquipment[i + 1] != null) {
 				sellEquipment[i] = sellEquipment[i + 1];
 				sellEquipment[i + 1] = null;
-			} else {
-				sellEquipment[i] = null;
-				break;
-			}
+			} 
 		}
 	}
 
 	private void putUpdateSellItemToListView(int pos, Equipment[] sellEquipment) {
 		Equipment equip = sellEquipment[pos];
-		updateEquipmentListToSell(sellEquipment, pos);
 		player.insertItemToInventory(equip);
 		player.setGold(player.getGold() - equip.getCost());
 		txtViewGold.setText(player.getGold() + "");
-		displayEquipToList(sellEquipment);
 	}
 
 	// ***********************************

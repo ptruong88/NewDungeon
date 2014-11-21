@@ -20,6 +20,7 @@ public class Player extends Person implements Parcelable {
 	private Item[] playerInventory;
 	private int inventoryMaxSpace, inventoryCurSpace;
 	private int curEquipment;// Track to know how many equipment player has.
+
 	// public final static int POSITION_SWORD = 0;
 	// public final static int POSITION_HELMET = 1;
 	// public final static int POSITION_SHIELD = 2;
@@ -38,7 +39,7 @@ public class Player extends Person implements Parcelable {
 	}
 
 	private void defaultStats() {
-		gold = 0;
+		gold = 1000;
 		score = 0;
 		maxHp = 120;
 		curHp = maxHp;
@@ -183,6 +184,34 @@ public class Player extends Person implements Parcelable {
 		playerInventory[inventoryCurSpace] = item;
 		++inventoryCurSpace;
 	}
+
+	/**
+	 * Sort inventory orderly from weapon, helmet, shield, cloth, ring, potion.
+	 */
+	int j = 0;
+	public void sortInventory() {
+		Item[] temp = new Item[inventoryMaxSpace];		
+		sortInventoryItem(temp, Item.ITEM_SWORD);
+		sortInventoryItem(temp, Item.ITEM_HELMET);
+		sortInventoryItem(temp, Item.ITEM_SHIELD);
+		sortInventoryItem(temp, Item.ITEM_CLOTH);
+		sortInventoryItem(temp, Item.ITEM_RING);
+		sortInventoryItem(temp, Item.ITEM_HEALTH_POTION);
+		sortInventoryItem(temp, Item.ITEM_MANA_POTION);
+		sortInventoryItem(temp, Item.ITEM_STAMINA_POTION);
+		playerInventory = temp;
+	}
+	
+	private void sortInventoryItem(Item[] temp, int itemType){
+		for (int i = 0; i < inventoryCurSpace; ++i)
+			if (playerInventory[i].getItemType() == itemType) {
+				temp[j] = playerInventory[i];
+				++j;
+			}
+	}
+	
+	//***********************************
+	//End Sort Inventory
 
 	public int getInventoryMaxSpace() {
 		return inventoryMaxSpace;

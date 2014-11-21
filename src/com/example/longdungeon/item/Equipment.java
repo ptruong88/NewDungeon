@@ -19,17 +19,14 @@ public class Equipment extends Item implements Parcelable {
 		case ITEM_SWORD:
 			damage = 10;
 			cost = damage;
-			statName = "DMG";
 			break;
 		case ITEM_RING:
 			mana = 10;
 			cost = mana;
-			statName = "MANA";
 			break;
 		default:
 			defend = 10;
 			cost = defend;
-			statName = "DEF";
 			break;
 		}
 	}
@@ -64,14 +61,7 @@ public class Equipment extends Item implements Parcelable {
 	}
 	
 	public String getStatName() {
-		switch (itemType) {
-		case ITEM_SWORD:
-			return "DMG";
-		case ITEM_RING:
-			return  "MANA";
-		default:
-			return "DEF";			
-		}
+		return statName;
 	}
 
 
@@ -105,6 +95,7 @@ public class Equipment extends Item implements Parcelable {
 			break;
 		}
 		dest.writeInt(cost);
+		dest.writeString(statName);
 	}
 
 	public void readFromParcel(Parcel in) {
@@ -122,6 +113,7 @@ public class Equipment extends Item implements Parcelable {
 			break;
 		}
 		cost = in.readInt();
+		statName = in.readString();
 	}
 
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {

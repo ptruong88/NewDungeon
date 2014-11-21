@@ -23,17 +23,14 @@ public class Potion extends Item implements Parcelable {
 		case ITEM_HEALTH_POTION:
 			plusHP = 10;
 			cost = plusHP;
-			statName = "HP";
 			break;
 		case ITEM_STAMINA_POTION:
 			plusSTM = 10;
 			cost = plusSTM;
-			statName = "MANA";
 			break;
 		default:
 			plusMGK = 10;
 			cost = plusMGK;
-			statName = "STM";
 			break;
 		}
 	}
@@ -69,14 +66,7 @@ public class Potion extends Item implements Parcelable {
 	}
 	
 	public String getStatName(){
-		switch (itemType) {
-		case ITEM_HEALTH_POTION:
-			return "HP";
-		case ITEM_MANA_POTION:
-			return "MANA";
-		default:
-			return "DEF";
-		}
+		return statName;
 	}
 
 	public String toString() {
@@ -127,6 +117,7 @@ public class Potion extends Item implements Parcelable {
 			break;
 		}
 		dest.writeInt(cost);
+		dest.writeString(statName);
 	}
 
 	public void readFromParcel(Parcel in) {
@@ -145,6 +136,7 @@ public class Potion extends Item implements Parcelable {
 			break;
 		}
 		cost = in.readInt();
+		statName = in.readString();
 	}
 
 	public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
