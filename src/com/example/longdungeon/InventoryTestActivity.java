@@ -83,7 +83,7 @@ public class InventoryTestActivity extends ActionBarActivity implements
 	private void getPlayerFromBundle() {
 		// TODO Auto-generated method stub
 		Bundle fromBattle = getIntent().getExtras();
-		player = fromBattle.getParcelable("com.example.longdungeon.character");
+		player = fromBattle.getParcelable(Player.PLAYER_DATA);
 	}
 
 	private void setUpButtonAction() {
@@ -131,13 +131,13 @@ public class InventoryTestActivity extends ActionBarActivity implements
 		case R.id.buttonShop:
 			Intent intentShop = new Intent(InventoryTestActivity.this,
 					ShoppingTestActivity.class);
-			intentShop.putExtra("com.example.longdungeon.character", player);
+			intentShop.putExtra(Player.PLAYER_DATA, player);
 			startActivity(intentShop);
 			break;
 		case R.id.buttonBattle:
 			Intent intentBattle = new Intent(InventoryTestActivity.this,
 					BattleTestActivity.class);
-			intentBattle.putExtra("com.example.longdungeon.character", player);
+			intentBattle.putExtra(Player.PLAYER_DATA, player);
 			startActivity(intentBattle);
 			break;
 		}
@@ -149,34 +149,12 @@ public class InventoryTestActivity extends ActionBarActivity implements
 	 * button.
 	 */
 	private void displayAll() {
-		Equipment[] equipments = player.getPlayerEquip();
-		String name;
-		for (int i = 0; i < equipments.length; ++i) {
-			if (equipments[i] != null) {
-				name = "+" + equipments[i].getStatNumber()
-						+ equipments[i].getStatName() + " "
-						+ equipments[i].getName();
-				adapter.add(name);
-			}
-		}
-		Item[] inventory = player.getPlayerInventory();
-		for (int i = 0; i < player.getInventoryCurSpace(); ++i) {
-			switch (inventory[i].getItemType()) {
-			case Item.ITEM_HEALTH_POTION:
-			case Item.ITEM_MANA_POTION:
-			case Item.ITEM_STAMINA_POTION:
-				Potion potion = (Potion) inventory[i];
-				name = "+" + potion.getStatNumber()
-						+ potion.getStatName() + " " + potion.getName();
-				break;
-			default:
-				Equipment equip = (Equipment) inventory[i];
-				name = "+" + equip.getStatNumber() + equip.getStatName() + " "
-						+ equip.getName();
-				break;
-			}
-			adapter.add(name);
-		}
+		displayWeapon();
+		displayHelmet();
+		displayShield();
+		displayCloth();
+		displayRing();
+		displayPotion();
 	}
 
 	private void displayWeapon() {
@@ -190,6 +168,7 @@ public class InventoryTestActivity extends ActionBarActivity implements
 		Item[] inventory = player.getPlayerInventory();
 		for (int i = 0; i < player.getInventoryCurSpace(); ++i) {
 			if (inventory[i].getItemType() == Item.ITEM_SWORD) {
+				equipments = (Equipment)inventory[i];
 				name = "+" + equipments.getStatNumber() + " "
 						+ equipments.getStatName() + " " + equipments.getName();
 				adapter.add(name);
@@ -208,6 +187,7 @@ public class InventoryTestActivity extends ActionBarActivity implements
 		Item[] inventory = player.getPlayerInventory();
 		for (int i = 0; i < player.getInventoryCurSpace(); ++i) {
 			if (inventory[i].getItemType() == Item.ITEM_HELMET) {
+				equipments = (Equipment)inventory[i];
 				name = "+" + equipments.getStatNumber() + " "
 						+ equipments.getStatName() + " " + equipments.getName();
 				adapter.add(name);
@@ -226,6 +206,7 @@ public class InventoryTestActivity extends ActionBarActivity implements
 		Item[] inventory = player.getPlayerInventory();
 		for (int i = 0; i < player.getInventoryCurSpace(); ++i) {
 			if (inventory[i].getItemType() == Item.ITEM_SHIELD) {
+				equipments = (Equipment)inventory[i];
 				name = "+" + equipments.getStatNumber() + " "
 						+ equipments.getStatName() + " " + equipments.getName();
 				adapter.add(name);
@@ -244,6 +225,7 @@ public class InventoryTestActivity extends ActionBarActivity implements
 		Item[] inventory = player.getPlayerInventory();
 		for (int i = 0; i < player.getInventoryCurSpace(); ++i) {
 			if (inventory[i].getItemType() == Item.ITEM_CLOTH) {
+				equipments = (Equipment)inventory[i];
 				name = "+" + equipments.getStatNumber() + " "
 						+ equipments.getStatName() + " " + equipments.getName();
 				adapter.add(name);
@@ -262,6 +244,7 @@ public class InventoryTestActivity extends ActionBarActivity implements
 		Item[] inventory = player.getPlayerInventory();
 		for (int i = 0; i < player.getInventoryCurSpace(); ++i) {
 			if (inventory[i].getItemType() == Item.ITEM_RING) {
+				equipments = (Equipment)inventory[i];
 				name = "+" + equipments.getStatNumber() + " "
 						+ equipments.getStatName() + " " + equipments.getName();
 				adapter.add(name);
@@ -294,27 +277,8 @@ public class InventoryTestActivity extends ActionBarActivity implements
 		listItems.setVisibility(View.VISIBLE);
 		listItems.setOnItemClickListener(this);
 
-		listWeapon = new String[] { "Axe", "Sword" };
-		listHelmet = new String[] { "Iron Helmet", "Gold Helmet" };
-		listShield = new String[] { "Iron Shield", "Gold Shield" };
-		listCloth = new String[] { "Iron Cloth", "Gold Cloth" };
-		listPotion = new String[] { "Health Potion 10HP", "Health Potion 20HP",
-				"Mana Potion 10Mana", "Mana Potion 20Mana",
-				"Stamina Potion 10STM", "Stamina Potion 20STM" };
-		int sizeAll = listWeapon.length + listHelmet.length + listShield.length
-				+ listCloth.length + listPotion.length;
-		listAll = new String[sizeAll];
-		int j = 0;
-		for (int i = 0; i < listWeapon.length; ++i, ++j)
-			listAll[j] = listWeapon[i];
-		for (int i = 0; i < listHelmet.length; ++i, ++j)
-			listAll[j] = listHelmet[i];
-		for (int i = 0; i < listShield.length; ++i, ++j)
-			listAll[j] = listShield[i];
-		for (int i = 0; i < listCloth.length; ++i, ++j)
-			listAll[j] = listCloth[i];
-		for (int i = 0; i < listPotion.length; ++i, ++j)
-			listAll[j] = listPotion[i];
+		displayWeapon();
+		listItems.setAdapter(adapter);
 	}
 
 	@Override
@@ -328,7 +292,7 @@ public class InventoryTestActivity extends ActionBarActivity implements
 	private void setUpConfirmBuy(final String message) {
 
 		// Setting Dialog Title
-		alertDialog.setTitle("Confrim buying");
+//		alertDialog.setTitle("");
 
 		// Setting Dialog Message
 		alertDialog.setMessage(message);

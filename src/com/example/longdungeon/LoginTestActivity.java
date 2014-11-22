@@ -59,7 +59,7 @@ public class LoginTestActivity extends ActionBarActivity {
 				Player player = new Player(edTxtLogin.getText().toString());
 				Intent intentBattle = new Intent(LoginTestActivity.this,
 						BattleTestActivity.class);
-				intentBattle.putExtra("com.example.longdungeon.character",
+				intentBattle.putExtra(Player.PLAYER_DATA,
 						player);
 				startActivity(intentBattle);
 				finish();

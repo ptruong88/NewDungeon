@@ -17,15 +17,15 @@ public class Equipment extends Item implements Parcelable {
 		super(name, itemType);
 		switch (itemType) {
 		case ITEM_SWORD:
-			damage = 10;
+			damage = 15;
 			cost = damage;
 			break;
 		case ITEM_RING:
-			mana = 10;
+			mana = 60;
 			cost = mana;
 			break;
 		default:
-			defend = 10;
+			defend = 3;
 			cost = defend;
 			break;
 		}

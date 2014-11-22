@@ -547,7 +547,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 				.findViewById(R.id.textViewPlayerName);
 		Intent intentLogin = getIntent();
 		player = intentLogin.getExtras().getParcelable(
-				"com.example.longdungeon.character");
+				Player.PLAYER_DATA);
 		txtViewPlayerName.setText(player.getName());
 
 		txtViewPlayerScore = (TextView) this
@@ -637,7 +637,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 						Intent intentShopping = new Intent(BattleTestActivity.this,
 								ShoppingTestActivity.class);
 						intentShopping.putExtra(
-								"com.example.longdungeon.character", player);
+								Player.PLAYER_DATA, player);
 						startActivity(intentShopping);
 						finish();
 					}
@@ -681,7 +681,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 						Intent intentShopping = new Intent(BattleTestActivity.this,
 								ShoppingTestActivity.class);
 						intentShopping.putExtra(
-								"com.example.longdungeon.character", player);
+								Player.PLAYER_DATA, player);
 						startActivity(intentShopping);
 						finish();
 					}

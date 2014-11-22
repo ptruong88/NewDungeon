@@ -83,7 +83,7 @@ public class InventoryActivity extends ActionBarActivity implements
 	private void getPlayerFromBundle() {
 		// TODO Auto-generated method stub
 		Bundle fromBattle = getIntent().getExtras();
-		player = fromBattle.getParcelable("com.example.longdungeon.character");
+		player = fromBattle.getParcelable(Player.PLAYER_DATA);
 	}
 
 	private void setUpButtonAction() {
@@ -131,13 +131,13 @@ public class InventoryActivity extends ActionBarActivity implements
 		case R.id.buttonShop:
 			Intent intentShop = new Intent(InventoryActivity.this,
 					ShoppingActivity.class);
-			intentShop.putExtra("com.example.longdungeon.character", player);
+			intentShop.putExtra(Player.PLAYER_DATA, player);
 			startActivity(intentShop);
 			break;
 		case R.id.buttonBattle:
 			Intent intentBattle = new Intent(InventoryActivity.this,
 					BattleActivity.class);
-			intentBattle.putExtra("com.example.longdungeon.character", player);
+			intentBattle.putExtra(Player.PLAYER_DATA, player);
 			startActivity(intentBattle);
 			break;
 		}
