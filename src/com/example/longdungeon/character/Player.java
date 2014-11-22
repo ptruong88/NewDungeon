@@ -20,8 +20,10 @@ public class Player extends Person implements Parcelable {
 	private Item[] playerInventory;
 	private int inventoryMaxSpace, inventoryCurSpace;
 	private int curEquipment;// Track to know how many equipment player has.
+	private int skillPoint;
 
 	public static final String PLAYER_DATA = "com.example.longdungeon.character.Player";
+
 	// public final static int POSITION_SWORD = 0;
 	// public final static int POSITION_HELMET = 1;
 	// public final static int POSITION_SHIELD = 2;
@@ -51,6 +53,7 @@ public class Player extends Person implements Parcelable {
 		def = 20;
 		damage = 15;
 		level = 0;
+		skillPoint = 5;
 		setUpPlayerEquip();
 		setUpPlayerInventory();
 	}
@@ -73,7 +76,7 @@ public class Player extends Person implements Parcelable {
 
 		playerEquip[Item.ITEM_RING] = new Equipment("Wood Ring", Item.ITEM_RING);
 		maxMana = playerEquip[Item.ITEM_RING].getStatNumber();
-		
+
 		curEquipment = 5;
 	}
 
@@ -82,19 +85,17 @@ public class Player extends Person implements Parcelable {
 		inventoryMaxSpace = 20;
 		playerInventory = new Item[inventoryMaxSpace];
 
-		playerInventory[0] = new Potion("Small Potion",
-				Item.ITEM_HEALTH_POTION);
-		((Potion) playerInventory[0]).setStatNumber((int)(maxHp*0.3));
+		playerInventory[0] = new Potion("Small Potion", Item.ITEM_HEALTH_POTION);
+		((Potion) playerInventory[0]).setStatNumber((int) (maxHp * 0.3));
 		((Potion) playerInventory[0]).setSize(5);
 
 		playerInventory[1] = new Potion("Small Potion",
 				Item.ITEM_STAMINA_POTION);
-		((Potion) playerInventory[1]).setStatNumber((int)(maxStm*0.3));
+		((Potion) playerInventory[1]).setStatNumber((int) (maxStm * 0.3));
 		((Potion) playerInventory[1]).setSize(5);
 
-		playerInventory[2] = new Potion("Small Potion",
-				Item.ITEM_MANA_POTION);
-		((Potion) playerInventory[2]).setStatNumber((int)(maxMana*0.3));
+		playerInventory[2] = new Potion("Small Potion", Item.ITEM_MANA_POTION);
+		((Potion) playerInventory[2]).setStatNumber((int) (maxMana * 0.3));
 		((Potion) playerInventory[2]).setSize(5);
 		inventoryCurSpace = 3;
 	}
@@ -137,6 +138,14 @@ public class Player extends Person implements Parcelable {
 
 	public void setCurMana(int curMana) {
 		this.curMana = curMana;
+	}
+
+	public void setSkillPoint(int skillPoint) {
+		this.skillPoint = skillPoint;
+	}
+
+	public int getSkillPoint() {
+		return skillPoint;
 	}
 
 	public Equipment getPlayerEquip(int position) {
@@ -196,8 +205,8 @@ public class Player extends Person implements Parcelable {
 		playerInventory[inventoryCurSpace] = item;
 		++inventoryCurSpace;
 	}
-	
-	public void removeItemToInventory(int position){
+
+	public void removeItemToInventory(int position) {
 		playerInventory[position] = null;
 		--inventoryCurSpace;
 	}
@@ -247,10 +256,10 @@ public class Player extends Person implements Parcelable {
 		this.inventoryCurSpace = inventoryCurSpace;
 	}
 
-	public boolean isInventoryFull(){
+	public boolean isInventoryFull() {
 		return inventoryCurSpace == inventoryMaxSpace;
 	}
-	
+
 	public int getLevel() {
 		return level;
 	}
@@ -286,6 +295,7 @@ public class Player extends Person implements Parcelable {
 		dest.writeInt(maxMana);
 		dest.writeInt(curMana);
 		dest.writeInt(level);
+		dest.writeInt(skillPoint);
 		for (int i = 0; i < playerEquip.length; ++i) {
 			dest.writeParcelable(playerEquip[i], flags);
 		}
@@ -311,6 +321,7 @@ public class Player extends Person implements Parcelable {
 		maxMana = in.readInt();
 		curMana = in.readInt();
 		level = in.readInt();
+		skillPoint = in.readInt();
 		for (int i = 0; i < 5; ++i) {
 			playerEquip[i] = in
 					.readParcelable(Equipment.class.getClassLoader());

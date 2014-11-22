@@ -97,6 +97,7 @@ public class InventoryTestActivity extends ActionBarActivity implements
 		this.findViewById(R.id.buttonPotion).setOnClickListener(this);
 		this.findViewById(R.id.buttonShop).setOnClickListener(this);
 		this.findViewById(R.id.buttonBattle).setOnClickListener(this);
+		this.findViewById(R.id.buttonSkill).setOnClickListener(this);
 	}
 
 	@Override
@@ -107,26 +108,33 @@ public class InventoryTestActivity extends ActionBarActivity implements
 		switch (button.getId()) {
 		case R.id.buttonAll:
 			displayAll();
+			listItems.setAdapter(adapter);
 			break;
 		case R.id.buttonWeapon:
 			displayWeapon();
+			listItems.setAdapter(adapter);
 			break;
 		case R.id.buttonHelmet:
 			displayHelmet();
+			listItems.setAdapter(adapter);
 			break;
 		case R.id.buttonShield:
 			displayShield();
+			listItems.setAdapter(adapter);
 			break;
 		case R.id.buttonCloth:
 			displayCloth();
+			listItems.setAdapter(adapter);
 			break;
 
 		case R.id.buttonRing:
 			displayRing();
+			listItems.setAdapter(adapter);
 			break;
 
 		case R.id.buttonPotion:
 			displayPotion();
+			listItems.setAdapter(adapter);
 			break;
 		case R.id.buttonShop:
 			Intent intentShop = new Intent(InventoryTestActivity.this,
@@ -140,8 +148,27 @@ public class InventoryTestActivity extends ActionBarActivity implements
 			intentBattle.putExtra(Player.PLAYER_DATA, player);
 			startActivity(intentBattle);
 			break;
+		case R.id.buttonSkill:
+			Button btn = (Button) this.findViewById(R.id.buttonSkill);
+			if (btn.getText().equals("Skill")) {
+				this.findViewById(R.id.scrollViewCategory).setVisibility(
+						View.INVISIBLE);
+				this.findViewById(R.id.listViewItems).setVisibility(
+						View.INVISIBLE);
+				this.findViewById(R.id.layoutSkill).setVisibility(View.VISIBLE);
+				btn.setText("Inventory");
+			}
+			else{
+				this.findViewById(R.id.scrollViewCategory).setVisibility(
+						View.VISIBLE);
+				this.findViewById(R.id.listViewItems).setVisibility(
+						View.VISIBLE);
+				this.findViewById(R.id.layoutSkill).setVisibility(View.INVISIBLE);
+				btn.setText("Skill");
+			}
+			break;
 		}
-		listItems.setAdapter(adapter);
+
 	}
 
 	/*
@@ -161,14 +188,14 @@ public class InventoryTestActivity extends ActionBarActivity implements
 		Equipment equipments = player.getPlayerEquip()[Item.ITEM_SWORD];
 		String name;
 
-		name = "+" + equipments.getStatNumber() + " " + equipments.getStatName()
-				+ " " + equipments.getName();
+		name = "+" + equipments.getStatNumber() + " "
+				+ equipments.getStatName() + " " + equipments.getName();
 		adapter.add(name);
 
 		Item[] inventory = player.getPlayerInventory();
 		for (int i = 0; i < player.getInventoryCurSpace(); ++i) {
 			if (inventory[i].getItemType() == Item.ITEM_SWORD) {
-				equipments = (Equipment)inventory[i];
+				equipments = (Equipment) inventory[i];
 				name = "+" + equipments.getStatNumber() + " "
 						+ equipments.getStatName() + " " + equipments.getName();
 				adapter.add(name);
@@ -180,14 +207,14 @@ public class InventoryTestActivity extends ActionBarActivity implements
 		Equipment equipments = player.getPlayerEquip()[Item.ITEM_HELMET];
 		String name;
 
-		name = "+" + equipments.getStatNumber() + " " + equipments.getStatName()
-				+ " " + equipments.getName();
+		name = "+" + equipments.getStatNumber() + " "
+				+ equipments.getStatName() + " " + equipments.getName();
 		adapter.add(name);
 
 		Item[] inventory = player.getPlayerInventory();
 		for (int i = 0; i < player.getInventoryCurSpace(); ++i) {
 			if (inventory[i].getItemType() == Item.ITEM_HELMET) {
-				equipments = (Equipment)inventory[i];
+				equipments = (Equipment) inventory[i];
 				name = "+" + equipments.getStatNumber() + " "
 						+ equipments.getStatName() + " " + equipments.getName();
 				adapter.add(name);
@@ -199,14 +226,14 @@ public class InventoryTestActivity extends ActionBarActivity implements
 		Equipment equipments = player.getPlayerEquip()[Item.ITEM_SHIELD];
 		String name;
 
-		name = "+" + equipments.getStatNumber() + " " + equipments.getStatName()
-				+ " " + equipments.getName();
+		name = "+" + equipments.getStatNumber() + " "
+				+ equipments.getStatName() + " " + equipments.getName();
 		adapter.add(name);
 
 		Item[] inventory = player.getPlayerInventory();
 		for (int i = 0; i < player.getInventoryCurSpace(); ++i) {
 			if (inventory[i].getItemType() == Item.ITEM_SHIELD) {
-				equipments = (Equipment)inventory[i];
+				equipments = (Equipment) inventory[i];
 				name = "+" + equipments.getStatNumber() + " "
 						+ equipments.getStatName() + " " + equipments.getName();
 				adapter.add(name);
@@ -218,14 +245,14 @@ public class InventoryTestActivity extends ActionBarActivity implements
 		Equipment equipments = player.getPlayerEquip()[Item.ITEM_CLOTH];
 		String name;
 
-		name = "+" + equipments.getStatNumber() + " " + equipments.getStatName()
-				+ " " + equipments.getName();
+		name = "+" + equipments.getStatNumber() + " "
+				+ equipments.getStatName() + " " + equipments.getName();
 		adapter.add(name);
 
 		Item[] inventory = player.getPlayerInventory();
 		for (int i = 0; i < player.getInventoryCurSpace(); ++i) {
 			if (inventory[i].getItemType() == Item.ITEM_CLOTH) {
-				equipments = (Equipment)inventory[i];
+				equipments = (Equipment) inventory[i];
 				name = "+" + equipments.getStatNumber() + " "
 						+ equipments.getStatName() + " " + equipments.getName();
 				adapter.add(name);
@@ -237,14 +264,14 @@ public class InventoryTestActivity extends ActionBarActivity implements
 		Equipment equipments = player.getPlayerEquip()[Item.ITEM_RING];
 		String name;
 
-		name = "+" + equipments.getStatNumber() + " " + equipments.getStatName()
-				+ " " + equipments.getName();
+		name = "+" + equipments.getStatNumber() + " "
+				+ equipments.getStatName() + " " + equipments.getName();
 		adapter.add(name);
 
 		Item[] inventory = player.getPlayerInventory();
 		for (int i = 0; i < player.getInventoryCurSpace(); ++i) {
 			if (inventory[i].getItemType() == Item.ITEM_RING) {
-				equipments = (Equipment)inventory[i];
+				equipments = (Equipment) inventory[i];
 				name = "+" + equipments.getStatNumber() + " "
 						+ equipments.getStatName() + " " + equipments.getName();
 				adapter.add(name);
@@ -279,6 +306,12 @@ public class InventoryTestActivity extends ActionBarActivity implements
 
 		displayWeapon();
 		listItems.setAdapter(adapter);
+		
+		this.findViewById(R.id.scrollViewCategory).setVisibility(
+				View.VISIBLE);
+		this.findViewById(R.id.listViewItems).setVisibility(
+				View.VISIBLE);
+		this.findViewById(R.id.layoutSkill).setVisibility(View.INVISIBLE);
 	}
 
 	@Override
@@ -292,7 +325,7 @@ public class InventoryTestActivity extends ActionBarActivity implements
 	private void setUpConfirmBuy(final String message) {
 
 		// Setting Dialog Title
-//		alertDialog.setTitle("");
+		// alertDialog.setTitle("");
 
 		// Setting Dialog Message
 		alertDialog.setMessage(message);
