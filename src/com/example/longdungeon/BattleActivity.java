@@ -231,7 +231,10 @@ public class BattleActivity extends ActionBarActivity implements
 					{
 						winDialog.show();
 					}
-					enemyTurn();// once you've attacked the enemy gets a turn
+					else
+					{
+						enemyTurn();// once you've attacked the enemy gets a turn
+					}
 				}
 				break;
 			case 1:// medium attack case based on it being in the 1st position
@@ -308,7 +311,10 @@ public class BattleActivity extends ActionBarActivity implements
 					{
 						winDialog.show();
 					}
-					enemyTurn();// once you've attacked the enemy gets a turn
+					else
+					{
+						enemyTurn();// once you've attacked the enemy gets a turn
+					}
 				}
 				break;
 			default:// heavy attack case based on it being in the 2nd position
@@ -381,8 +387,10 @@ public class BattleActivity extends ActionBarActivity implements
 					{
 						winDialog.show();
 					}
-					enemyTurn();// once you've attacked the enemy gets a turn
-					
+					else
+					{
+						enemyTurn();// once you've attacked the enemy gets a turn
+					}
 
 				}
 				break;
@@ -433,7 +441,10 @@ public class BattleActivity extends ActionBarActivity implements
 					{
 						winDialog.show();
 					}
-					enemyTurn();// once you've attacked the enemy gets a turn
+					else
+					{
+						enemyTurn();// once you've attacked the enemy gets a turn
+					}
 				} else {
 					Toast.makeText(getApplicationContext(), "not enough Mana!",
 							Toast.LENGTH_SHORT).show();
@@ -482,7 +493,10 @@ public class BattleActivity extends ActionBarActivity implements
 					{
 						winDialog.show();
 					}
-					enemyTurn();// once you've attacked the enemy gets a turn
+					else
+					{
+						enemyTurn();// once you've attacked the enemy gets a turn
+					}
 				} else {
 					Toast.makeText(getApplicationContext(), "not enough Mana!",
 							Toast.LENGTH_SHORT).show();
@@ -531,7 +545,10 @@ public class BattleActivity extends ActionBarActivity implements
 					{
 						winDialog.show();
 					}
-					enemyTurn();// once you've attacked the enemy gets a turn
+					else
+					{
+						enemyTurn();// once you've attacked the enemy gets a turn
+					}
 				} else {
 					Toast.makeText(getApplicationContext(), "not enough Mana!",
 							Toast.LENGTH_SHORT).show();
