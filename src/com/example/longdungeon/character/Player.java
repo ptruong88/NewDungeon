@@ -23,6 +23,7 @@ public class Player extends Person implements Parcelable {
 	private int skillPoint;
 
 	public static final String PLAYER_DATA = "com.example.longdungeon.character.Player";
+	public static final String PLAYER_FILE = "playerData";
 
 	// public final static int POSITION_SWORD = 0;
 	// public final static int POSITION_HELMET = 1;
@@ -196,7 +197,7 @@ public class Player extends Person implements Parcelable {
 	public Item[] getPlayerInventory() {
 		return playerInventory;
 	}
-
+	
 	public void setPlayerInventory(Item[] playerInventory) {
 		this.playerInventory = playerInventory;
 	}

@@ -5,10 +5,10 @@ import android.os.Parcelable;
 
 public class Potion extends Item implements Parcelable {
 
-	private int plusHP;// how many hp the potion restores
-	private int plusSTM;// how much stamina the potion restores
-	private int plusMGK;// how much magic the potion restores
-	private int size;
+	// private int plusHP;// how many hp the potion restores
+	// private int plusSTM;// how much stamina the potion restores
+	// private int plusMGK;// how much magic the potion restores
+	
 	public final int size_of_stack = 5;
 
 	public Potion() {
@@ -21,62 +21,42 @@ public class Potion extends Item implements Parcelable {
 		// this.potionType = potionType;
 		switch (itemType) {
 		case ITEM_HEALTH_POTION:
-			plusHP = 10;
-			cost = plusHP;
+			statNumber = 10;
 			break;
 		case ITEM_STAMINA_POTION:
-			plusSTM = 10;
-			cost = plusSTM;
+			statNumber = 10;
 			break;
 		default:
-			plusMGK = 10;
-			cost = plusMGK;
+			statNumber = 10;
 			break;
 		}
+		cost = statNumber;
 	}
 
-	public void setStatNumber(int number) {
-		switch (itemType) {
-		case ITEM_HEALTH_POTION:
-			plusHP = number;
-			cost = number;
-			break;
-		case ITEM_MANA_POTION:
-			plusMGK = number;
-			cost = number;
-			break;
-		default:
-			plusSTM = number;
-			cost = number;
-			break;
-		}
-	}
+//	public void setStatNumber(int statNumber) {
+//		this.statNumber = statNumber;
+//		cost = statNumber;
+//	}
 
 	// Depend on what kind of potion is, getStatPotion returns
 	// heal, mana, or stamina.
-	public int getStatNumber() {
-		switch (itemType) {
-		case ITEM_HEALTH_POTION:
-			return plusHP;
-		case ITEM_MANA_POTION:
-			return plusMGK;
-		default:
-			return plusSTM;
-		}
-	}
+	// public int getStatNumber() {
+	// switch (itemType) {
+	// case ITEM_HEALTH_POTION:
+	// return plusHP;
+	// case ITEM_MANA_POTION:
+	// return plusMGK;
+	// default:
+	// return plusSTM;
+	// }
+	// }
 
 	public String toString() {
 		return "+" + getStatNumber() + " " + getStatName() + " " + name + " x"
 				+ size;
 	}
 
-	public int getSize() {
-		return size;
-	}
-
-	public void setSize(int size) {
-		this.size = size;
-	}
+	
 
 	// public String getPotionType() {
 	// return potionType;
@@ -101,17 +81,7 @@ public class Potion extends Item implements Parcelable {
 		dest.writeString(name);
 		dest.writeInt(itemType);
 		dest.writeInt(size);
-		switch (itemType) {
-		case ITEM_HEALTH_POTION:
-			dest.writeInt(plusHP);
-			break;
-		case ITEM_STAMINA_POTION:
-			dest.writeInt(plusSTM);
-			break;
-		default:
-			dest.writeInt(plusMGK);
-			break;
-		}
+		dest.writeInt(statNumber);
 		dest.writeInt(cost);
 		dest.writeString(statName);
 	}
@@ -120,17 +90,7 @@ public class Potion extends Item implements Parcelable {
 		name = in.readString();
 		itemType = in.readInt();
 		size = in.readInt();
-		switch (itemType) {
-		case ITEM_HEALTH_POTION:
-			plusHP = in.readInt();
-			break;
-		case ITEM_STAMINA_POTION:
-			plusSTM = in.readInt();
-			break;
-		default:
-			plusMGK = in.readInt();
-			break;
-		}
+		statNumber = in.readInt();
 		cost = in.readInt();
 		statName = in.readString();
 	}

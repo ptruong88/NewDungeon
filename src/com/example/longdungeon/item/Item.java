@@ -10,7 +10,9 @@ public class Item implements Parcelable {
 	protected int itemType;
 	protected int cost;// gold from sell item or value from buy item.
 	protected String statName;
-	protected int position; //position in shopping activity.
+	protected int statNumber;
+	protected int size;// Size for potion
+	protected int position; // position in shopping activity.
 	public static final int ITEM_SWORD = 0;
 	public static final int ITEM_HELMET = 1;
 	public static final int ITEM_SHIELD = 2;
@@ -22,6 +24,7 @@ public class Item implements Parcelable {
 
 	public Item() {
 		// TODO Auto-generated constructor stub
+		itemType = 0;
 	}
 
 	public Item(String name, int itemType) {
@@ -50,12 +53,20 @@ public class Item implements Parcelable {
 			break;
 		}
 	}
-	
-	public String getStatName(){
+
+	public String getStatName() {
 		return statName;
 	}
 
-	
+	public int getStatNumber() {
+		return statNumber;
+	}
+
+	public void setStatNumber(int statNumber) {
+		this.statNumber = statNumber;
+		cost = statNumber;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -70,6 +81,24 @@ public class Item implements Parcelable {
 
 	public void setItemType(int itemType) {
 		this.itemType = itemType;
+		switch (itemType) {
+		case ITEM_SWORD:
+			statName = "DMG";
+			break;
+		case ITEM_MANA_POTION:
+		case ITEM_RING:
+			statName = "MANA";
+			break;
+		case ITEM_HEALTH_POTION:
+			statName = "HP";
+			break;
+		case ITEM_STAMINA_POTION:
+			statName = "STM";
+			break;
+		default:
+			statName = "DEF";
+			break;
+		}
 	}
 
 	public int getCost() {
@@ -86,6 +115,14 @@ public class Item implements Parcelable {
 
 	public void setPosition(int postion) {
 		this.position = postion;
+	}
+
+	public int getSize() {
+		return size;
+	}
+
+	public void setSize(int size) {
+		this.size = size;
 	}
 
 	public Item(Parcel in) {
