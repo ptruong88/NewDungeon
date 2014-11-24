@@ -193,11 +193,12 @@ public class InventoryTestActivity extends ActionBarActivity implements
 		adapter.add(name);
 
 		Item[] inventory = player.getPlayerInventory();
+		Item temp;
 		for (int i = 0; i < player.getInventoryCurSpace(); ++i) {
 			if (inventory[i].getItemType() == Item.ITEM_SWORD) {
-				equipments = (Equipment) inventory[i];
-				name = "+" + equipments.getStatNumber() + " "
-						+ equipments.getStatName() + " " + equipments.getName();
+				temp =  inventory[i];
+				name = "+" + temp.getStatNumber() + " "
+						+ temp.getStatName() + " " + temp.getName();
 				adapter.add(name);
 			}
 		}
@@ -212,11 +213,12 @@ public class InventoryTestActivity extends ActionBarActivity implements
 		adapter.add(name);
 
 		Item[] inventory = player.getPlayerInventory();
+		Item temp;
 		for (int i = 0; i < player.getInventoryCurSpace(); ++i) {
 			if (inventory[i].getItemType() == Item.ITEM_HELMET) {
-				equipments = (Equipment) inventory[i];
-				name = "+" + equipments.getStatNumber() + " "
-						+ equipments.getStatName() + " " + equipments.getName();
+				temp =  inventory[i];
+				name = "+" + temp.getStatNumber() + " "
+						+ temp.getStatName() + " " + temp.getName();
 				adapter.add(name);
 			}
 		}
@@ -231,11 +233,12 @@ public class InventoryTestActivity extends ActionBarActivity implements
 		adapter.add(name);
 
 		Item[] inventory = player.getPlayerInventory();
+		Item temp;
 		for (int i = 0; i < player.getInventoryCurSpace(); ++i) {
 			if (inventory[i].getItemType() == Item.ITEM_SHIELD) {
-				equipments = (Equipment) inventory[i];
-				name = "+" + equipments.getStatNumber() + " "
-						+ equipments.getStatName() + " " + equipments.getName();
+				temp =  inventory[i];
+				name = "+" + temp.getStatNumber() + " "
+						+ temp.getStatName() + " " + temp.getName();
 				adapter.add(name);
 			}
 		}
@@ -250,11 +253,12 @@ public class InventoryTestActivity extends ActionBarActivity implements
 		adapter.add(name);
 
 		Item[] inventory = player.getPlayerInventory();
+		Item temp;
 		for (int i = 0; i < player.getInventoryCurSpace(); ++i) {
 			if (inventory[i].getItemType() == Item.ITEM_CLOTH) {
-				equipments = (Equipment) inventory[i];
-				name = "+" + equipments.getStatNumber() + " "
-						+ equipments.getStatName() + " " + equipments.getName();
+				temp =  inventory[i];
+				name = "+" + temp.getStatNumber() + " "
+						+ temp.getStatName() + " " + temp.getName();
 				adapter.add(name);
 			}
 		}
@@ -269,11 +273,12 @@ public class InventoryTestActivity extends ActionBarActivity implements
 		adapter.add(name);
 
 		Item[] inventory = player.getPlayerInventory();
+		Item temp;
 		for (int i = 0; i < player.getInventoryCurSpace(); ++i) {
 			if (inventory[i].getItemType() == Item.ITEM_RING) {
-				equipments = (Equipment) inventory[i];
-				name = "+" + equipments.getStatNumber() + " "
-						+ equipments.getStatName() + " " + equipments.getName();
+				temp =  inventory[i];
+				name = "+" + temp.getStatNumber() + " "
+						+ temp.getStatName() + " " + temp.getName();
 				adapter.add(name);
 			}
 		}
@@ -281,13 +286,13 @@ public class InventoryTestActivity extends ActionBarActivity implements
 
 	private void displayPotion() {
 		Item[] inventory = player.getPlayerInventory();
-		Potion potion;
+		Item potion;
 		String name;
 		for (int i = 0; i < player.getInventoryCurSpace(); ++i) {
 			if (inventory[i].getItemType() == Item.ITEM_HEALTH_POTION
 					|| inventory[i].getItemType() == Item.ITEM_MANA_POTION
 					|| inventory[i].getItemType() == Item.ITEM_STAMINA_POTION) {
-				potion = (Potion) inventory[i];
+				potion =  inventory[i];
 				name = "+" + potion.getStatNumber() + " "
 						+ potion.getStatName() + " " + potion.getName();
 				adapter.add(name);

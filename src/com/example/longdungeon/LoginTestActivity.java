@@ -1,12 +1,26 @@
 package com.example.longdungeon;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.OptionalDataException;
+import java.io.StreamCorruptedException;
+
 import com.example.longdungeon.character.Player;
+import com.example.longdungeon.item.Equipment;
+import com.example.longdungeon.item.Item;
+import com.example.longdungeon.item.Potion;
 
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,7 +33,7 @@ public class LoginTestActivity extends ActionBarActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_login);
+		setContentView(R.layout.activity_login_test);
 
 		final EditText edTxtLogin = (EditText) this
 				.findViewById(R.id.editTextLogin);
@@ -59,12 +73,47 @@ public class LoginTestActivity extends ActionBarActivity {
 				Player player = new Player(edTxtLogin.getText().toString());
 				Intent intentBattle = new Intent(LoginTestActivity.this,
 						BattleTestActivity.class);
-				intentBattle.putExtra(Player.PLAYER_DATA,
-						player);
+				intentBattle.putExtra(Player.PLAYER_DATA, player);
 				startActivity(intentBattle);
 				finish();
 			}
 		});
+	}
+
+	protected void onResume() {
+		super.onResume();
+		this.findViewById(R.id.layoutLoginText).setVisibility(View.INVISIBLE);
+
+		File file = new File(getFilesDir(), Player.PLAYER_FILE);
+//		 file.delete();
+		if (file.exists()) {
+
+			// new Handler().postDelayed(new Runnable() {
+			//
+			// @Override
+			// public void run() {
+			// TODO Auto-generated method stub
+			try {
+				BufferedReader inputReader = new BufferedReader(
+						new InputStreamReader(openFileInput(Player.PLAYER_FILE)));
+
+				Player player = new Player();
+				player.readFromFile(player,inputReader);				
+
+				Intent intentShop = new Intent(LoginTestActivity.this,
+						ShoppingTestActivity.class);
+				intentShop.putExtra(Player.PLAYER_DATA, player);
+				startActivity(intentShop);
+				finish();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			// }
+			// }, 4000);
+
+		} else
+			this.findViewById(R.id.layoutLoginText).setVisibility(View.VISIBLE);
 	}
 
 	@Override

@@ -22,6 +22,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -39,9 +40,11 @@ public class BattleTestActivity extends ActionBarActivity implements
 			txtViewStamina, txtViewMobStamina;
 	private Mob mob;
 	private Player player;
-	private Button btnAttack, btnDenfend, btnMagic, btnItem, btnRun;
 	private String[] listAttack, listMagic, listItem;
 	private ArrayAdapter<String> adapterAttack, adapterMagic, adapterItem;
+	private static int[] imageMobs = new int[] { R.drawable.goblin,
+			R.drawable.skeleton, R.drawable.spider };
+	private ImageView imageMob;
 
 	// gordon's variables for the game loop
 	// boolean playerTurn = true;
@@ -54,10 +57,11 @@ public class BattleTestActivity extends ActionBarActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_battle);
+		setContentView(R.layout.activity_battle_test);
 
-		setUpMob();
+		
 		setUpPlayer();
+		setUpMob();
 		setUpListView();
 		setUpStringForListView();
 		setUpButtonAction();
@@ -169,8 +173,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 			// mobCurHp -= baseDamage;
 			switch (position) {
 			case 0:// basic attack case based on it being in the 0th position
-				if (player.getCurStm() >= 10) 
-				{
+				if (player.getCurStm() >= 10) {
 					player.setCurStm((player.getCurStm()) - 10);
 					txtViewStamina.setText("Stamina: " + player.getCurStm()
 							+ "/" + player.getMaxStm());// attacks always cost
@@ -178,22 +181,24 @@ public class BattleTestActivity extends ActionBarActivity implements
 														// or not
 
 					d10Roll = randomWithRange(1, 10);
-					if ((d10Roll == 1) || (d10Roll == 2)) 
-					{
-						Toast.makeText(getApplicationContext(),"Your attack missed!", Toast.LENGTH_SHORT).show();
+					if ((d10Roll == 1) || (d10Roll == 2)) {
+						Toast.makeText(getApplicationContext(),
+								"Your attack missed!", Toast.LENGTH_SHORT)
+								.show();
 					}
 
-					else if ((d10Roll == 2) || (d10Roll == 3) || (d10Roll == 4)) 
-					{
+					else if ((d10Roll == 2) || (d10Roll == 3) || (d10Roll == 4)) {
 						atkVal = (player.getDamage()) / 2;
-						if (enemyDefending == true) 
-						{
+						if (enemyDefending == true) {
 							atkVal = atkVal / 2;
 						}
-						String atkString = "Glancing hit for " + atkVal+ " damage!";
-						Toast.makeText(getApplicationContext(), atkString,Toast.LENGTH_SHORT).show();
+						String atkString = "Glancing hit for " + atkVal
+								+ " damage!";
+						Toast.makeText(getApplicationContext(), atkString,
+								Toast.LENGTH_SHORT).show();
 						mob.setCurHp(mob.getCurHp() - atkVal);
-						txtViewMobHp.setText("HP: " + mob.getCurHp() + "/"+ mob.getMaxHp());
+						txtViewMobHp.setText("HP: " + mob.getCurHp() + "/"
+								+ mob.getMaxHp());
 
 					}
 
@@ -227,8 +232,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 								+ mob.getMaxHp());
 					}
 					atkVal = 0;// clear attack val;
-					if(mob.getCurHp()<=0)
-					{
+					if (mob.getCurHp() <= 0) {
 						winDialog.show();
 					}
 					enemyTurn();// once you've attacked the enemy gets a turn
@@ -304,8 +308,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 								+ mob.getMaxHp());
 					}
 					atkVal = 0;
-					if(mob.getCurHp()<=0)
-					{
+					if (mob.getCurHp() <= 0) {
 						winDialog.show();
 					}
 					enemyTurn();// once you've attacked the enemy gets a turn
@@ -377,12 +380,10 @@ public class BattleTestActivity extends ActionBarActivity implements
 								+ mob.getMaxHp());
 					}
 					atkVal = 0;
-					if(mob.getCurHp()<=0)
-					{
+					if (mob.getCurHp() <= 0) {
 						winDialog.show();
 					}
 					enemyTurn();// once you've attacked the enemy gets a turn
-					
 
 				}
 				break;
@@ -429,8 +430,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 								+ mob.getMaxHp());
 					}
 					atkVal = 0;// clear attack val;
-					if(mob.getCurHp()<=0)
-					{
+					if (mob.getCurHp() <= 0) {
 						winDialog.show();
 					}
 					enemyTurn();// once you've attacked the enemy gets a turn
@@ -478,8 +478,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 								+ mob.getMaxHp());
 					}
 					atkVal = 0;// clear attack val;
-					if(mob.getCurHp()<=0)
-					{
+					if (mob.getCurHp() <= 0) {
 						winDialog.show();
 					}
 					enemyTurn();// once you've attacked the enemy gets a turn
@@ -527,8 +526,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 								+ mob.getMaxHp());
 					}
 					atkVal = 0;// clear attack val;
-					if(mob.getCurHp()<=0)
-					{
+					if (mob.getCurHp() <= 0) {
 						winDialog.show();
 					}
 					enemyTurn();// once you've attacked the enemy gets a turn
@@ -546,8 +544,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 		txtViewPlayerName = (TextView) this
 				.findViewById(R.id.textViewPlayerName);
 		Intent intentLogin = getIntent();
-		player = intentLogin.getExtras().getParcelable(
-				Player.PLAYER_DATA);
+		player = intentLogin.getExtras().getParcelable(Player.PLAYER_DATA);
 		txtViewPlayerName.setText(player.getName());
 
 		txtViewPlayerScore = (TextView) this
@@ -584,6 +581,9 @@ public class BattleTestActivity extends ActionBarActivity implements
 
 		mobMaxHp = mob.getMaxHp();
 		mobCurHp = mob.getCurHp();
+		
+		imageMob = (ImageView)this.findViewById(R.id.imageMob);
+		imageMob.setImageResource(imageMobs[player.getLevel()]);
 	}
 
 	private void setUpHideListView() {
@@ -634,10 +634,12 @@ public class BattleTestActivity extends ActionBarActivity implements
 						// Toast.makeText(getApplicationContext(),
 						// "You clicked on YES",
 						// Toast.LENGTH_SHORT).show();
-						Intent intentShopping = new Intent(BattleTestActivity.this,
+						Intent intentShopping = new Intent(
+								BattleTestActivity.this,
 								ShoppingTestActivity.class);
-						intentShopping.putExtra(
-								Player.PLAYER_DATA, player);
+						player.setLevel(player.getLevel() == 2 ? 0 : player
+								.getLevel() + 1);
+						intentShopping.putExtra(Player.PLAYER_DATA, player);
 						startActivity(intentShopping);
 						finish();
 					}
@@ -655,7 +657,6 @@ public class BattleTestActivity extends ActionBarActivity implements
 				});
 	}
 
-	
 	private AlertDialog.Builder winDialog;
 
 	private void setUpWinDialog() {
@@ -665,9 +666,8 @@ public class BattleTestActivity extends ActionBarActivity implements
 		// Setting Dialog Title
 		winDialog.setTitle("YOU WIN!");
 
-		
 		ImageView imageV = new ImageView(this);
-        imageV.setImageResource(R.drawable.victory);
+		imageV.setImageResource(R.drawable.victory);
 		winDialog.setView(imageV);
 
 		// Setting Positive "Yes" Btn
@@ -678,16 +678,17 @@ public class BattleTestActivity extends ActionBarActivity implements
 						// Toast.makeText(getApplicationContext(),
 						// "You clicked on YES",
 						// Toast.LENGTH_SHORT).show();
-						Intent intentShopping = new Intent(BattleTestActivity.this,
+						player.setLevel(1);
+						Intent intentShopping = new Intent(
+								BattleTestActivity.this,
 								ShoppingTestActivity.class);
-						intentShopping.putExtra(
-								Player.PLAYER_DATA, player);
+						intentShopping.putExtra(Player.PLAYER_DATA, player);
 						startActivity(intentShopping);
 						finish();
 					}
 				});
 	}
-	
+
 	private AlertDialog.Builder loseDialog;
 
 	private void setLoseDialog() {
@@ -698,7 +699,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 		loseDialog.setTitle("YOU LOSE!");
 
 		ImageView imageL = new ImageView(this);
-        imageL.setImageResource(R.drawable.defeat);
+		imageL.setImageResource(R.drawable.defeat);
 		loseDialog.setView(imageL);
 
 		// Setting Positive "Yes" Btn
@@ -709,14 +710,15 @@ public class BattleTestActivity extends ActionBarActivity implements
 						// Toast.makeText(getApplicationContext(),
 						// "You clicked on YES",
 						// Toast.LENGTH_SHORT).show();
-						Intent intentLogin = new Intent(BattleTestActivity.this,
+						Intent intentLogin = new Intent(
+								BattleTestActivity.this,
 								LoginTestActivity.class);
 						startActivity(intentLogin);
 						finish();
 					}
 				});
 	}
-	
+
 	private void setUpPic() {
 		// TODO Auto-generated method stub
 		BattleLayout relLyoutPic = (BattleLayout) this
@@ -753,12 +755,10 @@ public class BattleTestActivity extends ActionBarActivity implements
 												// is open for a free hit
 				txtViewMobStamina.setText("Stamina: " + mob.getCurStm() + "/"
 						+ mob.getMaxStm());
-				if(player.getCurHp()<=0)
-				{
+				if (player.getCurHp() <= 0) {
 					loseDialog.show();
 				}
 				playerDefending = false;// player's defense lasts only 1 turn
-				
 
 			} else {
 				Toast.makeText(getApplicationContext(), "The goblin attacks!",
@@ -828,12 +828,9 @@ public class BattleTestActivity extends ActionBarActivity implements
 					atkVal = 0;
 					d10Roll = 0;
 					playerDefending = false;
-					if(player.getCurHp()<=0)
-					{
+					if (player.getCurHp() <= 0) {
 						loseDialog.show();
 					}
-					
-
 
 				} else if (enemyAtk == 2) {
 					atkVal = (mob.getDamage() * 4) / 3;
@@ -899,8 +896,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 					atkVal = 0;
 					d10Roll = 0;
 					playerDefending = false;
-					if(player.getCurHp()<=0)
-					{
+					if (player.getCurHp() <= 0) {
 						loseDialog.show();
 					}
 				} else if (enemyAtk == 3) {
@@ -968,11 +964,10 @@ public class BattleTestActivity extends ActionBarActivity implements
 					atkVal = 0;
 					d10Roll = 0;
 					playerDefending = false;
-					if(player.getCurHp()<=0)
-					{
+					if (player.getCurHp() <= 0) {
 						loseDialog.show();
 					}
-					
+
 				}
 
 			}
@@ -988,6 +983,36 @@ public class BattleTestActivity extends ActionBarActivity implements
 	{
 		int range = (max - min) + 1;
 		return (int) (Math.random() * range) + min;
+	}
+
+	protected void onStart() {
+		super.onStart();
+		System.out.println("onStart - battle");
+	}
+
+	protected void onRestart() {
+		super.onRestart();
+		System.out.println("onRestart - battle");
+	}
+
+	protected void onResume() {
+		super.onResume();
+		System.out.println("onResume - battle");
+	}
+
+	protected void onPause() {
+		super.onPause();
+		System.out.println("onPause - battle");
+	}
+
+	protected void onStop() {
+		super.onStop();
+		System.out.println("onStop - battle");
+	}
+
+	protected void onDestroy() {
+		super.onDestroy();
+		System.out.println("onDestroy - battle");
 	}
 
 	@Override

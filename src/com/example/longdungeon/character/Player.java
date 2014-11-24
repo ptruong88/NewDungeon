@@ -2,6 +2,10 @@ package com.example.longdungeon.character;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import java.io.BufferedReader;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import com.example.longdungeon.item.Item;
@@ -83,7 +87,7 @@ public class Player extends Person implements Parcelable {
 
 	private void setUpPlayerInventory() {
 		inventoryCurSpace = 0;
-		inventoryMaxSpace = 20;
+		inventoryMaxSpace = 10;
 		playerInventory = new Item[inventoryMaxSpace];
 
 		playerInventory[0] = new Potion("Small Potion", Item.ITEM_HEALTH_POTION);
@@ -197,7 +201,7 @@ public class Player extends Person implements Parcelable {
 	public Item[] getPlayerInventory() {
 		return playerInventory;
 	}
-	
+
 	public void setPlayerInventory(Item[] playerInventory) {
 		this.playerInventory = playerInventory;
 	}
@@ -267,6 +271,140 @@ public class Player extends Person implements Parcelable {
 
 	public void setLevel(int level) {
 		this.level = level;
+	}
+
+	public void writeToFile(Player player, FileOutputStream outputStream)
+			throws IOException {
+		outputStream.write((player.getName() + "\n").getBytes());
+		outputStream.write((player.getXP() + "\n").getBytes());
+		outputStream.write((player.getGold() + "\n").getBytes());
+		outputStream.write((player.getMaxHp() + "\n").getBytes());
+		outputStream.write((player.getCurHp() + "\n").getBytes());
+		outputStream.write((player.getDef() + "\n").getBytes());
+		outputStream.write((player.getDamage() + "\n").getBytes());
+		outputStream.write((player.getMaxStm() + "\n").getBytes());
+		outputStream.write((player.getCurStm() + "\n").getBytes());
+		outputStream.write((player.getScore() + "\n").getBytes());
+		outputStream.write((player.getMaxMana() + "\n").getBytes());
+		outputStream.write((player.getCurMana() + "\n").getBytes());
+		outputStream.write((player.getLevel() + "\n").getBytes());
+		outputStream.write((player.getSkillPoint() + "\n").getBytes());
+		for (Equipment temp : player.getPlayerEquip()) {
+			outputStream.write((temp.getName() + "\n").getBytes());
+			outputStream.write((temp.getItemType() + "\n").getBytes());
+			outputStream.write((temp.getStatNumber() + "\n").getBytes());
+			outputStream.write((temp.getCost() + "\n").getBytes());
+		}
+		outputStream.write((player.getInventoryCurSpace() + "\n").getBytes());
+		outputStream.write((player.getInventoryMaxSpace() + "\n").getBytes());
+		Equipment equip;
+		Potion potion;
+		Item temp;
+		for (int i = 0; i < player.getInventoryCurSpace(); ++i) {
+			temp = player.getPlayerInventory()[i];
+			outputStream.write((temp.getItemType() + "\n").getBytes());
+			outputStream.write((temp.getName() + "\n").getBytes());
+			switch (temp.getItemType()) {
+			case Item.ITEM_HEALTH_POTION:
+			case Item.ITEM_MANA_POTION:
+			case Item.ITEM_STAMINA_POTION:
+				potion = (Potion) temp;
+				System.out.println("Item type-- " + temp.getItemType());
+				outputStream.write((potion.getStatNumber() + "\n").getBytes());
+				outputStream.write((potion.getCost() + "\n").getBytes());
+				outputStream.write((potion.getSize() + "\n").getBytes());
+				break;
+			default:
+				equip = (Equipment) temp;
+				System.out.println("Item type-- " + temp.getItemType());
+				outputStream.write((equip.getStatNumber() + "\n").getBytes());
+				outputStream.write((equip.getCost() + "\n").getBytes());
+				break;
+			}
+
+		}
+		outputStream.flush();
+		outputStream.close();
+		System.out.println("Done write to file.");
+	}
+	
+	public void readFromFile(Player player, BufferedReader inputReader)
+			throws IOException {
+		player.setName(inputReader.readLine());
+		// System.out.println(inputReader.readLine());
+		// System.out.println(inputReader.readLine());
+		// System.out.println(inputReader.readLine());
+		// System.out.println(inputReader.readLine());
+		// System.out.println(inputReader.readLine());
+		// System.out.println(inputReader.readLine());
+		// System.out.println(inputReader.readLine());
+		player.setXP(Integer.parseInt(inputReader.readLine()));
+		player.setGold(Integer.parseInt(inputReader.readLine()));
+		player.setMaxHp(Integer.parseInt(inputReader.readLine()));
+		player.setCurHp(Integer.parseInt(inputReader.readLine()));
+		player.setDef(Integer.parseInt(inputReader.readLine()));
+		player.setDamage(Integer.parseInt(inputReader.readLine()));
+		player.setMaxStm(Integer.parseInt(inputReader.readLine()));
+		player.setCurStm(Integer.parseInt(inputReader.readLine()));
+		player.setScore(Integer.parseInt(inputReader.readLine()));
+		player.setMaxMana(Integer.parseInt(inputReader.readLine()));
+		player.setCurMana(Integer.parseInt(inputReader.readLine()));
+		player.setLevel(Integer.parseInt(inputReader.readLine()));
+		player.setSkillPoint(Integer.parseInt(inputReader.readLine()));
+		for (Equipment temp : player.getPlayerEquip()) {
+			temp.setName(inputReader.readLine());
+			temp.setItemType(Integer.parseInt(inputReader.readLine()));
+			temp.setStatNumber(Integer.parseInt(inputReader.readLine()));
+			temp.setCost(Integer.parseInt(inputReader.readLine()));
+			player.insertNewEquipment(temp);
+		}
+		player.setInventoryCurSpace(0);
+		int curInventorySpace = Integer
+				.parseInt(inputReader.readLine());
+		player.setInventoryMaxSpace(Integer.parseInt(inputReader
+				.readLine()));
+		Equipment equip;
+		Potion potion;
+		int itemType;
+		String name;
+		for (int i = 0; i < curInventorySpace; ++i) {
+			itemType = Integer.parseInt((inputReader.readLine()));
+			name = inputReader.readLine();
+			switch (itemType) {
+			case Item.ITEM_HEALTH_POTION:
+			case Item.ITEM_MANA_POTION:
+			case Item.ITEM_STAMINA_POTION:
+				potion = new Potion(name, itemType);
+				potion.setStatNumber(Integer.parseInt(inputReader
+						.readLine()));
+				potion.setCost(Integer.parseInt(inputReader.readLine()));
+				potion.setSize(Integer.parseInt(inputReader.readLine()));
+				player.insertItemToInventory(potion);
+				break;
+			default:
+				equip = new Equipment(name, itemType);
+				equip.setStatNumber(Integer.parseInt(inputReader
+						.readLine()));
+				equip.setCost(Integer.parseInt(inputReader.readLine()));
+				player.insertItemToInventory(equip);
+				break;
+			}
+
+			// System.out.println("Item name-- " +
+			// inputReader.readLine());
+			// System.out.println("Item type-- " +
+			// inputReader.readLine());
+			// System.out.println("Item stat number-- "
+			// + inputReader.readLine());
+			// System.out.println("Item cost-- " +
+			// inputReader.readLine());
+			// System.out.println("Item size-- " +
+			// inputReader.readLine());
+
+		}
+		inputReader.close();
+
+		System.out.println("Done read from file.");
 	}
 
 	public Player(Parcel in) {

@@ -204,15 +204,7 @@
             android:layout_toRightOf="@+id/textViewGold"
             android:text="Shop" />
 
-        <Button
-            android:id="@+id/buttonSkill"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="15dp"
-            android:layout_toRightOf="@+id/buttonShop"
-            android:text="Skill" />
+      
 
         <Button
             android:id="@+id/buttonBattle"
@@ -221,8 +213,18 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
-            android:layout_toRightOf="@+id/buttonSkill"
+            android:layout_toRightOf="@+id/buttonShop"
             android:text="Battle" />
+        
+          <Button
+            android:id="@+id/buttonSkill"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:layout_toRightOf="@+id/buttonBattle"
+            android:text="Skill" />
     </RelativeLayout>
 
     <ScrollView

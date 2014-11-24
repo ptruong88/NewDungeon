@@ -1,5 +1,13 @@
 package com.example.longdungeon;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 import com.example.longdungeon.character.Player;
 import com.example.longdungeon.item.Equipment;
 import com.example.longdungeon.item.Item;
@@ -7,6 +15,7 @@ import com.example.longdungeon.item.Potion;
 
 import android.support.v7.app.ActionBarActivity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -59,6 +68,7 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 		// TODO Auto-generated method stub
 		Bundle fromBattle = getIntent().getExtras();
 		player = fromBattle.getParcelable(Player.PLAYER_DATA);
+
 	}
 
 	/**
@@ -235,15 +245,16 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 		final String message = parent.getItemAtPosition(position).toString();
 		System.out.println("Buy from shop--- " + message);
 		int cost = cost(message);
-		if (player.getGold() < cost) {
+		if (player.isInventoryFull()) {
+			alertDialogCancelBuy.setTitle("Can't make a buy...");
+			alertDialogCancelBuy
+					.setMessage("You don't have enough inventory space to place a new item.");
+			alertDialogCancelBuy.show();
+		} else if (player.getGold() < cost) {
 			alertDialogCancelBuy.setTitle("Can't make a buy...");
 			alertDialogCancelBuy
 					.setMessage("You don't have enough gold to buy the item");
 			alertDialogCancelBuy.show();
-		} else if (player.isInventoryFull()) {
-			alertDialogCancelBuy.setTitle("Can't make a buy...");
-			alertDialogCancelBuy
-					.setMessage("You don't have enough inventory space to place a new item.");
 		} else {
 
 			// Setting Dialog Message
@@ -258,18 +269,18 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 							// "You clicked on YES",
 							// Toast.LENGTH_SHORT).show();
 
-							String v = "You bought " + message;
-							Toast.makeText(getApplicationContext(), v,
-									Toast.LENGTH_SHORT).show();
-							listItems.setEnabled(false);
+//							String v = "You bought " + message;
+//							Toast.makeText(getApplicationContext(), v,
+//									Toast.LENGTH_SHORT).show();
+//							listItems.setEnabled(false);
 							buyingStuff(message, position);
-							new Handler().postDelayed(new Runnable() {
-								@Override
-								public void run() {
-									listItems.setEnabled(true);
-								}
-
-							}, Toast.LENGTH_LONG * 2200);
+//							new Handler().postDelayed(new Runnable() {
+//								@Override
+//								public void run() {
+//									listItems.setEnabled(true);
+//								}
+//
+//							}, Toast.LENGTH_LONG * 2200);
 						}
 					});
 			// Setting Negative "NO" Btn
@@ -498,9 +509,8 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 		default:// Inventory button
 			Intent intentInventory = new Intent(ShoppingTestActivity.this,
 					InventoryTestActivity.class);
-			player.sortInventory();
-			intentInventory.putExtra(Player.PLAYER_DATA,
-					player);
+			// player.sortInventory();
+			intentInventory.putExtra(Player.PLAYER_DATA, player);
 			startActivity(intentInventory);
 			break;
 		}
@@ -531,6 +541,65 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 				adapter.add(sellEquipment[i].toString() + " ("
 						+ sellEquipment[i].getCost() + " Gold)");
 	}// End button action**************
+
+	protected void onStart() {
+		super.onStart();
+		System.out.println("onStart - shop");
+	}
+
+	protected void onRestart() {
+		super.onRestart();
+		System.out.println("onRestart - shop");
+	}
+
+	protected void onResume() {
+		super.onResume();
+		System.out.println("onResume - shop");
+	}
+
+	/**
+	 * Data save when player doesn't play anymore.
+	 */
+	protected void onPause() {
+		super.onPause();
+		System.out.println("onPause - shop");
+
+		File file = new File(getFilesDir(), Player.PLAYER_FILE);
+		FileOutputStream outputStream;
+
+		try {
+			if (!file.exists())
+				file.createNewFile();
+			outputStream = openFileOutput(Player.PLAYER_FILE,
+					Context.MODE_PRIVATE);
+			player.writeToFile(player, outputStream);
+			// System.out.println("Test file");
+			// BufferedReader inputReader = new BufferedReader(
+			// new InputStreamReader(
+			// openFileInput(Player.PLAYER_FILE)));
+			//
+			//
+			// System.out.println(inputReader.readLine());
+			// System.out.println(inputReader.readLine());
+			// System.out.println(inputReader.readLine());
+			// System.out.println(inputReader.readLine());
+			// System.out.println(inputReader.readLine());
+			// System.out.println(inputReader.readLine());
+			// System.out.println(inputReader.readLine());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	protected void onStop() {
+		super.onStop();
+		System.out.println("onStop - shop");
+	}
+
+	protected void onDestroy() {
+		super.onDestroy();
+		System.out.println("onDestroy - shop");
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
