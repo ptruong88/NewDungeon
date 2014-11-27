@@ -233,6 +233,9 @@ public class BattleTestActivity extends ActionBarActivity implements
 					}
 					atkVal = 0;// clear attack val;
 					if (mob.getCurHp() <= 0) {
+						player.setCurHp(player.getMaxHp());
+						player.setCurMana(player.getMaxMana());
+						player.setCurStm(player.getMaxStm());
 						winDialog.show();
 					}
 					enemyTurn();// once you've attacked the enemy gets a turn
@@ -309,6 +312,9 @@ public class BattleTestActivity extends ActionBarActivity implements
 					}
 					atkVal = 0;
 					if (mob.getCurHp() <= 0) {
+						player.setCurHp(player.getMaxHp());
+						player.setCurMana(player.getMaxMana());
+						player.setCurStm(player.getMaxStm());
 						winDialog.show();
 					}
 					enemyTurn();// once you've attacked the enemy gets a turn
@@ -381,6 +387,9 @@ public class BattleTestActivity extends ActionBarActivity implements
 					}
 					atkVal = 0;
 					if (mob.getCurHp() <= 0) {
+						player.setCurHp(player.getMaxHp());
+						player.setCurMana(player.getMaxMana());
+						player.setCurStm(player.getMaxStm());
 						winDialog.show();
 					}
 					enemyTurn();// once you've attacked the enemy gets a turn
@@ -431,6 +440,9 @@ public class BattleTestActivity extends ActionBarActivity implements
 					}
 					atkVal = 0;// clear attack val;
 					if (mob.getCurHp() <= 0) {
+						player.setCurHp(player.getMaxHp());
+						player.setCurMana(player.getMaxMana());
+						player.setCurStm(player.getMaxStm());
 						winDialog.show();
 					}
 					enemyTurn();// once you've attacked the enemy gets a turn
@@ -479,6 +491,9 @@ public class BattleTestActivity extends ActionBarActivity implements
 					}
 					atkVal = 0;// clear attack val;
 					if (mob.getCurHp() <= 0) {
+						player.setCurHp(player.getMaxHp());
+						player.setCurMana(player.getMaxMana());
+						player.setCurStm(player.getMaxStm());
 						winDialog.show();
 					}
 					enemyTurn();// once you've attacked the enemy gets a turn
@@ -527,6 +542,9 @@ public class BattleTestActivity extends ActionBarActivity implements
 					}
 					atkVal = 0;// clear attack val;
 					if (mob.getCurHp() <= 0) {
+						player.setCurHp(player.getMaxHp());
+						player.setCurMana(player.getMaxMana());
+						player.setCurStm(player.getMaxStm());
 						winDialog.show();
 					}
 					enemyTurn();// once you've attacked the enemy gets a turn
