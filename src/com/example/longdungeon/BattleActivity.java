@@ -229,6 +229,9 @@ public class BattleActivity extends ActionBarActivity implements
 					atkVal = 0;// clear attack val;
 					if(mob.getCurHp()<=0)
 					{
+						player.setCurHp(player.getMaxHp());
+						player.setCurMana(player.getMaxMana());
+						player.setCurStm(player.getMaxStm());
 						winDialog.show();
 					}
 					else
@@ -309,6 +312,9 @@ public class BattleActivity extends ActionBarActivity implements
 					atkVal = 0;
 					if(mob.getCurHp()<=0)
 					{
+						player.setCurHp(player.getMaxHp());
+						player.setCurMana(player.getMaxMana());
+						player.setCurStm(player.getMaxStm());
 						winDialog.show();
 					}
 					else
@@ -385,6 +391,9 @@ public class BattleActivity extends ActionBarActivity implements
 					atkVal = 0;
 					if(mob.getCurHp()<=0)
 					{
+						player.setCurHp(player.getMaxHp());
+						player.setCurMana(player.getMaxMana());
+						player.setCurStm(player.getMaxStm());
 						winDialog.show();
 					}
 					else
@@ -439,6 +448,9 @@ public class BattleActivity extends ActionBarActivity implements
 					atkVal = 0;// clear attack val;
 					if(mob.getCurHp()<=0)
 					{
+						player.setCurHp(player.getMaxHp());
+						player.setCurMana(player.getMaxMana());
+						player.setCurStm(player.getMaxStm());
 						winDialog.show();
 					}
 					else
@@ -491,6 +503,9 @@ public class BattleActivity extends ActionBarActivity implements
 					atkVal = 0;// clear attack val;
 					if(mob.getCurHp()<=0)
 					{
+						player.setCurHp(player.getMaxHp());
+						player.setCurMana(player.getMaxMana());
+						player.setCurStm(player.getMaxStm());
 						winDialog.show();
 					}
 					else
@@ -543,6 +558,9 @@ public class BattleActivity extends ActionBarActivity implements
 					atkVal = 0;// clear attack val;
 					if(mob.getCurHp()<=0)
 					{
+						player.setCurHp(player.getMaxHp());
+						player.setCurMana(player.getMaxMana());
+						player.setCurStm(player.getMaxStm());
 						winDialog.show();
 					}
 					else
