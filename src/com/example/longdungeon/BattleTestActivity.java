@@ -3,8 +3,6 @@ package com.example.longdungeon;
 import com.example.longdungeon.character.Mob;
 import com.example.longdungeon.character.Person;
 import com.example.longdungeon.character.Player;
-import com.example.longdungeon.item.Item;
-import com.example.longdungeon.item.Potion;
 import com.example.longdungeon.layout.BattleLayout;
 
 import android.support.v7.app.ActionBarActivity;
@@ -55,15 +53,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 	boolean ranAway = false;
 	int d10Roll = 0;
 	int atkVal;
-	
-	Item[] inventoryCpy = player.getPlayerInventory();
-	int numHealthPotions = inventoryCpy[inventoryCpy.length-2].getSize();
-	int healthPotionRegen = inventoryCpy[inventoryCpy.length-2].getStatNumber();
-	int numStaminaPotions = inventoryCpy[inventoryCpy.length-1].getSize();
-	int staminaPotionRegen = inventoryCpy[inventoryCpy.length-1].getStatNumber();
-	int numManaPotions = inventoryCpy[inventoryCpy.length].getSize();
-	int manaPotionRegen = inventoryCpy[inventoryCpy.length].getStatNumber();
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -89,8 +79,6 @@ public class BattleTestActivity extends ActionBarActivity implements
 
 	private int baseDamage;// Player Attack
 
-	
-	
 	private void setUpStringForListView() {
 		// TODO Auto-generated method stub
 		listAttack = new String[3];
@@ -115,15 +103,11 @@ public class BattleTestActivity extends ActionBarActivity implements
 		adapterMagic = new ArrayAdapter<String>(getApplicationContext(),
 				android.R.layout.activity_list_item, android.R.id.text1,
 				listMagic);
-		Item[] inventoryCpy = player.getPlayerInventory();
-		String healthPotions = inventoryCpy[inventoryCpy.length-2].toString();
-		
-		String staminaPotions = inventoryCpy[inventoryCpy.length-1].toString();
-		
-		String manaPotions = inventoryCpy[inventoryCpy.length].toString();
-		
-		listItem = new String[] { healthPotions, staminaPotions, manaPotions };
-		
+
+		listItem = new String[] { "Health Potion 10HP x5",
+				"Health Potion 20HP x5", "Mana Potion 10MN x5",
+				"Mana Potion 20MN x5", "Stamina Potion 10STM x5",
+				"Stamina Potion 20STM x5" };
 		adapterItem = new ArrayAdapter<String>(getApplicationContext(),
 				android.R.layout.activity_list_item, android.R.id.text1,
 				listItem);
@@ -567,53 +551,6 @@ public class BattleTestActivity extends ActionBarActivity implements
 				} else {
 					Toast.makeText(getApplicationContext(), "not enough Mana!",
 							Toast.LENGTH_SHORT).show();
-				}
-				break;
-			}
-		}//
-		else if (parent.getItemAtPosition(position).toString()
-				.contains("Potion")) {
-			switch (position) {
-			case 0:// Health
-				if(numHealthPotions<1)
-				{Toast.makeText(getApplicationContext(), "You're out of Potions!",
-						Toast.LENGTH_SHORT).show();}
-				else if(numHealthPotions>=1)
-				{
-					numHealthPotions--;
-					player.setCurHp(player.getCurHp()+healthPotionRegen);
-					if(player.getCurHp()>player.getMaxHp())
-					{player.setCurHp(player.getMaxHp());}//can't supercharge with potions
-					txtViewPlayerHp.setText("HP: " + player.getCurHp() + "/"+ player.getMaxHp());
-					enemyTurn();// once you've used an item the enemy gets a turn
-				}
-				break;
-			case 1:// Stamina
-				if(numStaminaPotions<1)
-				{Toast.makeText(getApplicationContext(), "You're out of Potions!",
-						Toast.LENGTH_SHORT).show();}
-				else if(numStaminaPotions>=1)
-				{
-					numStaminaPotions--;
-					player.setCurStm(player.getCurStm()+staminaPotionRegen);
-					if(player.getCurStm()>player.getMaxStm())
-					{player.setCurStm(player.getMaxStm());}//can't supercharge with potions
-					txtViewStamina.setText("Stamina: " + player.getCurStm() + "/" + player.getMaxStm());
-					enemyTurn();// once you've used an item the enemy gets a turn
-				}
-				break;
-			default:// Mana
-				if(numManaPotions<1)
-				{Toast.makeText(getApplicationContext(), "You're out of Potions!",
-						Toast.LENGTH_SHORT).show();}
-				else if(numManaPotions>=1)
-				{
-					numManaPotions--;
-					player.setCurMana(player.getCurMana()+manaPotionRegen);
-					if(player.getCurMana()>player.getMaxMana())
-					{player.setCurMana(player.getMaxMana());}//can't supercharge with potions
-					txtViewPlayerMana.setText("Mana: " + player.getCurMana() + "/"+ player.getMaxMana());
-					enemyTurn();// once you've used an item the enemy gets a turn
 				}
 				break;
 			}
