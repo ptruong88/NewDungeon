@@ -56,13 +56,13 @@ public class BattleTestActivity extends ActionBarActivity implements
 	int d10Roll = 0;
 	int atkVal;
 	
-	Item[] inventoryCpy = player.getPlayerInventory();
-	int numHealthPotions = inventoryCpy[inventoryCpy.length-2].getSize();
-	int healthPotionRegen = inventoryCpy[inventoryCpy.length-2].getStatNumber();
-	int numStaminaPotions = inventoryCpy[inventoryCpy.length-1].getSize();
-	int staminaPotionRegen = inventoryCpy[inventoryCpy.length-1].getStatNumber();
-	int numManaPotions = inventoryCpy[inventoryCpy.length].getSize();
-	int manaPotionRegen = inventoryCpy[inventoryCpy.length].getStatNumber();
+	
+	int numHealthPotions = 5;
+	int healthPotionRegen = 5;
+	int numStaminaPotions = 5;
+	int staminaPotionRegen = 36;
+	int numManaPotions = 30;
+	int manaPotionRegen = 18;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -115,12 +115,14 @@ public class BattleTestActivity extends ActionBarActivity implements
 		adapterMagic = new ArrayAdapter<String>(getApplicationContext(),
 				android.R.layout.activity_list_item, android.R.id.text1,
 				listMagic);
-		Item[] inventoryCpy = player.getPlayerInventory();
-		String healthPotions = inventoryCpy[inventoryCpy.length-2].toString();
 		
-		String staminaPotions = inventoryCpy[inventoryCpy.length-1].toString();
+		//Item[] inventoryCpy = player.getPlayerInventory();
 		
-		String manaPotions = inventoryCpy[inventoryCpy.length].toString();
+		String healthPotions = "+36 HP Small Potion x"+numHealthPotions;
+		
+		String staminaPotions = "+30 STM Small Potion x"+numStaminaPotions;
+		
+		String manaPotions =  "+18 MANA Small Potion x"+numStaminaPotions;
 		
 		listItem = new String[] { healthPotions, staminaPotions, manaPotions };
 		
@@ -184,7 +186,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 		// Toast.makeText(getApplicationContext(),
 		// parent.getItemAtPosition(position).toString(),
 		// Toast.LENGTH_SHORT).show();
-		if (parent.getItemAtPosition(position).toString().contains("STM")) {
+		if (parent.getItemAtPosition(position).toString().contains("Attack")) {
 
 			// mobCurHp -= baseDamage;
 			switch (position) {
@@ -414,7 +416,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 				break;
 			}
 		} else if (parent.getItemAtPosition(position).toString()
-				.contains("MANA")) {
+				.contains("Magic")) {
 			switch (position) {
 			case 0:// Fireball
 				if (player.getCurMana() >= 10) {
@@ -571,6 +573,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 				break;
 			}
 		}//
+		
 		else if (parent.getItemAtPosition(position).toString()
 				.contains("Potion")) {
 			switch (position) {
@@ -585,6 +588,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 					if(player.getCurHp()>player.getMaxHp())
 					{player.setCurHp(player.getMaxHp());}//can't supercharge with potions
 					txtViewPlayerHp.setText("HP: " + player.getCurHp() + "/"+ player.getMaxHp());
+					setUpStringForListView();
 					enemyTurn();// once you've used an item the enemy gets a turn
 				}
 				break;
@@ -599,6 +603,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 					if(player.getCurStm()>player.getMaxStm())
 					{player.setCurStm(player.getMaxStm());}//can't supercharge with potions
 					txtViewStamina.setText("Stamina: " + player.getCurStm() + "/" + player.getMaxStm());
+					setUpStringForListView();
 					enemyTurn();// once you've used an item the enemy gets a turn
 				}
 				break;
@@ -613,11 +618,12 @@ public class BattleTestActivity extends ActionBarActivity implements
 					if(player.getCurMana()>player.getMaxMana())
 					{player.setCurMana(player.getMaxMana());}//can't supercharge with potions
 					txtViewPlayerMana.setText("Mana: " + player.getCurMana() + "/"+ player.getMaxMana());
+					setUpStringForListView();
 					enemyTurn();// once you've used an item the enemy gets a turn
 				}
 				break;
 			}
-		}//
+		}
 	}
 
 	private void setUpPlayer() {

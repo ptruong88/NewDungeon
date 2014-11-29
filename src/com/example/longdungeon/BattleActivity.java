@@ -51,6 +51,14 @@ public class BattleActivity extends ActionBarActivity implements
 	int d10Roll = 0;
 	int atkVal;
 
+	
+	int numHealthPotions = 5;
+	int healthPotionRegen = 5;
+	int numStaminaPotions = 5;
+	int staminaPotionRegen = 36;
+	int numManaPotions = 30;
+	int manaPotionRegen = 18;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -100,10 +108,14 @@ public class BattleActivity extends ActionBarActivity implements
 				android.R.layout.activity_list_item, android.R.id.text1,
 				listMagic);
 
-		listItem = new String[] { "Health Potion 10HP x5",
-				"Health Potion 20HP x5", "Mana Potion 10MN x5",
-				"Mana Potion 20MN x5", "Stamina Potion 10STM x5",
-				"Stamina Potion 20STM x5" };
+		String healthPotions = "+36 HP Small Potion x"+numHealthPotions;
+		
+		String staminaPotions = "+30 STM Small Potion x"+numStaminaPotions;
+		
+		String manaPotions =  "+18 MANA Small Potion x"+numStaminaPotions;
+		
+		listItem = new String[] { healthPotions, staminaPotions, manaPotions };
+		
 		adapterItem = new ArrayAdapter<String>(getApplicationContext(),
 				android.R.layout.activity_list_item, android.R.id.text1,
 				listItem);
@@ -574,6 +586,58 @@ public class BattleActivity extends ActionBarActivity implements
 				break;
 			}
 		}//
+		
+		else if (parent.getItemAtPosition(position).toString()
+				.contains("Potion")) {
+			switch (position) {
+			case 0:// Health
+				if(numHealthPotions<1)
+				{Toast.makeText(getApplicationContext(), "You're out of Potions!",
+						Toast.LENGTH_SHORT).show();}
+				else if(numHealthPotions>=1)
+				{
+					numHealthPotions--;
+					player.setCurHp(player.getCurHp()+healthPotionRegen);
+					if(player.getCurHp()>player.getMaxHp())
+					{player.setCurHp(player.getMaxHp());}//can't supercharge with potions
+					txtViewPlayerHp.setText("HP: " + player.getCurHp() + "/"+ player.getMaxHp());
+					setUpStringForListView();
+					enemyTurn();// once you've used an item the enemy gets a turn
+				}
+				break;
+			case 1:// Stamina
+				if(numStaminaPotions<1)
+				{Toast.makeText(getApplicationContext(), "You're out of Potions!",
+						Toast.LENGTH_SHORT).show();}
+				else if(numStaminaPotions>=1)
+				{
+					numStaminaPotions--;
+					player.setCurStm(player.getCurStm()+staminaPotionRegen);
+					if(player.getCurStm()>player.getMaxStm())
+					{player.setCurStm(player.getMaxStm());}//can't supercharge with potions
+					txtViewStamina.setText("Stamina: " + player.getCurStm() + "/" + player.getMaxStm());
+					setUpStringForListView();
+					enemyTurn();// once you've used an item the enemy gets a turn
+				}
+				break;
+			default:// Mana
+				if(numManaPotions<1)
+				{Toast.makeText(getApplicationContext(), "You're out of Potions!",
+						Toast.LENGTH_SHORT).show();}
+				else if(numManaPotions>=1)
+				{
+					numManaPotions--;
+					player.setCurMana(player.getCurMana()+manaPotionRegen);
+					if(player.getCurMana()>player.getMaxMana())
+					{player.setCurMana(player.getMaxMana());}//can't supercharge with potions
+					txtViewPlayerMana.setText("Mana: " + player.getCurMana() + "/"+ player.getMaxMana());
+					setUpStringForListView();
+					enemyTurn();// once you've used an item the enemy gets a turn
+				}
+				break;
+			}
+		}
+		
 	}
 
 	private void setUpPlayer() {
