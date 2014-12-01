@@ -113,7 +113,7 @@ public class LoginTestActivity extends ActionBarActivity {
 //			// }, 4000);
 //
 //		} else
-//			this.findViewById(R.id.layoutLoginText).setVisibility(View.VISIBLE);
+			this.findViewById(R.id.layoutLoginText).setVisibility(View.VISIBLE);
 	}
 
 	@Override

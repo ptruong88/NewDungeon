@@ -48,7 +48,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 	private String[] listAttack, listMagic, listItem;
 	private ArrayAdapter<String> adapterAttack, adapterMagic, adapterItem;
 	private static int[] imageMobs = new int[] { R.drawable.goblin,
-			R.drawable.skeleton, R.drawable.spider };
+			R.drawable.skeleton, R.drawable.spider, R.drawable.bats, R.drawable.dragon };
 	private ImageView imageMob, imagePlayer;
 
 	// gordon's variables for the game loop
@@ -576,65 +576,10 @@ public class BattleTestActivity extends ActionBarActivity implements
 		}//
 
 		else if (parent.getItemAtPosition(position).toString()
-				.contains("Potion")) {
+				.contains("Potion")) 
+		{
 			potionClick(parent.getItemAtPosition(position).toString(), position);
-			/*
-			switch (position) {
-			case 0:// Health
-				if (numHealthPotions < 1) {
-					Toast.makeText(getApplicationContext(),
-							"You're out of Potions!", Toast.LENGTH_SHORT)
-							.show();
-				} else if (numHealthPotions >= 1) {
-					numHealthPotions--;
-					player.setCurHp(player.getCurHp() + healthPotionRegen);
-					if (player.getCurHp() > player.getMaxHp()) {
-						player.setCurHp(player.getMaxHp());
-					}// can't supercharge with potions
-					txtViewPlayerHp.setText("HP: " + player.getCurHp() + "/"
-							+ player.getMaxHp());
-					setUpStringForListView();
-					enemyTurn();// once you've used an item the enemy gets a
-								// turn
-				}
-				break;
-			case 1:// Stamina
-				if (numStaminaPotions < 1) {
-					Toast.makeText(getApplicationContext(),
-							"You're out of Potions!", Toast.LENGTH_SHORT)
-							.show();
-				} else if (numStaminaPotions >= 1) {
-					numStaminaPotions--;
-					player.setCurStm(player.getCurStm() + staminaPotionRegen);
-					if (player.getCurStm() > player.getMaxStm()) {
-						player.setCurStm(player.getMaxStm());
-					}// can't supercharge with potions
-					txtViewStamina.setText("Stamina: " + player.getCurStm()
-							+ "/" + player.getMaxStm());
-					setUpStringForListView();
-					enemyTurn();// once you've used an item the enemy gets a
-								// turn
-				}
-				break;
-			default:// Mana
-				if (numManaPotions < 1) {
-					Toast.makeText(getApplicationContext(),
-							"You're out of Potions!", Toast.LENGTH_SHORT)
-							.show();
-				} else if (numManaPotions >= 1) {
-					numManaPotions--;
-					player.setCurMana(player.getCurMana() + manaPotionRegen);
-					if (player.getCurMana() > player.getMaxMana()) {
-						player.setCurMana(player.getMaxMana());
-					}// can't supercharge with potions
-					txtViewPlayerMana.setText("Mana: " + player.getCurMana()
-							+ "/" + player.getMaxMana());
-					setUpStringForListView();
-					enemyTurn();// once you've used an item the enemy gets a
-								// turn
-				}
-				break;
-			}*/
+			enemyTurn();
 		}
 	}
 
@@ -698,7 +643,9 @@ public class BattleTestActivity extends ActionBarActivity implements
 
 	private void setUpMob() {
 		// TODO Auto-generated method stub
-		String nameMob = "Goblin";
+		String[] mobNames= {"goblin",
+		"skeleton", "spider", "bats", "dragon" };
+		String nameMob = mobNames[player.getLevel()];
 		mob = new Mob(nameMob);
 		txtViewMobName = (TextView) this.findViewById(R.id.textViewMobName);
 		txtViewMobName.setText(nameMob);
@@ -768,7 +715,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 						Intent intentShopping = new Intent(
 								BattleTestActivity.this,
 								ShoppingTestActivity.class);
-						player.setLevel(player.getLevel() == 2 ? 0 : player
+						player.setLevel(player.getLevel() == imageMobs.length-1 ? 0 : player
 								.getLevel() + 1);
 						intentShopping.putExtra(Player.PLAYER_DATA, player);
 						startActivity(intentShopping);
@@ -809,7 +756,8 @@ public class BattleTestActivity extends ActionBarActivity implements
 						// Toast.makeText(getApplicationContext(),
 						// "You clicked on YES",
 						// Toast.LENGTH_SHORT).show();
-						player.setLevel(1);
+						player.setLevel(player.getLevel() == imageMobs.length-1 ? 0 : player
+								.getLevel() + 1);
 						Intent intentShopping = new Intent(
 								BattleTestActivity.this,
 								ShoppingTestActivity.class);
@@ -880,7 +828,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 
 			if ((mob.getCurStm() <= 0)) {
 				Toast.makeText(getApplicationContext(),
-						"The goblin wheezes and stops to catch it's breath",
+						"The enemy wheezes and stops to catch it's breath",
 						Toast.LENGTH_SHORT).show();
 				mob.setCurStm(mob.getMaxStm());// enemy regains all stamina but
 												// is open for a free hit
@@ -892,7 +840,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 				playerDefending = false;// player's defense lasts only 1 turn
 
 			} else {
-				Toast.makeText(getApplicationContext(), "The goblin attacks!",
+				Toast.makeText(getApplicationContext(), "The enemy attacks!",
 						Toast.LENGTH_SHORT).show();
 				int enemyAtk = randomWithRange(1, 3);
 				if (enemyAtk == 1) {
@@ -921,7 +869,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 						}
 						Toast.makeText(
 								getApplicationContext(),
-								"The goblin lands a glancing blow for" + atkVal
+								"The enemy lands a glancing blow for" + atkVal
 										+ "damage!", Toast.LENGTH_SHORT).show();
 						player.setCurHp(player.getCurHp() - atkVal);
 						txtViewPlayerHp.setText("HP: " + player.getCurHp()
@@ -935,7 +883,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 
 						Toast.makeText(
 								getApplicationContext(),
-								"The goblin's attack hits for" + atkVal
+								"The enemy's attack hits for" + atkVal
 										+ "damage!", Toast.LENGTH_SHORT).show();
 						player.setCurHp(player.getCurHp() - atkVal);
 						txtViewPlayerHp.setText("HP: " + player.getCurHp()
@@ -949,7 +897,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 
 						Toast.makeText(
 								getApplicationContext(),
-								"The goblin lands a critical hit for " + atkVal
+								"The enemy lands a critical hit for " + atkVal
 										+ " damage!", Toast.LENGTH_SHORT)
 								.show();
 						player.setCurHp(player.getCurHp() - atkVal);
@@ -977,7 +925,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 					d10Roll = randomWithRange(1, 10);
 					if ((d10Roll == 1) || (d10Roll == 2)) {
 						Toast.makeText(getApplicationContext(),
-								"The goblin's attack missed!",
+								"The enemy's attack missed!",
 								Toast.LENGTH_SHORT).show();
 					}
 
@@ -989,7 +937,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 						}
 						Toast.makeText(
 								getApplicationContext(),
-								"The goblin lands a glancing blow for" + atkVal
+								"The enemy lands a glancing blow for" + atkVal
 										+ "damage!", Toast.LENGTH_SHORT).show();
 						player.setCurHp(player.getCurHp() - atkVal);
 						txtViewPlayerHp.setText("HP: " + player.getCurHp()
@@ -1003,7 +951,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 
 						Toast.makeText(
 								getApplicationContext(),
-								"The goblin's attack hits for" + atkVal
+								"The enemy's attack hits for" + atkVal
 										+ "damage!", Toast.LENGTH_SHORT).show();
 						player.setCurHp(player.getCurHp() - atkVal);
 						txtViewPlayerHp.setText("HP: " + player.getCurHp()
@@ -1017,7 +965,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 
 						Toast.makeText(
 								getApplicationContext(),
-								"The goblin lands a critical hit for " + atkVal
+								"The enemy lands a critical hit for " + atkVal
 										+ " damage!", Toast.LENGTH_SHORT)
 								.show();
 						player.setCurHp(player.getCurHp() - atkVal);
@@ -1045,7 +993,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 					d10Roll = randomWithRange(1, 10);
 					if ((d10Roll == 1) || (d10Roll == 2)) {
 						Toast.makeText(getApplicationContext(),
-								"The goblin's attack missed!",
+								"The enemy's attack missed!",
 								Toast.LENGTH_SHORT).show();
 					}
 
@@ -1057,7 +1005,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 						}
 						Toast.makeText(
 								getApplicationContext(),
-								"The goblin lands a glancing blow for" + atkVal
+								"The enemy lands a glancing blow for" + atkVal
 										+ "damage!", Toast.LENGTH_SHORT).show();
 						player.setCurHp(player.getCurHp() - atkVal);
 						txtViewPlayerHp.setText("HP: " + player.getCurHp()
@@ -1071,7 +1019,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 
 						Toast.makeText(
 								getApplicationContext(),
-								"The goblin's attack hits for" + atkVal
+								"The enemy's attack hits for" + atkVal
 										+ "damage!", Toast.LENGTH_SHORT).show();
 						player.setCurHp(player.getCurHp() - atkVal);
 						txtViewPlayerHp.setText("HP: " + player.getCurHp()
@@ -1085,7 +1033,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 
 						Toast.makeText(
 								getApplicationContext(),
-								"The goblin lands a critical hit for " + atkVal
+								"The enemy lands a critical hit for " + atkVal
 										+ " damage!", Toast.LENGTH_SHORT)
 								.show();
 						player.setCurHp(player.getCurHp() - atkVal);
@@ -1118,13 +1066,53 @@ public class BattleTestActivity extends ActionBarActivity implements
 			{
 				if (potions[i].getItemType()==Item.ITEM_HEALTH_POTION)
 				{
-					player.setCurHp(player.getCurHp()+potions[i].getStatNumber());
-					potions[i].setSize(potions[i].getSize()-1);
-					txtViewPlayerHp.setText("HP: " + player.getCurHp() + "/"
-							+ player.getMaxHp());
-					adapterItem.remove(e);
-					adapterItem.insert(potions[i].toString(), position);
-					break;
+					if(potions[i].getSize()>0)
+					{
+						player.setCurHp(player.getCurHp()+potions[i].getStatNumber());
+						if(player.getCurHp()>player.getMaxHp())
+						{
+							player.setCurHp(player.getMaxHp());
+						}
+						player.setCurHp(player.getCurHp()+potions[i].getStatNumber());
+						potions[i].setSize(potions[i].getSize()-1);
+						txtViewPlayerHp.setText("HP: " + player.getCurHp() + "/"
+								+ player.getMaxHp());
+						adapterItem.remove(e);
+						adapterItem.insert(potions[i].toString(), position);
+						break;
+					}
+				}
+				else if(potions[i].getItemType()==Item.ITEM_MANA_POTION)
+				{
+					if(potions[i].getSize()>0)
+					{
+						player.setCurMana(player.getCurMana()+potions[i].getStatNumber());
+						if(player.getCurMana()>player.getMaxMana())
+						{
+							player.setCurMana(player.getMaxMana());
+						}
+						potions[i].setSize(potions[i].getSize()-1);
+						txtViewPlayerMana.setText("Mana: " + player.getCurMana()
+							+ "/" + player.getMaxMana());
+						adapterItem.remove(e);
+						adapterItem.insert(potions[i].toString(), position);
+						break;
+					}
+				}
+				else if(potions[i].getItemType()==Item.ITEM_STAMINA_POTION)
+				{
+					if(potions[i].getSize()>0)
+					{		
+						player.setCurStm(player.getCurStm()+potions[i].getStatNumber());
+						if(player.getCurStm()>player.getMaxStm())
+						{player.setCurStm(player.getMaxStm());}
+						potions[i].setSize(potions[i].getSize()-1);
+						txtViewStamina.setText("Stamina: " + player.getCurStm() + "/"
+							+ player.getMaxStm());
+						adapterItem.remove(e);
+						adapterItem.insert(potions[i].toString(), position);
+						break;
+					}
 				}
 			}
 		}
