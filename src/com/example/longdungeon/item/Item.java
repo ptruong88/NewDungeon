@@ -26,6 +26,7 @@ public class Item implements Parcelable {
 	public Item() {
 		// TODO Auto-generated constructor stub
 		itemType = 0;
+		size = 1;
 	}
 
 	public Item(String name, int itemType) {
@@ -53,6 +54,7 @@ public class Item implements Parcelable {
 			statName = "DEF";
 			break;
 		}
+		size = 1;
 	}
 
 	public String getStatName() {
@@ -124,6 +126,7 @@ public class Item implements Parcelable {
 
 	public void setSize(int size) {
 		this.size = size;
+		cost = statNumber*size;
 	}
 
 	

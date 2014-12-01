@@ -20,6 +20,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -46,7 +49,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 	private ArrayAdapter<String> adapterAttack, adapterMagic, adapterItem;
 	private static int[] imageMobs = new int[] { R.drawable.goblin,
 			R.drawable.skeleton, R.drawable.spider };
-	private ImageView imageMob;
+	private ImageView imageMob, imagePlayer;
 
 	// gordon's variables for the game loop
 	// boolean playerTurn = true;
@@ -55,7 +58,9 @@ public class BattleTestActivity extends ActionBarActivity implements
 	boolean ranAway = false;
 	int d10Roll = 0;
 	int atkVal;
-
+	// Animation
+    private Animation animMove;
+    
 	Potion[] potions;
 	//int numHealthPotions = 5;
 	//int healthPotionRegen = 5;
@@ -190,7 +195,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 		listAbility.setVisibility(View.INVISIBLE);
 		if (parent.getItemAtPosition(position).toString().contains("Attack")) {
 			
-
+			animationPlayerAttack();
 			// mobCurHp -= baseDamage;
 			switch (position) {
 			case 0:// basic attack case based on it being in the 0th position
@@ -633,8 +638,40 @@ public class BattleTestActivity extends ActionBarActivity implements
 		}
 	}
 
+	private void animationPlayerAttack() {
+		// load the animation
+        animMove = AnimationUtils.loadAnimation(getApplicationContext(),
+                R.anim.move);
+         
+        // set animation listener
+        animMove.setAnimationListener(new AnimationListener() {
+			
+			@Override
+			public void onAnimationStart(Animation animation) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+        
+        imagePlayer.startAnimation(animMove);
+	}
+
 	private void setUpPlayer() {
-		// TODO Auto-generated method stub
+		//get player image
+		imagePlayer = (ImageView)this.findViewById(R.id.imagePlayer);
+		
 		txtViewPlayerName = (TextView) this
 				.findViewById(R.id.textViewPlayerName);
 		Intent intentLogin = getIntent();

@@ -173,7 +173,7 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 			potion[i] = new Potion(materialsPotion[i] + des, itemType);
 			potion[i].setStatNumber((int) (base * percent[i]));
 			potion[i].setPosition(i);
-			potion[i].setCost(potion[i].getCost() * potion[i].getSize());
+			potion[i].setSize(5);
 		}
 		return potion;
 	}

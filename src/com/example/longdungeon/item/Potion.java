@@ -12,12 +12,11 @@ public class Potion extends Item implements Parcelable {
 	public final int size_of_stack = 5;
 
 	public Potion() {
-		size = 0;
+		super();
 	}
 
 	public Potion(String name, int itemType) {
 		super(name, itemType);
-		size = 5;
 		// this.potionType = potionType;
 		switch (itemType) {
 		case ITEM_HEALTH_POTION:
