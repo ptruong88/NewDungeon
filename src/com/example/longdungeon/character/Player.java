@@ -59,33 +59,40 @@ public class Player extends Person implements Parcelable {
 		damage = 15;
 		level = 0;
 		skillPoint = 5;
-		setUpPlayerEquip();
-		setUpPlayerInventory();
+		setUpEquip();
+		setUpInventory();
 	}
 
-	private void setUpPlayerEquip() {
+	private void setUpEquip() {
 		playerEquip = new Equipment[5];
 		playerEquip[Item.ITEM_SWORD] = new Equipment("Wood Sword",
 				Item.ITEM_SWORD);
+		playerEquip[Item.ITEM_SWORD].setEquipped((byte) 1);
 		damage = playerEquip[Item.ITEM_SWORD].getStatNumber();
 
 		playerEquip[Item.ITEM_HELMET] = new Equipment("Wood Helmet",
 				Item.ITEM_HELMET);
+		playerEquip[Item.ITEM_HELMET].setEquipped((byte) 1);
+		
 		playerEquip[Item.ITEM_SHIELD] = new Equipment("Wood Shield",
 				Item.ITEM_SHIELD);
+		playerEquip[Item.ITEM_SHIELD].setEquipped((byte) 1);
+		
 		playerEquip[Item.ITEM_CLOTH] = new Equipment("Wood Cloth",
 				Item.ITEM_CLOTH);
+		playerEquip[Item.ITEM_CLOTH].setEquipped((byte) 1);
 		def = playerEquip[Item.ITEM_HELMET].getStatNumber()
 				+ playerEquip[Item.ITEM_SHIELD].getStatNumber()
 				+ playerEquip[Item.ITEM_CLOTH].getStatNumber();
 
 		playerEquip[Item.ITEM_RING] = new Equipment("Wood Ring", Item.ITEM_RING);
+		playerEquip[Item.ITEM_RING].setEquipped((byte) 1);
 		maxMana = playerEquip[Item.ITEM_RING].getStatNumber();
 
 		curEquipment = 5;
 	}
 
-	private void setUpPlayerInventory() {
+	private void setUpInventory() {
 		inventoryCurSpace = 0;
 		inventoryMaxSpace = 10;
 		playerInventory = new Item[inventoryMaxSpace];
@@ -211,8 +218,14 @@ public class Player extends Person implements Parcelable {
 		++inventoryCurSpace;
 	}
 
-	public void removeItemToInventory(int position) {
+	public void removeItemFromInventory(int position) {
 		playerInventory[position] = null;
+		for (int i = position; i < inventoryCurSpace - 1; ++i) {
+			if (playerInventory[i + 1] != null) {
+				playerInventory[i] = playerInventory[i + 1];
+				playerInventory[i + 1] = null;
+			}
+		}
 		--inventoryCurSpace;
 	}
 
@@ -356,6 +369,7 @@ public class Player extends Person implements Parcelable {
 			temp.setItemType(Integer.parseInt(inputReader.readLine()));
 			temp.setStatNumber(Integer.parseInt(inputReader.readLine()));
 			temp.setCost(Integer.parseInt(inputReader.readLine()));
+			temp.setEquipped((byte)1);
 			player.insertNewEquipment(temp);
 		}
 		player.setInventoryCurSpace(0);
@@ -460,7 +474,7 @@ public class Player extends Person implements Parcelable {
 		maxMana = in.readInt();
 		curMana = in.readInt();
 		level = in.readInt();
-		skillPoint = in.readInt();
+		skillPoint = in.readInt();		
 		for (int i = 0; i < 5; ++i) {
 			playerEquip[i] = in
 					.readParcelable(Equipment.class.getClassLoader());

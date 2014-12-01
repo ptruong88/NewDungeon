@@ -13,6 +13,7 @@ public class Item implements Parcelable {
 	protected int statNumber;
 	protected int size;// Size for potion
 	protected int position; // position in shopping activity.
+	
 	public static final int ITEM_SWORD = 0;
 	public static final int ITEM_HELMET = 1;
 	public static final int ITEM_SHIELD = 2;
@@ -125,6 +126,12 @@ public class Item implements Parcelable {
 		this.size = size;
 	}
 
+	
+	
+	public boolean equals(String e) {
+		return e.contains(statNumber+"") && e.contains(name);
+	}
+	
 	public Item(Parcel in) {
 		readFromParcel(in);
 	}

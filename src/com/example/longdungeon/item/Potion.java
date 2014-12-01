@@ -8,7 +8,7 @@ public class Potion extends Item implements Parcelable {
 	// private int plusHP;// how many hp the potion restores
 	// private int plusSTM;// how much stamina the potion restores
 	// private int plusMGK;// how much magic the potion restores
-	
+
 	public final int size_of_stack = 5;
 
 	public Potion() {
@@ -33,10 +33,10 @@ public class Potion extends Item implements Parcelable {
 		cost = statNumber;
 	}
 
-//	public void setStatNumber(int statNumber) {
-//		this.statNumber = statNumber;
-//		cost = statNumber;
-//	}
+	// public void setStatNumber(int statNumber) {
+	// this.statNumber = statNumber;
+	// cost = statNumber;
+	// }
 
 	// Depend on what kind of potion is, getStatPotion returns
 	// heal, mana, or stamina.
@@ -52,11 +52,13 @@ public class Potion extends Item implements Parcelable {
 	// }
 
 	public String toString() {
-		return "+" + getStatNumber() + " " + getStatName() + " " + name + " x"
-				+ size;
+		return statNumber + " " + statName + " " + name + " x" + size;
 	}
 
-	
+	public boolean equals(String e) {
+		return e.contains(statNumber + "") && e.contains(statName)
+				&& e.contains(name);
+	}
 
 	// public String getPotionType() {
 	// return potionType;

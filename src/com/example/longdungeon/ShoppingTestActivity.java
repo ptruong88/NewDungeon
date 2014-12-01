@@ -36,9 +36,10 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 
 	private TextView txtViewGold;
 
-	private ArrayAdapter<String> adapter;
-	private ListView listItems;
-	private AlertDialog.Builder alertDialog, alertDialogCancelBuy;
+	private ArrayAdapter<String> adapterShop, adapterInventory;
+	private ListView listItems, listItemsInventory;
+	private AlertDialog.Builder alertDialog, alertDialogCancelBuy,
+			alertDialogSell;
 	private Player player;
 	private Equipment[] sellWeapon, sellHelmet, sellShield, sellCloth,
 			sellRing;
@@ -55,8 +56,9 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 		setUpEquipmentToSell();
 		setUpPotionToSell();
 		setUpBuyingDialog();
+		setUpSellingDialog();
 		setUpCancelBuyingDialog();
-		setUpListSell();
+		setUpListSellAndInventory();
 		setUpButton();
 
 	}
@@ -91,7 +93,7 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 		materialsEquip[3] = "Gold";
 		materialsEquip[4] = "Platinum";
 
-		double[] percent = randPercent(2.0);
+		double[] percent = randPercent(1.0);
 		sellWeapon = setUpItemToSell(Item.ITEM_SWORD, percent);
 		sellHelmet = setUpItemToSell(Item.ITEM_HELMET, percent);
 		sellShield = setUpItemToSell(Item.ITEM_SHIELD, percent);
@@ -146,7 +148,7 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 		materialsPotion[3] = "Super";
 		materialsPotion[4] = "Super Super";
 
-		double[] percent = randPercent(2.0);
+		double[] percent = randPercent(0.0);
 		sellHealPotion = setUpPotionToSell(Item.ITEM_HEALTH_POTION, percent);
 		sellManaPotion = setUpPotionToSell(Item.ITEM_MANA_POTION, percent);
 		sellStaminaPotion = setUpPotionToSell(Item.ITEM_STAMINA_POTION, percent);
@@ -157,13 +159,13 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 		int base;
 		switch (itemType) {
 		case Item.ITEM_HEALTH_POTION:
-			base = player.getMaxHp();
+			base = (int) (player.getMaxHp() * 0.4);
 			break;
 		case Item.ITEM_MANA_POTION:
-			base = player.getMaxMana();
+			base = (int) (player.getMaxMana() * 0.4);
 			break;
 		default:
-			base = player.getMaxStm();
+			base = (int) (player.getMaxStm() * 0.4);
 			break;
 		}
 		Potion[] potion = new Potion[5];
@@ -183,9 +185,11 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 	 */
 	private double[] randPercent(double range) {
 		int[] num = new int[materialsEquip.length];
-		double a = 0.2;
-		for (int i = 0; i < num.length; ++i, a += 0.2)
-			num[i] = (int) (Math.random() * range * a * 100) + 1;
+		double a = 0.1;
+		for (int i = 0; i < num.length; ++i, a += 0.1) {
+			num[i] = (int) ((Math.random() + range + a) * 100);
+			System.out.println("Number-- " + num[i]);
+		}
 
 		int min;
 		for (int i = 0; i < num.length; ++i) {
@@ -236,12 +240,84 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 		alertDialog.setTitle("Confirm buying...");
 	}
 
+	private void setUpSellingDialog() {
+		// Set up for buy confirm dialog.
+		alertDialogSell = new AlertDialog.Builder(this);
+		// Setting Dialog Title
+		alertDialogSell.setTitle("Confirm selling...");
+	}
+
 	// A string to show what difference between old and new equipment.
 	private String compareStat;
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view,
 			final int position, long id) {
+		switch (parent.getId()) {
+		case R.id.listViewItems:
+			buying(parent, position);
+			break;
+		default:
+			selling(parent, position);
+			alertDialogSell.show();
+			break;
+		}
+	}
+
+	private void selling(AdapterView<?> parent, int position) {
+		final String item = parent.getItemAtPosition(position).toString();
+		if (item.endsWith("E")) {
+			alertDialogSell.setMessage("Can't sell an equipped item");
+			alertDialogSell.setPositiveButton("YES",
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+							// Write your code here to execute after dialog
+							dialog.cancel();
+						}
+					});
+		} else {
+			Item[] inventory = player.getPlayerInventory();
+			Item temp = null;
+			int cost;
+			for (int i = 0; i < player.getInventoryCurSpace(); ++i) {
+				if (inventory[i].equals(item)) {
+					temp = inventory[i];
+					position = i;
+					break;
+				}
+			}
+			cost = (int) (temp.getCost() * 0.75);
+			alertDialogSell.setMessage("Selling " + temp + " to get " + cost
+					+ " Gold");
+			setSellDialogButton(item, position, cost);
+		}
+	}
+
+	private void setSellDialogButton(final String item, final int position,
+			final int cost) {
+		// TODO Auto-generated method stub
+		alertDialogSell.setPositiveButton("YES",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						// Write your code here to execute after dialog
+						adapterInventory.remove(item);
+						player.removeItemFromInventory(position);
+						player.setGold(player.getGold() + cost);
+						txtViewGold.setText("Gold: " + player.getGold());
+					}
+				});
+		// Setting Negative "NO" Btn
+		alertDialogSell.setNegativeButton("NO",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						dialog.cancel();
+					}
+				});
+	}
+
+	private void buying(AdapterView<?> parent, final int position) {
+		// TODO Auto-generated method stub
+
 		final String message = parent.getItemAtPosition(position).toString();
 		System.out.println("Buy from shop--- " + message);
 		int cost = cost(message);
@@ -258,7 +334,10 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 		} else {
 
 			// Setting Dialog Message
-			alertDialog.setMessage(message + "\n(" + compareStat + ")");
+			if (compareStat.length() != 0)
+				alertDialog.setMessage(message + "\n(" + compareStat + ")");
+			else
+				alertDialog.setMessage(message);
 
 			// Setting Positive "Yes" Btn
 			alertDialog.setPositiveButton("YES",
@@ -269,18 +348,18 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 							// "You clicked on YES",
 							// Toast.LENGTH_SHORT).show();
 
-//							String v = "You bought " + message;
-//							Toast.makeText(getApplicationContext(), v,
-//									Toast.LENGTH_SHORT).show();
-//							listItems.setEnabled(false);
+							// String v = "You bought " + message;
+							// Toast.makeText(getApplicationContext(), v,
+							// Toast.LENGTH_SHORT).show();
+							// listItems.setEnabled(false);
 							buyingStuff(message, position);
-//							new Handler().postDelayed(new Runnable() {
-//								@Override
-//								public void run() {
-//									listItems.setEnabled(true);
-//								}
-//
-//							}, Toast.LENGTH_LONG * 2200);
+							// new Handler().postDelayed(new Runnable() {
+							// @Override
+							// public void run() {
+							// listItems.setEnabled(true);
+							// }
+							//
+							// }, Toast.LENGTH_LONG * 2200);
 						}
 					});
 			// Setting Negative "NO" Btn
@@ -336,66 +415,78 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 					+ sellRing[i].getStatName();
 			return sellRing[i].getCost();
 		} else if (message.contains("HP")) {
-			return sellHealPotion[position(message, sellHealPotion)].getCost();
+			i = position(message, sellHealPotion);
+			compareStat = "";
+			return sellHealPotion[i].getCost();
 		} else if (message.contains("STM")) {
-			return sellStaminaPotion[position(message, sellStaminaPotion)]
-					.getCost();
+			i = position(message, sellStaminaPotion);
+			compareStat = "";
+			return sellHealPotion[i].getCost();
 		} else if (message.contains("MANA") && message.contains("Potion")) {
-			return sellManaPotion[position(message, sellManaPotion)].getCost();
+			i = position(message, sellManaPotion);
+			compareStat = "";
+			return sellHealPotion[i].getCost();
 		}
 		return 0;
 	}
 
 	private void buyingStuff(String message, int pos) {
-		// if (adapter.getCount() > 0)
-		// adapter.clear();
+		// if (adapterShop.getCount() > 0)
+		// adapterShop.clear();
 		if (message.contains("Sword")) {
 			pos = position(message, sellWeapon);
 			putUpdateSellItemToListView(pos, sellWeapon);
-			updateListToSell(sellWeapon, pos);
-			adapter.remove(message);
+			updateListToSell(pos, sellWeapon);
+			adapterShop.remove(message);
 		} else if (message.contains("Helmet")) {
 			pos = position(message, sellHelmet);
 			putUpdateSellItemToListView(pos, sellHelmet);
-			updateListToSell(sellHelmet, pos);
-			adapter.remove(message);
+			updateListToSell(pos, sellHelmet);
+			adapterShop.remove(message);
+
 		} else if (message.contains("Shield")) {
 			pos = position(message, sellShield);
 			putUpdateSellItemToListView(pos, sellShield);
-			updateListToSell(sellShield, pos);
-			adapter.remove(message);
+			updateListToSell(pos, sellShield);
+			adapterShop.remove(message);
+
 		} else if (message.contains("Cloth")) {
 			pos = position(message, sellCloth);
 			putUpdateSellItemToListView(pos, sellCloth);
-			updateListToSell(sellCloth, pos);
-			adapter.remove(message);
+			updateListToSell(pos, sellCloth);
+			adapterShop.remove(message);
+
 		} else if (message.contains("Ring")) {
 			pos = position(message, sellRing);
 			putUpdateSellItemToListView(pos, sellRing);
-			updateListToSell(sellRing, pos);
-			adapter.remove(message);
+			updateListToSell(pos, sellRing);
+			adapterShop.remove(message);
+
 		} else if (message.contains("HP")) {
 			pos = position(message, sellHealPotion);
 			putUpdateSellItemToListView(pos, sellHealPotion);
-			updateListToSell(sellHealPotion, pos);
-			adapter.remove(message);
+			updateListToSell(pos, sellHealPotion);
+			adapterShop.remove(message);
+
 		} else if (message.contains("STM")) {
 			pos = position(message, sellStaminaPotion);
 			putUpdateSellItemToListView(pos, sellStaminaPotion);
-			updateListToSell(sellStaminaPotion, pos);
-			adapter.remove(message);
+			updateListToSell(pos, sellStaminaPotion);
+			adapterShop.remove(message);
+
 		} else if (message.contains("MANA") && message.contains("Potion")) {
 			pos = position(message, sellManaPotion);
 			putUpdateSellItemToListView(pos, sellManaPotion);
-			updateListToSell(sellManaPotion, pos);
-			adapter.remove(message);
+			updateListToSell(pos, sellManaPotion);
+			adapterShop.remove(message);
+
 		}
-		// listItems.setAdapter(adapter);
+		// listItems.setAdapter(adapterShop);
 	}
 
 	// ***********************************
 	// Update sell equipment and display.
-	private void updateListToSell(Equipment[] sellEquipment, int pos) {
+	private void updateListToSell(int pos, Equipment[] sellEquipment) {
 		sellEquipment[pos] = null;
 		for (int i = pos; i < sellEquipment.length - 1; ++i) {
 			if (sellEquipment[i + 1] != null) {
@@ -410,6 +501,7 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 		player.insertItemToInventory(equip);
 		player.setGold(player.getGold() - equip.getCost());
 		txtViewGold.setText("Gold: " + player.getGold());
+		adapterInventory.add(equip.toString());
 	}
 
 	// ***********************************
@@ -417,7 +509,7 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 
 	// ***********************************
 	// Update sell potion and display.
-	private void updateListToSell(Potion[] sellPotion, int pos) {
+	private void updateListToSell(int pos, Potion[] sellPotion) {
 		sellPotion[pos] = null;
 		for (int i = pos; i < sellPotion.length - 1; ++i) {
 			if (sellPotion[i + 1] != null) {
@@ -431,7 +523,8 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 		Potion equip = sellPotion[pos];
 		player.insertItemToInventory(equip);
 		player.setGold(player.getGold() - equip.getCost());
-		txtViewGold.setText(player.getGold() + "");
+		txtViewGold.setText("Gold: " + player.getGold());
+		adapterInventory.add(equip.toString());
 	}
 
 	private int position(String message, Item[] item) {
@@ -450,16 +543,31 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 	/**
 	 * Set list view for selling.
 	 */
-	private void setUpListSell() {
+	private void setUpListSellAndInventory() {
 		listItems = (ListView) this.findViewById(R.id.listViewItems);
 		listItems.setOnItemClickListener(this);
 
-		adapter = new ArrayAdapter<String>(getApplicationContext(),
+		adapterShop = new ArrayAdapter<String>(getApplicationContext(),
 				android.R.layout.activity_list_item, android.R.id.text1);
 
 		// Display list view in the first place.
-		displayEquipToList(sellWeapon);
-		listItems.setAdapter(adapter);
+		displayToList(sellWeapon);
+		listItems.setAdapter(adapterShop);
+
+		// Display inventory items.
+		listItemsInventory = (ListView) this
+				.findViewById(R.id.listViewItemsInventory);
+		listItemsInventory.setOnItemClickListener(this);
+
+		adapterInventory = new ArrayAdapter<String>(getApplicationContext(),
+				android.R.layout.activity_list_item, android.R.id.text1);
+
+		// Display weapon in the first place.
+		if (!adapterInventory.isEmpty())
+			adapterInventory.clear();
+		adapterInventory.add(player.getPlayerEquip(Item.ITEM_SWORD).toString());
+		displayFromInventory(Item.ITEM_SWORD);
+		listItemsInventory.setAdapter(adapterInventory);
 	}// End***************
 
 	/**
@@ -480,31 +588,55 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 	@Override
 	public void onClick(View button) {
 		// TODO Auto-generated method stub
-		if (adapter.getCount() > 0)
-			adapter.clear();
+		if (!adapterShop.isEmpty()) {
+			adapterShop.clear();
+			adapterInventory.clear();
+		}
 		switch (button.getId()) {
 		case R.id.buttonAll:
 			displayAll();
 			break;
 		case R.id.buttonWeapon:
-			displayEquipToList(sellWeapon);
+			displayToList(sellWeapon);
+
+			adapterInventory.add(player.getPlayerEquip(Item.ITEM_SWORD)
+					.toString());
+			System.out.println("Equipment "
+					+ player.getPlayerEquip(Item.ITEM_SWORD).isEquipped());
+			displayFromInventory(Item.ITEM_SWORD);
 			break;
 		case R.id.buttonHelmet:
-			displayEquipToList(sellHelmet);
+			displayToList(sellHelmet);
+			adapterInventory.add(player.getPlayerEquip(Item.ITEM_HELMET)
+					.toString());
+			displayFromInventory(Item.ITEM_HELMET);
 			break;
 		case R.id.buttonShield:
-			displayEquipToList(sellShield);
+			displayToList(sellShield);
+			adapterInventory.add(player.getPlayerEquip(Item.ITEM_SHIELD)
+					.toString());
+			displayFromInventory(Item.ITEM_SHIELD);
 			break;
 		case R.id.buttonCloth:
-			displayEquipToList(sellCloth);
+			displayToList(sellCloth);
+			adapterInventory.add(player.getPlayerEquip(Item.ITEM_CLOTH)
+					.toString());
+			displayFromInventory(Item.ITEM_CLOTH);
 			break;
 		case R.id.buttonRing:
-			displayEquipToList(sellRing);
+			displayToList(sellRing);
+			adapterInventory.add(player.getPlayerEquip(Item.ITEM_RING)
+					.toString());
+			displayFromInventory(Item.ITEM_RING);
 			break;
 		case R.id.buttonPotion:
-			displayPotionToList(sellHealPotion);
-			displayPotionToList(sellManaPotion);
-			displayPotionToList(sellStaminaPotion);
+			displayToList(sellHealPotion);
+			displayToList(sellManaPotion);
+			displayToList(sellStaminaPotion);
+
+			displayFromInventory(Item.ITEM_HEALTH_POTION);
+			displayFromInventory(Item.ITEM_MANA_POTION);
+			displayFromInventory(Item.ITEM_STAMINA_POTION);
 			break;
 		default:// Inventory button
 			Intent intentInventory = new Intent(ShoppingTestActivity.this,
@@ -514,33 +646,61 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 			startActivity(intentInventory);
 			break;
 		}
-		listItems.setAdapter(adapter);
+//		listItems.setAdapter(adapterShop);
+//		listItemsInventory.setAdapter(adapterInventory);
 	}
 
 	private void displayAll() {
-		displayEquipToList(sellWeapon);
-		displayEquipToList(sellHelmet);
-		displayEquipToList(sellShield);
-		displayEquipToList(sellCloth);
-		displayEquipToList(sellRing);
-		displayPotionToList(sellHealPotion);
-		displayPotionToList(sellManaPotion);
-		displayPotionToList(sellStaminaPotion);
+		displayToList(sellWeapon);
+		displayToList(sellHelmet);
+		displayToList(sellShield);
+		displayToList(sellCloth);
+		displayToList(sellRing);
+		displayToList(sellHealPotion);
+		displayToList(sellManaPotion);
+		displayToList(sellStaminaPotion);
+
+		adapterInventory.add(player.getPlayerEquip(Item.ITEM_SWORD).toString());
+		displayFromInventory(Item.ITEM_SWORD);
+		adapterInventory
+				.add(player.getPlayerEquip(Item.ITEM_HELMET).toString());
+		displayFromInventory(Item.ITEM_HELMET);
+		adapterInventory
+				.add(player.getPlayerEquip(Item.ITEM_SHIELD).toString());
+		displayFromInventory(Item.ITEM_SHIELD);
+		adapterInventory.add(player.getPlayerEquip(Item.ITEM_CLOTH).toString());
+		displayFromInventory(Item.ITEM_CLOTH);
+		adapterInventory.add(player.getPlayerEquip(Item.ITEM_RING).toString());
+		displayFromInventory(Item.ITEM_RING);
+		displayFromInventory(Item.ITEM_HEALTH_POTION);
+		displayFromInventory(Item.ITEM_MANA_POTION);
+		displayFromInventory(Item.ITEM_STAMINA_POTION);
+
 	}
 
-	private void displayPotionToList(Potion[] sellPotion) {
+	private void displayToList(Item[] sellPotion) {
 		for (int i = 0; i < sellPotion.length; ++i)
 			if (sellPotion[i] != null)
-				adapter.add(sellPotion[i].toString() + " ("
+				adapterShop.add(sellPotion[i].toString() + " ("
 						+ (sellPotion[i].getCost()) + " Gold)");
 	}
 
-	private void displayEquipToList(Equipment[] sellEquipment) {
-		for (int i = 0; i < sellEquipment.length; ++i)
-			if (sellEquipment[i] != null)
-				adapter.add(sellEquipment[i].toString() + " ("
-						+ sellEquipment[i].getCost() + " Gold)");
-	}// End button action**************
+	// End button action**************
+
+	/**
+	 * Display inventory to list.
+	 */
+
+	private void displayFromInventory(int itemType) {
+		Item[] inventory = player.getPlayerInventory();
+		for (int i = 0; i < player.getInventoryCurSpace(); ++i) {
+			if (inventory[i].getItemType() == itemType) {
+				adapterInventory.add(inventory[i].toString());
+			}
+		}
+	}
+
+	// End display inventory.
 
 	protected void onStart() {
 		super.onStart();
