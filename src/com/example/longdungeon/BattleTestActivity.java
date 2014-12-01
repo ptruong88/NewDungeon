@@ -572,7 +572,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 
 		else if (parent.getItemAtPosition(position).toString()
 				.contains("Potion")) {
-			potionClick(parent.getItemAtPosition(position).toString());
+			potionClick(parent.getItemAtPosition(position).toString(), position);
 			/*
 			switch (position) {
 			case 0:// Health
@@ -1073,7 +1073,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 
 	}
 	
-	public void potionClick(String e)
+	public void potionClick(String e, int position)
 	{
 		for(int i=0; i<potions.length;i++)
 		{
@@ -1085,6 +1085,9 @@ public class BattleTestActivity extends ActionBarActivity implements
 					potions[i].setSize(potions[i].getSize()-1);
 					txtViewPlayerHp.setText("HP: " + player.getCurHp() + "/"
 							+ player.getMaxHp());
+					adapterItem.remove(e);
+					adapterItem.insert(potions[i].toString(), position);
+					break;
 				}
 			}
 		}

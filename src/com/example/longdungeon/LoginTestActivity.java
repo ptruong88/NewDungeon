@@ -85,35 +85,35 @@ public class LoginTestActivity extends ActionBarActivity {
 		this.findViewById(R.id.layoutLoginText).setVisibility(View.INVISIBLE);
 
 		File file = new File(getFilesDir(), Player.PLAYER_FILE);
-//		 file.delete();
-		if (file.exists()) {
-
-			// new Handler().postDelayed(new Runnable() {
-			//
-			// @Override
-			// public void run() {
-			// TODO Auto-generated method stub
-			try {
-				BufferedReader inputReader = new BufferedReader(
-						new InputStreamReader(openFileInput(Player.PLAYER_FILE)));
-
-				Player player = new Player();
-				player.readFromFile(player,inputReader);				
-
-				Intent intentShop = new Intent(LoginTestActivity.this,
-						ShoppingTestActivity.class);
-				intentShop.putExtra(Player.PLAYER_DATA, player);
-				startActivity(intentShop);
-				finish();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			// }
-			// }, 4000);
-
-		} else
-			this.findViewById(R.id.layoutLoginText).setVisibility(View.VISIBLE);
+		 file.delete();
+//		if (file.exists()) {
+//
+//			// new Handler().postDelayed(new Runnable() {
+//			//
+//			// @Override
+//			// public void run() {
+//			// TODO Auto-generated method stub
+//			try {
+//				BufferedReader inputReader = new BufferedReader(
+//						new InputStreamReader(openFileInput(Player.PLAYER_FILE)));
+//
+//				Player player = new Player();
+//				player.readFromFile(player,inputReader);				
+//
+//				Intent intentShop = new Intent(LoginTestActivity.this,
+//						ShoppingTestActivity.class);
+//				intentShop.putExtra(Player.PLAYER_DATA, player);
+//				startActivity(intentShop);
+//				finish();
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			// }
+//			// }, 4000);
+//
+//		} else
+//			this.findViewById(R.id.layoutLoginText).setVisibility(View.VISIBLE);
 	}
 
 	@Override
