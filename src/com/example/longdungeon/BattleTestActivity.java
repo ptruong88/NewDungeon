@@ -55,21 +55,20 @@ public class BattleTestActivity extends ActionBarActivity implements
 	boolean ranAway = false;
 	int d10Roll = 0;
 	int atkVal;
-	
-	
-	int numHealthPotions = 5;
-	int healthPotionRegen = 5;
-	int numStaminaPotions = 5;
-	int staminaPotionRegen = 36;
-	int numManaPotions = 30;
-	int manaPotionRegen = 18;
-	
+
+	Potion[] potions;
+	//int numHealthPotions = 5;
+	//int healthPotionRegen = 5;
+	//int numStaminaPotions = 5;
+	//int staminaPotionRegen = 36;
+	//int numManaPotions = 30;
+	//int manaPotionRegen = 18;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_battle_test);
 
-		
 		setUpPlayer();
 		setUpMob();
 		setUpListView();
@@ -89,8 +88,6 @@ public class BattleTestActivity extends ActionBarActivity implements
 
 	private int baseDamage;// Player Attack
 
-	
-	
 	private void setUpStringForListView() {
 		// TODO Auto-generated method stub
 		listAttack = new String[3];
@@ -115,20 +112,23 @@ public class BattleTestActivity extends ActionBarActivity implements
 		adapterMagic = new ArrayAdapter<String>(getApplicationContext(),
 				android.R.layout.activity_list_item, android.R.id.text1,
 				listMagic);
-		
-		//Item[] inventoryCpy = player.getPlayerInventory();
-		
-		String healthPotions = "+36 HP Small Potion x"+numHealthPotions;
-		
-		String staminaPotions = "+30 STM Small Potion x"+numStaminaPotions;
-		
-		String manaPotions =  "+18 MANA Small Potion x"+numStaminaPotions;
-		
-		listItem = new String[] { healthPotions, staminaPotions, manaPotions };
-		
+
 		adapterItem = new ArrayAdapter<String>(getApplicationContext(),
-				android.R.layout.activity_list_item, android.R.id.text1,
-				listItem);
+				android.R.layout.activity_list_item, android.R.id.text1);
+		
+		potions = new Potion[player.getInventoryCurSpace()];
+		for (int i = 0; i < player.getInventoryCurSpace(); ++i) {
+			if (player.getPlayerInventory()[i].getItemType() == Item.ITEM_HEALTH_POTION
+					|| player.getPlayerInventory()[i].getItemType() == Item.ITEM_STAMINA_POTION
+					|| player.getPlayerInventory()[i].getItemType() == Item.ITEM_MANA_POTION) 
+			{
+				potions[i]=(Potion) player.getPlayerInventory()[i];
+				adapterItem.add(potions[i].toString());
+			}
+		}
+		
+		
+		
 	}
 
 	private void setUpButtonAction() {
@@ -141,6 +141,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 	}
 
 	public void onClick(View button) {
+		
 		switch (button.getId()) {
 		case R.id.buttonAttack:
 			listAbility.setAdapter(adapterAttack);
@@ -186,7 +187,9 @@ public class BattleTestActivity extends ActionBarActivity implements
 		// Toast.makeText(getApplicationContext(),
 		// parent.getItemAtPosition(position).toString(),
 		// Toast.LENGTH_SHORT).show();
+		listAbility.setVisibility(View.INVISIBLE);
 		if (parent.getItemAtPosition(position).toString().contains("Attack")) {
+			
 
 			// mobCurHp -= baseDamage;
 			switch (position) {
@@ -251,14 +254,10 @@ public class BattleTestActivity extends ActionBarActivity implements
 					}
 					atkVal = 0;// clear attack val;
 					if (mob.getCurHp() <= 0) {
-						player.setCurHp(player.getMaxHp());
-						player.setCurMana(player.getMaxMana());
-						player.setCurStm(player.getMaxStm());
-						winDialog.show();
-					}
-					else
-					{
-						enemyTurn();// once you've attacked the enemy gets a turn
+						playerSetWin();
+					} else {
+						enemyTurn();// once you've attacked the enemy gets a
+									// turn
 					}
 				}
 				break;
@@ -333,14 +332,10 @@ public class BattleTestActivity extends ActionBarActivity implements
 					}
 					atkVal = 0;
 					if (mob.getCurHp() <= 0) {
-						player.setCurHp(player.getMaxHp());
-						player.setCurMana(player.getMaxMana());
-						player.setCurStm(player.getMaxStm());
-						winDialog.show();
-					}
-					else
-					{
-						enemyTurn();// once you've attacked the enemy gets a turn
+						playerSetWin();
+					} else {
+						enemyTurn();// once you've attacked the enemy gets a
+									// turn
 					}
 				}
 				break;
@@ -411,14 +406,10 @@ public class BattleTestActivity extends ActionBarActivity implements
 					}
 					atkVal = 0;
 					if (mob.getCurHp() <= 0) {
-						player.setCurHp(player.getMaxHp());
-						player.setCurMana(player.getMaxMana());
-						player.setCurStm(player.getMaxStm());
-						winDialog.show();
-					}
-					else
-					{
-						enemyTurn();// once you've attacked the enemy gets a turn
+						playerSetWin();
+					} else {
+						enemyTurn();// once you've attacked the enemy gets a
+									// turn
 					}
 				}
 				break;
@@ -466,14 +457,10 @@ public class BattleTestActivity extends ActionBarActivity implements
 					}
 					atkVal = 0;// clear attack val;
 					if (mob.getCurHp() <= 0) {
-						player.setCurHp(player.getMaxHp());
-						player.setCurMana(player.getMaxMana());
-						player.setCurStm(player.getMaxStm());
-						winDialog.show();
-					}
-					else
-					{
-						enemyTurn();// once you've attacked the enemy gets a turn
+						playerSetWin();
+					} else {
+						enemyTurn();// once you've attacked the enemy gets a
+									// turn
 					}
 				} else {
 					Toast.makeText(getApplicationContext(), "not enough Mana!",
@@ -520,14 +507,10 @@ public class BattleTestActivity extends ActionBarActivity implements
 					}
 					atkVal = 0;// clear attack val;
 					if (mob.getCurHp() <= 0) {
-						player.setCurHp(player.getMaxHp());
-						player.setCurMana(player.getMaxMana());
-						player.setCurStm(player.getMaxStm());
-						winDialog.show();
-					}
-					else
-					{
-						enemyTurn();// once you've attacked the enemy gets a turn
+						playerSetWin();
+					} else {
+						enemyTurn();// once you've attacked the enemy gets a
+									// turn
 					}
 				} else {
 					Toast.makeText(getApplicationContext(), "not enough Mana!",
@@ -574,14 +557,10 @@ public class BattleTestActivity extends ActionBarActivity implements
 					}
 					atkVal = 0;// clear attack val;
 					if (mob.getCurHp() <= 0) {
-						player.setCurHp(player.getMaxHp());
-						player.setCurMana(player.getMaxMana());
-						player.setCurStm(player.getMaxStm());
-						winDialog.show();
-					}
-					else
-					{
-						enemyTurn();// once you've attacked the enemy gets a turn
+						playerSetWin();
+					} else {
+						enemyTurn();// once you've attacked the enemy gets a
+									// turn
 					}
 				} else {
 					Toast.makeText(getApplicationContext(), "not enough Mana!",
@@ -590,56 +569,67 @@ public class BattleTestActivity extends ActionBarActivity implements
 				break;
 			}
 		}//
-		
+
 		else if (parent.getItemAtPosition(position).toString()
 				.contains("Potion")) {
+			potionClick(parent.getItemAtPosition(position).toString());
+			/*
 			switch (position) {
 			case 0:// Health
-				if(numHealthPotions<1)
-				{Toast.makeText(getApplicationContext(), "You're out of Potions!",
-						Toast.LENGTH_SHORT).show();}
-				else if(numHealthPotions>=1)
-				{
+				if (numHealthPotions < 1) {
+					Toast.makeText(getApplicationContext(),
+							"You're out of Potions!", Toast.LENGTH_SHORT)
+							.show();
+				} else if (numHealthPotions >= 1) {
 					numHealthPotions--;
-					player.setCurHp(player.getCurHp()+healthPotionRegen);
-					if(player.getCurHp()>player.getMaxHp())
-					{player.setCurHp(player.getMaxHp());}//can't supercharge with potions
-					txtViewPlayerHp.setText("HP: " + player.getCurHp() + "/"+ player.getMaxHp());
+					player.setCurHp(player.getCurHp() + healthPotionRegen);
+					if (player.getCurHp() > player.getMaxHp()) {
+						player.setCurHp(player.getMaxHp());
+					}// can't supercharge with potions
+					txtViewPlayerHp.setText("HP: " + player.getCurHp() + "/"
+							+ player.getMaxHp());
 					setUpStringForListView();
-					enemyTurn();// once you've used an item the enemy gets a turn
+					enemyTurn();// once you've used an item the enemy gets a
+								// turn
 				}
 				break;
 			case 1:// Stamina
-				if(numStaminaPotions<1)
-				{Toast.makeText(getApplicationContext(), "You're out of Potions!",
-						Toast.LENGTH_SHORT).show();}
-				else if(numStaminaPotions>=1)
-				{
+				if (numStaminaPotions < 1) {
+					Toast.makeText(getApplicationContext(),
+							"You're out of Potions!", Toast.LENGTH_SHORT)
+							.show();
+				} else if (numStaminaPotions >= 1) {
 					numStaminaPotions--;
-					player.setCurStm(player.getCurStm()+staminaPotionRegen);
-					if(player.getCurStm()>player.getMaxStm())
-					{player.setCurStm(player.getMaxStm());}//can't supercharge with potions
-					txtViewStamina.setText("Stamina: " + player.getCurStm() + "/" + player.getMaxStm());
+					player.setCurStm(player.getCurStm() + staminaPotionRegen);
+					if (player.getCurStm() > player.getMaxStm()) {
+						player.setCurStm(player.getMaxStm());
+					}// can't supercharge with potions
+					txtViewStamina.setText("Stamina: " + player.getCurStm()
+							+ "/" + player.getMaxStm());
 					setUpStringForListView();
-					enemyTurn();// once you've used an item the enemy gets a turn
+					enemyTurn();// once you've used an item the enemy gets a
+								// turn
 				}
 				break;
 			default:// Mana
-				if(numManaPotions<1)
-				{Toast.makeText(getApplicationContext(), "You're out of Potions!",
-						Toast.LENGTH_SHORT).show();}
-				else if(numManaPotions>=1)
-				{
+				if (numManaPotions < 1) {
+					Toast.makeText(getApplicationContext(),
+							"You're out of Potions!", Toast.LENGTH_SHORT)
+							.show();
+				} else if (numManaPotions >= 1) {
 					numManaPotions--;
-					player.setCurMana(player.getCurMana()+manaPotionRegen);
-					if(player.getCurMana()>player.getMaxMana())
-					{player.setCurMana(player.getMaxMana());}//can't supercharge with potions
-					txtViewPlayerMana.setText("Mana: " + player.getCurMana() + "/"+ player.getMaxMana());
+					player.setCurMana(player.getCurMana() + manaPotionRegen);
+					if (player.getCurMana() > player.getMaxMana()) {
+						player.setCurMana(player.getMaxMana());
+					}// can't supercharge with potions
+					txtViewPlayerMana.setText("Mana: " + player.getCurMana()
+							+ "/" + player.getMaxMana());
 					setUpStringForListView();
-					enemyTurn();// once you've used an item the enemy gets a turn
+					enemyTurn();// once you've used an item the enemy gets a
+								// turn
 				}
 				break;
-			}
+			}*/
 		}
 	}
 
@@ -685,8 +675,8 @@ public class BattleTestActivity extends ActionBarActivity implements
 
 		mobMaxHp = mob.getMaxHp();
 		mobCurHp = mob.getCurHp();
-		
-		imageMob = (ImageView)this.findViewById(R.id.imageMob);
+
+		imageMob = (ImageView) this.findViewById(R.id.imageMob);
 		imageMob.setImageResource(imageMobs[player.getLevel()]);
 	}
 
@@ -1082,11 +1072,45 @@ public class BattleTestActivity extends ActionBarActivity implements
 		}
 
 	}
+	
+	public void potionClick(String e)
+	{
+		for(int i=0; i<potions.length;i++)
+		{
+			if(potions[i]!=null&&potions[i].equals(e))
+			{
+				if (potions[i].getItemType()==Item.ITEM_HEALTH_POTION)
+				{
+					player.setCurHp(player.getCurHp()+potions[i].getStatNumber());
+					potions[i].setSize(potions[i].getSize()-1);
+					txtViewPlayerHp.setText("HP: " + player.getCurHp() + "/"
+							+ player.getMaxHp());
+				}
+			}
+		}
+	}
 
 	public int randomWithRange(int min, int max)// used for rolls to hit
 	{
 		int range = (max - min) + 1;
 		return (int) (Math.random() * range) + min;
+	}
+
+	public void playerSetWin() {
+		player.setCurHp(player.getMaxHp());
+		player.setCurMana(player.getMaxMana());
+		player.setCurStm(player.getMaxStm());
+		player.setScore(player.getScore() + mob.getXP());
+		player.setLevel(player.getLevel() + 1);
+		for(int i=0;i<potions.length;i++ )
+		{
+			if(potions[i]!=null)
+			{
+				player.getPlayerInventory()[i]=potions[i];
+			}
+		}
+		winDialog.show();
+		
 	}
 
 	protected void onStart() {

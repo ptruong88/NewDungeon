@@ -52,11 +52,14 @@ public class Potion extends Item implements Parcelable {
 	// }
 
 	public String toString() {
-		return "+" + getStatNumber() + " " + getStatName() + " " + name + " x"
+		return "+" + statNumber + " " + statName + " " + name + " x"
 				+ size;
 	}
 
-	
+	public boolean equals(String e)
+	{
+		return e.contains(statNumber+"")&& e.contains(statName)&&e.contains(name);
+	}
 
 	// public String getPotionType() {
 	// return potionType;
