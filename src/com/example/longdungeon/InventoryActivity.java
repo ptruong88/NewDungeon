@@ -36,11 +36,13 @@ public class InventoryActivity extends ActionBarActivity implements
 	private AlertDialog.Builder alertDialog;
 	private Player player;
 	private MediaPlayer medplay;
+	private int exp = 10;
+	TextView txtEXP;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_inventory_test);
+		setContentView(R.layout.activity_inventory);
 
 		getPlayerFromBundle();
 		setUpButtonAction();
@@ -394,6 +396,231 @@ public class InventoryActivity extends ActionBarActivity implements
 			if (item[i] != null && message.contains(item[i].getName()))
 				return i;
 		return 0;
+	}
+	
+	public void onClickplusHP(View v){
+		TextView txtHP = (TextView) this.findViewById(R.id.textViewSkillHpInput);
+		if(exp > 0){
+			String hpValue = (String) txtHP.getText();
+			int hpint = Integer.parseInt(hpValue);
+			txtHP.setText(Integer.toString(hpint+1));
+			exp--;
+			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
+			txtEXP.setText(Integer.toString(exp));
+		}
+	}
+	
+	public void onClickminusHP(View v){
+		TextView txtHP = (TextView) this.findViewById(R.id.textViewSkillHpInput);
+		int hp = Integer.parseInt((String) txtHP.getText());
+		if(hp > 0){
+			txtHP.setText(Integer.toString(hp-1));
+			exp++;
+			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
+			txtEXP.setText(Integer.toString(exp));
+		}
+	}
+	
+	public void onClickplusplusHP(View v){
+		TextView txtHP = (TextView) this.findViewById(R.id.textViewSkillHpInput);
+		int hp = Integer.parseInt((String) txtHP.getText());
+		if(exp > 0){
+			txtHP.setText(Integer.toString(hp+exp));
+			exp=0;
+			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
+			txtEXP.setText(Integer.toString(exp));
+		}
+	}
+	
+	public void onClickminusminusHP(View v){
+		TextView txtHP = (TextView) this.findViewById(R.id.textViewSkillHpInput);
+		int hp = Integer.parseInt((String) txtHP.getText());
+		if(hp > 0){
+			txtHP.setText("0");
+			exp+=hp;
+			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
+			txtEXP.setText(Integer.toString(exp));
+		}
+	}
+	
+	public void onClickplusSTM(View v){
+		TextView txtSTM = (TextView) this.findViewById(R.id.textViewSkillStaminaInput);
+		if(exp > 0){
+			String STMValue = (String) txtSTM.getText();
+			int STMint = Integer.parseInt(STMValue);
+			txtSTM.setText(Integer.toString(STMint+1));
+			exp--;
+			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
+			txtEXP.setText(Integer.toString(exp));
+		}
+	}
+	
+	public void onClickminusSTM(View v){
+		TextView txtSTM = (TextView) this.findViewById(R.id.textViewSkillStaminaInput);
+		int STM = Integer.parseInt((String) txtSTM.getText());
+		if(STM > 0){
+			txtSTM.setText(Integer.toString(STM-1));
+			exp++;
+			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
+			txtEXP.setText(Integer.toString(exp));
+		}
+	}
+	
+	public void onClickplusplusSTM(View v){
+		TextView txtSTM = (TextView) this.findViewById(R.id.textViewSkillStaminaInput);
+		int STM = Integer.parseInt((String) txtSTM.getText());
+		if(exp > 0){
+			txtSTM.setText(Integer.toString(STM+exp));
+			exp=0;
+			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
+			txtEXP.setText(Integer.toString(exp));
+		}
+	}
+	
+	public void onClickminusminusSTM(View v){
+		TextView txtSTM = (TextView) this.findViewById(R.id.textViewSkillStaminaInput);
+		int STM = Integer.parseInt((String) txtSTM.getText());
+		if(STM > 0){
+			txtSTM.setText("0");
+			exp+=STM;
+			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
+			txtEXP.setText(Integer.toString(exp));
+		}
+	}
+	
+	public void onClickplusMANA(View v){
+		TextView txtMANA = (TextView) this.findViewById(R.id.textViewSkillManaInput);
+		if(exp > 0){
+			String MANAValue = (String) txtMANA.getText();
+			int MANAint = Integer.parseInt(MANAValue);
+			txtMANA.setText(Integer.toString(MANAint+1));
+			exp--;
+			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
+			txtEXP.setText(Integer.toString(exp));
+		}
+	}
+	
+	public void onClickminusMANA(View v){
+		TextView txtMANA = (TextView) this.findViewById(R.id.textViewSkillManaInput);
+		int MANA = Integer.parseInt((String) txtMANA.getText());
+		if(MANA > 0){
+			txtMANA.setText(Integer.toString(MANA-1));
+			exp++;
+			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
+			txtEXP.setText(Integer.toString(exp));
+		}
+	}
+	
+	public void onClickplusplusMANA(View v){
+		TextView txtMANA = (TextView) this.findViewById(R.id.textViewSkillManaInput);
+		int MANA = Integer.parseInt((String) txtMANA.getText());
+		if(exp > 0){
+			txtMANA.setText(Integer.toString(MANA+exp));
+			exp=0;
+			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
+			txtEXP.setText(Integer.toString(exp));
+		}
+	}
+	
+	public void onClickminusminusMANA(View v){
+		TextView txtMANA = (TextView) this.findViewById(R.id.textViewSkillManaInput);
+		int MANA = Integer.parseInt((String) txtMANA.getText());
+		if(MANA > 0){
+			txtMANA.setText("0");
+			exp+=MANA;
+			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
+			txtEXP.setText(Integer.toString(exp));
+		}
+	}
+	
+	public void onClickplusDMG(View v){
+		TextView txtDMG = (TextView) this.findViewById(R.id.textViewSkillDMGInput);
+		if(exp > 0){
+			String DMGValue = (String) txtDMG.getText();
+			int DMGint = Integer.parseInt(DMGValue);
+			txtDMG.setText(Integer.toString(DMGint+1));
+			exp--;
+			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
+			txtEXP.setText(Integer.toString(exp));
+		}
+	}
+	
+	public void onClickminusDMG(View v){
+		TextView txtDMG = (TextView) this.findViewById(R.id.textViewSkillDMGInput);
+		int DMG = Integer.parseInt((String) txtDMG.getText());
+		if(DMG > 0){
+			txtDMG.setText(Integer.toString(DMG-1));
+			exp++;
+			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
+			txtEXP.setText(Integer.toString(exp));
+		}
+	}
+	
+	public void onClickplusplusDMG(View v){
+		TextView txtDMG = (TextView) this.findViewById(R.id.textViewSkillDMGInput);
+		int DMG = Integer.parseInt((String) txtDMG.getText());
+		if(exp > 0){
+			txtDMG.setText(Integer.toString(DMG+exp));
+			exp=0;
+			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
+			txtEXP.setText(Integer.toString(exp));
+		}
+	}
+	
+	public void onClickminusminusDMG(View v){
+		TextView txtDMG = (TextView) this.findViewById(R.id.textViewSkillDMGInput);
+		int DMG = Integer.parseInt((String) txtDMG.getText());
+		if(DMG > 0){
+			txtDMG.setText("0");
+			exp+=DMG;
+			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
+			txtEXP.setText(Integer.toString(exp));
+		}
+	}
+	
+	public void onClickplusDFND(View v){
+		TextView txtDFND = (TextView) this.findViewById(R.id.textViewSkillDEFENDInput);
+		if(exp > 0){
+			String DFNDValue = (String) txtDFND.getText();
+			int DFNDint = Integer.parseInt(DFNDValue);
+			txtDFND.setText(Integer.toString(DFNDint+1));
+			exp--;
+			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
+			txtEXP.setText(Integer.toString(exp));
+		}
+	}
+	
+	public void onClickminusDFND(View v){
+		TextView txtDFND = (TextView) this.findViewById(R.id.textViewSkillDEFENDInput);
+		int DFND = Integer.parseInt((String) txtDFND.getText());
+		if(DFND > 0){
+			txtDFND.setText(Integer.toString(DFND-1));
+			exp++;
+			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
+			txtEXP.setText(Integer.toString(exp));
+		}
+	}
+	
+	public void onClickplusplusDFND(View v){
+		TextView txtDFND = (TextView) this.findViewById(R.id.textViewSkillDEFENDInput);
+		int DFND = Integer.parseInt((String) txtDFND.getText());
+		if(exp > 0){
+			txtDFND.setText(Integer.toString(DFND+exp));
+			exp=0;
+			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
+			txtEXP.setText(Integer.toString(exp));
+		}
+	}
+	
+	public void onClickminusminusDFND(View v){
+		TextView txtDFND = (TextView) this.findViewById(R.id.textViewSkillDEFENDInput);
+		int DFND = Integer.parseInt((String) txtDFND.getText());
+		if(DFND > 0){
+			txtDFND.setText("0");
+			exp+=DFND;
+			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
+			txtEXP.setText(Integer.toString(exp));
+		}
 	}
 
 	//Start music
