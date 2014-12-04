@@ -34,6 +34,7 @@ import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.media.MediaPlayer;
 
 public class BattleTestActivity extends ActionBarActivity implements
 		OnClickListener, OnItemClickListener {
@@ -61,13 +62,8 @@ public class BattleTestActivity extends ActionBarActivity implements
 	// Animation
     private Animation animMove;
     
-	Potion[] potions;
-	//int numHealthPotions = 5;
-	//int healthPotionRegen = 5;
-	//int numStaminaPotions = 5;
-	//int staminaPotionRegen = 36;
-	//int numManaPotions = 30;
-	//int manaPotionRegen = 18;
+	private Potion[] potions;
+	private MediaPlayer medplay;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +79,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 		setUpDialogForRun();
 		setUpWinDialog();
 		setLoseDialog();
+		playMusic();
 	}
 
 	private void setUpListView() {
@@ -1130,6 +1127,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 		player.setCurStm(player.getMaxStm());
 		player.setScore(player.getScore() + mob.getXP());
 		player.setLevel(player.getLevel() + 1);
+		player.setSkillPoint(player.getSkillPoint()+5);//you get 5 skill points for defeating an enemy
 		for(int i=0;i<potions.length;i++ )
 		{
 			if(potions[i]!=null)
@@ -1140,6 +1138,14 @@ public class BattleTestActivity extends ActionBarActivity implements
 		winDialog.show();
 		
 	}
+	
+	//Start music
+		private void playMusic(){
+			medplay= MediaPlayer.create(this.getApplicationContext(), R.raw.clinthammer_battle);
+			medplay.setLooping(true);
+			medplay.start();
+		}
+		
 
 	protected void onStart() {
 		super.onStart();
@@ -1159,6 +1165,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 	protected void onPause() {
 		super.onPause();
 		System.out.println("onPause - battle");
+		medplay.stop();
 	}
 
 	protected void onStop() {

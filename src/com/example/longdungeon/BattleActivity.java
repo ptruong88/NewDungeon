@@ -3,6 +3,8 @@ package com.example.longdungeon;
 import com.example.longdungeon.character.Mob;
 import com.example.longdungeon.character.Person;
 import com.example.longdungeon.character.Player;
+import com.example.longdungeon.item.Item;
+import com.example.longdungeon.item.Potion;
 import com.example.longdungeon.layout.BattleLayout;
 
 import android.support.v7.app.ActionBarActivity;
@@ -11,6 +13,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,6 +21,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.Animation.AnimationListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -39,9 +45,15 @@ public class BattleActivity extends ActionBarActivity implements
 			txtViewStamina, txtViewMobStamina;
 	private Mob mob;
 	private Player player;
+	
+	
 	private Button btnAttack, btnDenfend, btnMagic, btnItem, btnRun;
 	private String[] listAttack, listMagic, listItem;
 	private ArrayAdapter<String> adapterAttack, adapterMagic, adapterItem;
+	
+	private static int[] imageMobs = new int[] { R.drawable.goblin,
+			R.drawable.skeleton, R.drawable.spider, R.drawable.bats, R.drawable.dragon };
+	private ImageView imageMob, imagePlayer;
 
 	// gordon's variables for the game loop
 	// boolean playerTurn = true;
@@ -50,22 +62,19 @@ public class BattleActivity extends ActionBarActivity implements
 	boolean ranAway = false;
 	int d10Roll = 0;
 	int atkVal;
-
-	
-	int numHealthPotions = 5;
-	int healthPotionRegen = 5;
-	int numStaminaPotions = 5;
-	int staminaPotionRegen = 36;
-	int numManaPotions = 30;
-	int manaPotionRegen = 18;
+	// Animation
+    private Animation animMove;
+    
+	private Potion[] potions;
+	private MediaPlayer medplay;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_battle);
+		setContentView(R.layout.activity_battle_test);
 
-		setUpMob();
 		setUpPlayer();
+		setUpMob();
 		setUpListView();
 		setUpStringForListView();
 		setUpButtonAction();
@@ -73,6 +82,7 @@ public class BattleActivity extends ActionBarActivity implements
 		setUpDialogForRun();
 		setUpWinDialog();
 		setLoseDialog();
+		playMusic();
 	}
 
 	private void setUpListView() {
@@ -108,17 +118,22 @@ public class BattleActivity extends ActionBarActivity implements
 				android.R.layout.activity_list_item, android.R.id.text1,
 				listMagic);
 
-		String healthPotions = "+36 HP Small Potion x"+numHealthPotions;
-		
-		String staminaPotions = "+30 STM Small Potion x"+numStaminaPotions;
-		
-		String manaPotions =  "+18 MANA Small Potion x"+numStaminaPotions;
-		
-		listItem = new String[] { healthPotions, staminaPotions, manaPotions };
-		
 		adapterItem = new ArrayAdapter<String>(getApplicationContext(),
-				android.R.layout.activity_list_item, android.R.id.text1,
-				listItem);
+				android.R.layout.activity_list_item, android.R.id.text1);
+		
+		potions = new Potion[player.getInventoryCurSpace()];
+		for (int i = 0; i < player.getInventoryCurSpace(); ++i) {
+			if (player.getPlayerInventory()[i].getItemType() == Item.ITEM_HEALTH_POTION
+					|| player.getPlayerInventory()[i].getItemType() == Item.ITEM_STAMINA_POTION
+					|| player.getPlayerInventory()[i].getItemType() == Item.ITEM_MANA_POTION) 
+			{
+				potions[i]=(Potion) player.getPlayerInventory()[i];
+				adapterItem.add(potions[i].toString());
+			}
+		}
+		
+		
+		
 	}
 
 	private void setUpButtonAction() {
@@ -176,13 +191,14 @@ public class BattleActivity extends ActionBarActivity implements
 		// Toast.makeText(getApplicationContext(),
 		// parent.getItemAtPosition(position).toString(),
 		// Toast.LENGTH_SHORT).show();
-		if (parent.getItemAtPosition(position).toString().contains("STM")) {
-
+		listAbility.setVisibility(View.INVISIBLE);
+		if (parent.getItemAtPosition(position).toString().contains("Attack")) {
+			
+			animationPlayerAttack();
 			// mobCurHp -= baseDamage;
 			switch (position) {
 			case 0:// basic attack case based on it being in the 0th position
-				if (player.getCurStm() >= 10) 
-				{
+				if (player.getCurStm() >= 10) {
 					player.setCurStm((player.getCurStm()) - 10);
 					txtViewStamina.setText("Stamina: " + player.getCurStm()
 							+ "/" + player.getMaxStm());// attacks always cost
@@ -190,22 +206,24 @@ public class BattleActivity extends ActionBarActivity implements
 														// or not
 
 					d10Roll = randomWithRange(1, 10);
-					if ((d10Roll == 1) || (d10Roll == 2)) 
-					{
-						Toast.makeText(getApplicationContext(),"Your attack missed!", Toast.LENGTH_SHORT).show();
+					if ((d10Roll == 1) || (d10Roll == 2)) {
+						Toast.makeText(getApplicationContext(),
+								"Your attack missed!", Toast.LENGTH_SHORT)
+								.show();
 					}
 
-					else if ((d10Roll == 2) || (d10Roll == 3) || (d10Roll == 4)) 
-					{
+					else if ((d10Roll == 2) || (d10Roll == 3) || (d10Roll == 4)) {
 						atkVal = (player.getDamage()) / 2;
-						if (enemyDefending == true) 
-						{
+						if (enemyDefending == true) {
 							atkVal = atkVal / 2;
 						}
-						String atkString = "Glancing hit for " + atkVal+ " damage!";
-						Toast.makeText(getApplicationContext(), atkString,Toast.LENGTH_SHORT).show();
+						String atkString = "Glancing hit for " + atkVal
+								+ " damage!";
+						Toast.makeText(getApplicationContext(), atkString,
+								Toast.LENGTH_SHORT).show();
 						mob.setCurHp(mob.getCurHp() - atkVal);
-						txtViewMobHp.setText("HP: " + mob.getCurHp() + "/"+ mob.getMaxHp());
+						txtViewMobHp.setText("HP: " + mob.getCurHp() + "/"
+								+ mob.getMaxHp());
 
 					}
 
@@ -239,16 +257,11 @@ public class BattleActivity extends ActionBarActivity implements
 								+ mob.getMaxHp());
 					}
 					atkVal = 0;// clear attack val;
-					if(mob.getCurHp()<=0)
-					{
-						player.setCurHp(player.getMaxHp());
-						player.setCurMana(player.getMaxMana());
-						player.setCurStm(player.getMaxStm());
-						winDialog.show();
-					}
-					else
-					{
-						enemyTurn();// once you've attacked the enemy gets a turn
+					if (mob.getCurHp() <= 0) {
+						playerSetWin();
+					} else {
+						enemyTurn();// once you've attacked the enemy gets a
+									// turn
 					}
 				}
 				break;
@@ -322,16 +335,11 @@ public class BattleActivity extends ActionBarActivity implements
 								+ mob.getMaxHp());
 					}
 					atkVal = 0;
-					if(mob.getCurHp()<=0)
-					{
-						player.setCurHp(player.getMaxHp());
-						player.setCurMana(player.getMaxMana());
-						player.setCurStm(player.getMaxStm());
-						winDialog.show();
-					}
-					else
-					{
-						enemyTurn();// once you've attacked the enemy gets a turn
+					if (mob.getCurHp() <= 0) {
+						playerSetWin();
+					} else {
+						enemyTurn();// once you've attacked the enemy gets a
+									// turn
 					}
 				}
 				break;
@@ -401,23 +409,17 @@ public class BattleActivity extends ActionBarActivity implements
 								+ mob.getMaxHp());
 					}
 					atkVal = 0;
-					if(mob.getCurHp()<=0)
-					{
-						player.setCurHp(player.getMaxHp());
-						player.setCurMana(player.getMaxMana());
-						player.setCurStm(player.getMaxStm());
-						winDialog.show();
+					if (mob.getCurHp() <= 0) {
+						playerSetWin();
+					} else {
+						enemyTurn();// once you've attacked the enemy gets a
+									// turn
 					}
-					else
-					{
-						enemyTurn();// once you've attacked the enemy gets a turn
-					}
-
 				}
 				break;
 			}
 		} else if (parent.getItemAtPosition(position).toString()
-				.contains("MANA")) {
+				.contains("Magic")) {
 			switch (position) {
 			case 0:// Fireball
 				if (player.getCurMana() >= 10) {
@@ -458,16 +460,11 @@ public class BattleActivity extends ActionBarActivity implements
 								+ mob.getMaxHp());
 					}
 					atkVal = 0;// clear attack val;
-					if(mob.getCurHp()<=0)
-					{
-						player.setCurHp(player.getMaxHp());
-						player.setCurMana(player.getMaxMana());
-						player.setCurStm(player.getMaxStm());
-						winDialog.show();
-					}
-					else
-					{
-						enemyTurn();// once you've attacked the enemy gets a turn
+					if (mob.getCurHp() <= 0) {
+						playerSetWin();
+					} else {
+						enemyTurn();// once you've attacked the enemy gets a
+									// turn
 					}
 				} else {
 					Toast.makeText(getApplicationContext(), "not enough Mana!",
@@ -513,16 +510,11 @@ public class BattleActivity extends ActionBarActivity implements
 								+ mob.getMaxHp());
 					}
 					atkVal = 0;// clear attack val;
-					if(mob.getCurHp()<=0)
-					{
-						player.setCurHp(player.getMaxHp());
-						player.setCurMana(player.getMaxMana());
-						player.setCurStm(player.getMaxStm());
-						winDialog.show();
-					}
-					else
-					{
-						enemyTurn();// once you've attacked the enemy gets a turn
+					if (mob.getCurHp() <= 0) {
+						playerSetWin();
+					} else {
+						enemyTurn();// once you've attacked the enemy gets a
+									// turn
 					}
 				} else {
 					Toast.makeText(getApplicationContext(), "not enough Mana!",
@@ -568,16 +560,11 @@ public class BattleActivity extends ActionBarActivity implements
 								+ mob.getMaxHp());
 					}
 					atkVal = 0;// clear attack val;
-					if(mob.getCurHp()<=0)
-					{
-						player.setCurHp(player.getMaxHp());
-						player.setCurMana(player.getMaxMana());
-						player.setCurStm(player.getMaxStm());
-						winDialog.show();
-					}
-					else
-					{
-						enemyTurn();// once you've attacked the enemy gets a turn
+					if (mob.getCurHp() <= 0) {
+						playerSetWin();
+					} else {
+						enemyTurn();// once you've attacked the enemy gets a
+									// turn
 					}
 				} else {
 					Toast.makeText(getApplicationContext(), "not enough Mana!",
@@ -586,67 +573,53 @@ public class BattleActivity extends ActionBarActivity implements
 				break;
 			}
 		}//
-		
+
 		else if (parent.getItemAtPosition(position).toString()
-				.contains("Potion")) {
-			switch (position) {
-			case 0:// Health
-				if(numHealthPotions<1)
-				{Toast.makeText(getApplicationContext(), "You're out of Potions!",
-						Toast.LENGTH_SHORT).show();}
-				else if(numHealthPotions>=1)
-				{
-					numHealthPotions--;
-					player.setCurHp(player.getCurHp()+healthPotionRegen);
-					if(player.getCurHp()>player.getMaxHp())
-					{player.setCurHp(player.getMaxHp());}//can't supercharge with potions
-					txtViewPlayerHp.setText("HP: " + player.getCurHp() + "/"+ player.getMaxHp());
-					setUpStringForListView();
-					enemyTurn();// once you've used an item the enemy gets a turn
-				}
-				break;
-			case 1:// Stamina
-				if(numStaminaPotions<1)
-				{Toast.makeText(getApplicationContext(), "You're out of Potions!",
-						Toast.LENGTH_SHORT).show();}
-				else if(numStaminaPotions>=1)
-				{
-					numStaminaPotions--;
-					player.setCurStm(player.getCurStm()+staminaPotionRegen);
-					if(player.getCurStm()>player.getMaxStm())
-					{player.setCurStm(player.getMaxStm());}//can't supercharge with potions
-					txtViewStamina.setText("Stamina: " + player.getCurStm() + "/" + player.getMaxStm());
-					setUpStringForListView();
-					enemyTurn();// once you've used an item the enemy gets a turn
-				}
-				break;
-			default:// Mana
-				if(numManaPotions<1)
-				{Toast.makeText(getApplicationContext(), "You're out of Potions!",
-						Toast.LENGTH_SHORT).show();}
-				else if(numManaPotions>=1)
-				{
-					numManaPotions--;
-					player.setCurMana(player.getCurMana()+manaPotionRegen);
-					if(player.getCurMana()>player.getMaxMana())
-					{player.setCurMana(player.getMaxMana());}//can't supercharge with potions
-					txtViewPlayerMana.setText("Mana: " + player.getCurMana() + "/"+ player.getMaxMana());
-					setUpStringForListView();
-					enemyTurn();// once you've used an item the enemy gets a turn
-				}
-				break;
-			}
+				.contains("Potion")) 
+		{
+			potionClick(parent.getItemAtPosition(position).toString(), position);
+			enemyTurn();
 		}
-		
+	}
+
+	private void animationPlayerAttack() {
+		// load the animation
+        animMove = AnimationUtils.loadAnimation(getApplicationContext(),
+                R.anim.move);
+         
+        // set animation listener
+        animMove.setAnimationListener(new AnimationListener() {
+			
+			@Override
+			public void onAnimationStart(Animation animation) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+        
+        imagePlayer.startAnimation(animMove);
 	}
 
 	private void setUpPlayer() {
-		// TODO Auto-generated method stub
+		//get player image
+		imagePlayer = (ImageView)this.findViewById(R.id.imagePlayer);
+		
 		txtViewPlayerName = (TextView) this
 				.findViewById(R.id.textViewPlayerName);
 		Intent intentLogin = getIntent();
-		player = intentLogin.getExtras().getParcelable(
-				Player.PLAYER_DATA);
+		player = intentLogin.getExtras().getParcelable(Player.PLAYER_DATA);
 		txtViewPlayerName.setText(player.getName());
 
 		txtViewPlayerScore = (TextView) this
@@ -707,14 +680,9 @@ public class BattleActivity extends ActionBarActivity implements
 
 	}
 
-	// @Override
-	// public void onWindowFocusChanged(boolean hasFocus) {
-	// // TODO Auto-generated method stub
-	// super.onWindowFocusChanged(hasFocus);
-	// setUpPic();// Set up mob and player picture based on layout.
-	// }
+	
 	private AlertDialog.Builder alertDialog;
-
+	
 	private void setUpDialogForRun() {
 		// TODO Auto-generated method stub
 		alertDialog = new AlertDialog.Builder(this);
@@ -733,10 +701,12 @@ public class BattleActivity extends ActionBarActivity implements
 						// Toast.makeText(getApplicationContext(),
 						// "You clicked on YES",
 						// Toast.LENGTH_SHORT).show();
-						Intent intentShopping = new Intent(BattleActivity.this,
-								ShoppingActivity.class);
-						intentShopping.putExtra(
-								Player.PLAYER_DATA, player);
+						Intent intentShopping = new Intent(
+								BattleActivity.this,
+								ShoppingTestActivity.class);
+						player.setLevel(player.getLevel() == imageMobs.length-1 ? 0 : player
+								.getLevel() + 1);
+						intentShopping.putExtra(Player.PLAYER_DATA, player);
 						startActivity(intentShopping);
 						finish();
 					}
@@ -754,7 +724,6 @@ public class BattleActivity extends ActionBarActivity implements
 				});
 	}
 
-	
 	private AlertDialog.Builder winDialog;
 
 	private void setUpWinDialog() {
@@ -764,9 +733,8 @@ public class BattleActivity extends ActionBarActivity implements
 		// Setting Dialog Title
 		winDialog.setTitle("YOU WIN!");
 
-		
 		ImageView imageV = new ImageView(this);
-        imageV.setImageResource(R.drawable.victory);
+		imageV.setImageResource(R.drawable.victory);
 		winDialog.setView(imageV);
 
 		// Setting Positive "Yes" Btn
@@ -777,16 +745,18 @@ public class BattleActivity extends ActionBarActivity implements
 						// Toast.makeText(getApplicationContext(),
 						// "You clicked on YES",
 						// Toast.LENGTH_SHORT).show();
-						Intent intentShopping = new Intent(BattleActivity.this,
-								ShoppingActivity.class);
-						intentShopping.putExtra(
-								Player.PLAYER_DATA, player);
+						player.setLevel(player.getLevel() == imageMobs.length-1 ? 0 : player
+								.getLevel() + 1);
+						Intent intentShopping = new Intent(
+								BattleActivity.this,
+								ShoppingTestActivity.class);
+						intentShopping.putExtra(Player.PLAYER_DATA, player);
 						startActivity(intentShopping);
 						finish();
 					}
 				});
 	}
-	
+
 	private AlertDialog.Builder loseDialog;
 
 	private void setLoseDialog() {
@@ -797,7 +767,7 @@ public class BattleActivity extends ActionBarActivity implements
 		loseDialog.setTitle("YOU LOSE!");
 
 		ImageView imageL = new ImageView(this);
-        imageL.setImageResource(R.drawable.defeat);
+		imageL.setImageResource(R.drawable.defeat);
 		loseDialog.setView(imageL);
 
 		// Setting Positive "Yes" Btn
@@ -808,14 +778,15 @@ public class BattleActivity extends ActionBarActivity implements
 						// Toast.makeText(getApplicationContext(),
 						// "You clicked on YES",
 						// Toast.LENGTH_SHORT).show();
-						Intent intentLogin = new Intent(BattleActivity.this,
-								LoginActivity.class);
+						Intent intentLogin = new Intent(
+								BattleActivity.this,
+								LoginTestActivity.class);
 						startActivity(intentLogin);
 						finish();
 					}
 				});
 	}
-	
+
 	private void setUpPic() {
 		// TODO Auto-generated method stub
 		BattleLayout relLyoutPic = (BattleLayout) this
@@ -1083,10 +1054,127 @@ public class BattleActivity extends ActionBarActivity implements
 
 	}
 
+	public void potionClick(String e, int position)
+	{
+		for(int i=0; i<potions.length;i++)
+		{
+			if(potions[i]!=null&&potions[i].equals(e))
+			{
+				if (potions[i].getItemType()==Item.ITEM_HEALTH_POTION)
+				{
+					if(potions[i].getSize()>0)
+					{
+						player.setCurHp(player.getCurHp()+potions[i].getStatNumber());
+						if(player.getCurHp()>player.getMaxHp())
+						{
+							player.setCurHp(player.getMaxHp());
+						}
+						player.setCurHp(player.getCurHp()+potions[i].getStatNumber());
+						potions[i].setSize(potions[i].getSize()-1);
+						txtViewPlayerHp.setText("HP: " + player.getCurHp() + "/"
+								+ player.getMaxHp());
+						adapterItem.remove(e);
+						adapterItem.insert(potions[i].toString(), position);
+						break;
+					}
+				}
+				else if(potions[i].getItemType()==Item.ITEM_MANA_POTION)
+				{
+					if(potions[i].getSize()>0)
+					{
+						player.setCurMana(player.getCurMana()+potions[i].getStatNumber());
+						if(player.getCurMana()>player.getMaxMana())
+						{
+							player.setCurMana(player.getMaxMana());
+						}
+						potions[i].setSize(potions[i].getSize()-1);
+						txtViewPlayerMana.setText("Mana: " + player.getCurMana()
+							+ "/" + player.getMaxMana());
+						adapterItem.remove(e);
+						adapterItem.insert(potions[i].toString(), position);
+						break;
+					}
+				}
+				else if(potions[i].getItemType()==Item.ITEM_STAMINA_POTION)
+				{
+					if(potions[i].getSize()>0)
+					{		
+						player.setCurStm(player.getCurStm()+potions[i].getStatNumber());
+						if(player.getCurStm()>player.getMaxStm())
+						{player.setCurStm(player.getMaxStm());}
+						potions[i].setSize(potions[i].getSize()-1);
+						txtViewStamina.setText("Stamina: " + player.getCurStm() + "/"
+							+ player.getMaxStm());
+						adapterItem.remove(e);
+						adapterItem.insert(potions[i].toString(), position);
+						break;
+					}
+				}
+			}
+		}
+	}
+
 	public int randomWithRange(int min, int max)// used for rolls to hit
 	{
 		int range = (max - min) + 1;
 		return (int) (Math.random() * range) + min;
+	}
+
+	public void playerSetWin() {
+		player.setCurHp(player.getMaxHp());
+		player.setCurMana(player.getMaxMana());
+		player.setCurStm(player.getMaxStm());
+		player.setScore(player.getScore() + mob.getXP());
+		player.setLevel(player.getLevel() + 1);
+		player.setSkillPoint(player.getSkillPoint()+5);//you get 5 skill points for defeating an enemy
+		for(int i=0;i<potions.length;i++ )
+		{
+			if(potions[i]!=null)
+			{
+				player.getPlayerInventory()[i]=potions[i];
+			}
+		}
+		winDialog.show();
+		
+	}
+	
+	//Start music
+		private void playMusic(){
+			medplay= MediaPlayer.create(this.getApplicationContext(), R.raw.clinthammer_battle);
+			medplay.setLooping(true);
+			medplay.start();
+		}
+		
+
+	protected void onStart() {
+		super.onStart();
+		System.out.println("onStart - battle");
+	}
+
+	protected void onRestart() {
+		super.onRestart();
+		System.out.println("onRestart - battle");
+	}
+
+	protected void onResume() {
+		super.onResume();
+		System.out.println("onResume - battle");
+	}
+
+	protected void onPause() {
+		super.onPause();
+		System.out.println("onPause - battle");
+		medplay.stop();
+	}
+
+	protected void onStop() {
+		super.onStop();
+		System.out.println("onStop - battle");
+	}
+
+	protected void onDestroy() {
+		super.onDestroy();
+		System.out.println("onDestroy - battle");
 	}
 
 	@Override
