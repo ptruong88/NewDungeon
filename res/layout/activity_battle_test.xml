@@ -45,6 +45,15 @@
             android:layout_toRightOf="@+id/imageMob"
             android:scaleType="fitEnd"
             android:src="@drawable/knight" />
+
+        <ImageView
+            android:id="@+id/imageViewEffect"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_alignTop="@+id/imageMob"
+            android:layout_centerHorizontal="true"
+            android:src="@null" />
+
     </RelativeLayout>
 
     <RelativeLayout

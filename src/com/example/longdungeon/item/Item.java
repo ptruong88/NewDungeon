@@ -12,7 +12,7 @@ public class Item implements Parcelable {
 	protected String statName;
 	protected int statNumber;
 	protected int size;// Size for potion
-	protected int position; // position in shopping activity.
+	protected byte position; // position in shopping activity.
 	
 	public static final int ITEM_SWORD = 0;
 	public static final int ITEM_HELMET = 1;
@@ -112,11 +112,11 @@ public class Item implements Parcelable {
 		this.cost = cost;
 	}
 
-	public int getPosition() {
+	public byte getPosition() {
 		return position;
 	}
 
-	public void setPosition(int postion) {
+	public void setPosition(byte postion) {
 		this.position = postion;
 	}
 

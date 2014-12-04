@@ -14,6 +14,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -34,9 +35,10 @@ import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.media.MediaPlayer;
 
 public class BattleTestActivity extends ActionBarActivity implements
-		OnClickListener, OnItemClickListener {
+		OnClickListener, OnItemClickListener, AnimationListener {
 
 	private ListView listAbility;
 	private View lyoutBattle;
@@ -48,7 +50,8 @@ public class BattleTestActivity extends ActionBarActivity implements
 	private String[] listAttack, listMagic, listItem;
 	private ArrayAdapter<String> adapterAttack, adapterMagic, adapterItem;
 	private static int[] imageMobs = new int[] { R.drawable.goblin,
-			R.drawable.skeleton, R.drawable.spider, R.drawable.bats, R.drawable.dragon };
+			R.drawable.skeleton, R.drawable.spider, R.drawable.bats,
+			R.drawable.dragon };
 	private ImageView imageMob, imagePlayer;
 
 	// gordon's variables for the game loop
@@ -59,15 +62,10 @@ public class BattleTestActivity extends ActionBarActivity implements
 	int d10Roll = 0;
 	int atkVal;
 	// Animation
-    private Animation animMove;
-    
-	Potion[] potions;
-	//int numHealthPotions = 5;
-	//int healthPotionRegen = 5;
-	//int numStaminaPotions = 5;
-	//int staminaPotionRegen = 36;
-	//int numManaPotions = 30;
-	//int manaPotionRegen = 18;
+	private Animation animMove;
+
+	private Potion[] potions;
+	private MediaPlayer medplay;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +81,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 		setUpDialogForRun();
 		setUpWinDialog();
 		setLoseDialog();
+		playMusic();
 	}
 
 	private void setUpListView() {
@@ -120,20 +119,17 @@ public class BattleTestActivity extends ActionBarActivity implements
 
 		adapterItem = new ArrayAdapter<String>(getApplicationContext(),
 				android.R.layout.activity_list_item, android.R.id.text1);
-		
+
 		potions = new Potion[player.getInventoryCurSpace()];
 		for (int i = 0; i < player.getInventoryCurSpace(); ++i) {
 			if (player.getPlayerInventory()[i].getItemType() == Item.ITEM_HEALTH_POTION
 					|| player.getPlayerInventory()[i].getItemType() == Item.ITEM_STAMINA_POTION
-					|| player.getPlayerInventory()[i].getItemType() == Item.ITEM_MANA_POTION) 
-			{
-				potions[i]=(Potion) player.getPlayerInventory()[i];
+					|| player.getPlayerInventory()[i].getItemType() == Item.ITEM_MANA_POTION) {
+				potions[i] = (Potion) player.getPlayerInventory()[i];
 				adapterItem.add(potions[i].toString());
 			}
 		}
-		
-		
-		
+
 	}
 
 	private void setUpButtonAction() {
@@ -146,7 +142,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 	}
 
 	public void onClick(View button) {
-		
+
 		switch (button.getId()) {
 		case R.id.buttonAttack:
 			listAbility.setAdapter(adapterAttack);
@@ -194,7 +190,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 		// Toast.LENGTH_SHORT).show();
 		listAbility.setVisibility(View.INVISIBLE);
 		if (parent.getItemAtPosition(position).toString().contains("Attack")) {
-			
+
 			animationPlayerAttack();
 			// mobCurHp -= baseDamage;
 			switch (position) {
@@ -576,8 +572,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 		}//
 
 		else if (parent.getItemAtPosition(position).toString()
-				.contains("Potion")) 
-		{
+				.contains("Potion")) {
 			potionClick(parent.getItemAtPosition(position).toString(), position);
 			enemyTurn();
 		}
@@ -585,38 +580,45 @@ public class BattleTestActivity extends ActionBarActivity implements
 
 	private void animationPlayerAttack() {
 		// load the animation
-        animMove = AnimationUtils.loadAnimation(getApplicationContext(),
-                R.anim.move);
-         
-        // set animation listener
-        animMove.setAnimationListener(new AnimationListener() {
-			
+		animMove = AnimationUtils.loadAnimation(getApplicationContext(),
+				R.anim.move);
+
+		// set animation listener
+		animMove.setAnimationListener(this);
+
+		imagePlayer.startAnimation(animMove);
+
+		final Animation animShake = AnimationUtils.loadAnimation(
+				getApplicationContext(), R.anim.shake);
+
+		// set animation listener
+		animShake.setAnimationListener(this);
+		final ImageView imageEffect = (ImageView)this.findViewById(R.id.imageViewEffect);
+		
+		new Handler().postDelayed(new Runnable() {
+
 			@Override
-			public void onAnimationStart(Animation animation) {
+			public void run() {
 				// TODO Auto-generated method stub
-				
+				imageMob.startAnimation(animShake);
+				imageEffect.setImageResource(R.drawable.playerlightattack);
+				imageEffect.setVisibility(View.VISIBLE);
 			}
-			
+		}, 800);
+
+		new Handler().postDelayed(new Runnable() {
+
 			@Override
-			public void onAnimationRepeat(Animation animation) {
-				// TODO Auto-generated method stub
-				
+			public void run() {
+				imageEffect.setVisibility(View.INVISIBLE);
 			}
-			
-			@Override
-			public void onAnimationEnd(Animation animation) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
-        
-        imagePlayer.startAnimation(animMove);
+		}, 1000);
 	}
 
 	private void setUpPlayer() {
-		//get player image
-		imagePlayer = (ImageView)this.findViewById(R.id.imagePlayer);
-		
+		// get player image
+		imagePlayer = (ImageView) this.findViewById(R.id.imagePlayer);
+
 		txtViewPlayerName = (TextView) this
 				.findViewById(R.id.textViewPlayerName);
 		Intent intentLogin = getIntent();
@@ -643,8 +645,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 
 	private void setUpMob() {
 		// TODO Auto-generated method stub
-		String[] mobNames= {"goblin",
-		"skeleton", "spider", "bats", "dragon" };
+		String[] mobNames = { "goblin", "skeleton", "spider", "bats", "dragon" };
 		String nameMob = mobNames[player.getLevel()];
 		mob = new Mob(nameMob);
 		txtViewMobName = (TextView) this.findViewById(R.id.textViewMobName);
@@ -715,8 +716,8 @@ public class BattleTestActivity extends ActionBarActivity implements
 						Intent intentShopping = new Intent(
 								BattleTestActivity.this,
 								ShoppingTestActivity.class);
-						player.setLevel(player.getLevel() == imageMobs.length-1 ? 0 : player
-								.getLevel() + 1);
+						player.setLevel(player.getLevel() == imageMobs.length - 1 ? 0
+								: player.getLevel() + 1);
 						intentShopping.putExtra(Player.PLAYER_DATA, player);
 						startActivity(intentShopping);
 						finish();
@@ -756,8 +757,8 @@ public class BattleTestActivity extends ActionBarActivity implements
 						// Toast.makeText(getApplicationContext(),
 						// "You clicked on YES",
 						// Toast.LENGTH_SHORT).show();
-						player.setLevel(player.getLevel() == imageMobs.length-1 ? 0 : player
-								.getLevel() + 1);
+						player.setLevel(player.getLevel() == imageMobs.length - 1 ? 0
+								: player.getLevel() + 1);
 						Intent intentShopping = new Intent(
 								BattleTestActivity.this,
 								ShoppingTestActivity.class);
@@ -1057,58 +1058,51 @@ public class BattleTestActivity extends ActionBarActivity implements
 		}
 
 	}
-	
-	public void potionClick(String e, int position)
-	{
-		for(int i=0; i<potions.length;i++)
-		{
-			if(potions[i]!=null&&potions[i].equals(e))
-			{
-				if (potions[i].getItemType()==Item.ITEM_HEALTH_POTION)
-				{
-					if(potions[i].getSize()>0)
-					{
-						player.setCurHp(player.getCurHp()+potions[i].getStatNumber());
-						if(player.getCurHp()>player.getMaxHp())
-						{
+
+	public void potionClick(String e, int position) {
+		for (int i = 0; i < potions.length; i++) {
+			if (potions[i] != null && potions[i].equals(e)) {
+				if (potions[i].getItemType() == Item.ITEM_HEALTH_POTION) {
+					if (potions[i].getSize() > 0) {
+						player.setCurHp(player.getCurHp()
+								+ potions[i].getStatNumber());
+						if (player.getCurHp() > player.getMaxHp()) {
 							player.setCurHp(player.getMaxHp());
 						}
-						player.setCurHp(player.getCurHp()+potions[i].getStatNumber());
-						potions[i].setSize(potions[i].getSize()-1);
-						txtViewPlayerHp.setText("HP: " + player.getCurHp() + "/"
-								+ player.getMaxHp());
+						player.setCurHp(player.getCurHp()
+								+ potions[i].getStatNumber());
+						potions[i].setSize(potions[i].getSize() - 1);
+						txtViewPlayerHp.setText("HP: " + player.getCurHp()
+								+ "/" + player.getMaxHp());
 						adapterItem.remove(e);
 						adapterItem.insert(potions[i].toString(), position);
 						break;
 					}
-				}
-				else if(potions[i].getItemType()==Item.ITEM_MANA_POTION)
-				{
-					if(potions[i].getSize()>0)
-					{
-						player.setCurMana(player.getCurMana()+potions[i].getStatNumber());
-						if(player.getCurMana()>player.getMaxMana())
-						{
+				} else if (potions[i].getItemType() == Item.ITEM_MANA_POTION) {
+					if (potions[i].getSize() > 0) {
+						player.setCurMana(player.getCurMana()
+								+ potions[i].getStatNumber());
+						if (player.getCurMana() > player.getMaxMana()) {
 							player.setCurMana(player.getMaxMana());
 						}
-						potions[i].setSize(potions[i].getSize()-1);
-						txtViewPlayerMana.setText("Mana: " + player.getCurMana()
-							+ "/" + player.getMaxMana());
+						potions[i].setSize(potions[i].getSize() - 1);
+						txtViewPlayerMana.setText("Mana: "
+								+ player.getCurMana() + "/"
+								+ player.getMaxMana());
 						adapterItem.remove(e);
 						adapterItem.insert(potions[i].toString(), position);
 						break;
 					}
-				}
-				else if(potions[i].getItemType()==Item.ITEM_STAMINA_POTION)
-				{
-					if(potions[i].getSize()>0)
-					{		
-						player.setCurStm(player.getCurStm()+potions[i].getStatNumber());
-						if(player.getCurStm()>player.getMaxStm())
-						{player.setCurStm(player.getMaxStm());}
-						potions[i].setSize(potions[i].getSize()-1);
-						txtViewStamina.setText("Stamina: " + player.getCurStm() + "/"
-							+ player.getMaxStm());
+				} else if (potions[i].getItemType() == Item.ITEM_STAMINA_POTION) {
+					if (potions[i].getSize() > 0) {
+						player.setCurStm(player.getCurStm()
+								+ potions[i].getStatNumber());
+						if (player.getCurStm() > player.getMaxStm()) {
+							player.setCurStm(player.getMaxStm());
+						}
+						potions[i].setSize(potions[i].getSize() - 1);
+						txtViewStamina.setText("Stamina: " + player.getCurStm()
+								+ "/" + player.getMaxStm());
 						adapterItem.remove(e);
 						adapterItem.insert(potions[i].toString(), position);
 						break;
@@ -1130,15 +1124,25 @@ public class BattleTestActivity extends ActionBarActivity implements
 		player.setCurStm(player.getMaxStm());
 		player.setScore(player.getScore() + mob.getXP());
 		player.setLevel(player.getLevel() + 1);
-		for(int i=0;i<potions.length;i++ )
-		{
-			if(potions[i]!=null)
-			{
-				player.getPlayerInventory()[i]=potions[i];
+		player.setSkillPoint(player.getSkillPoint() + 5);// you get 5 skill
+															// points for
+															// defeating an
+															// enemy
+		for (int i = 0; i < potions.length; i++) {
+			if (potions[i] != null) {
+				player.getPlayerInventory()[i] = potions[i];
 			}
 		}
 		winDialog.show();
-		
+
+	}
+
+	// Start music
+	private void playMusic() {
+		medplay = MediaPlayer.create(this.getApplicationContext(),
+				R.raw.clinthammer_battle);
+		medplay.setLooping(true);
+		medplay.start();
 	}
 
 	protected void onStart() {
@@ -1159,6 +1163,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 	protected void onPause() {
 		super.onPause();
 		System.out.println("onPause - battle");
+		medplay.stop();
 	}
 
 	protected void onStop() {
@@ -1184,10 +1189,28 @@ public class BattleTestActivity extends ActionBarActivity implements
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+		if (id == R.id.effect) {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void onAnimationEnd(Animation arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onAnimationRepeat(Animation arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onAnimationStart(Animation arg0) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

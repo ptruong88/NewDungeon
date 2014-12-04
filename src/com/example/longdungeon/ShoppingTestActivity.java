@@ -44,7 +44,6 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 	private Equipment[] sellWeapon, sellHelmet, sellShield, sellCloth,
 			sellRing;
 	private Potion[] sellHealPotion, sellManaPotion, sellStaminaPotion;
-	private String[] materialsEquip, materialsPotion;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -86,22 +85,19 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 	 * Set equipment to sell in array.
 	 */
 	private void setUpEquipmentToSell() {
-		materialsEquip = new String[5];
-		materialsEquip[0] = "Iron";
-		materialsEquip[1] = "Bronze";
-		materialsEquip[2] = "Silver";
-		materialsEquip[3] = "Gold";
-		materialsEquip[4] = "Platinum";
+		String[] materialsEquip = { "Iron", "Bronze", "Silver", "Gold",
+				"Platinum" };
 
-		double[] percent = randPercent(1.0);
-		sellWeapon = setUpItemToSell(Item.ITEM_SWORD, percent);
-		sellHelmet = setUpItemToSell(Item.ITEM_HELMET, percent);
-		sellShield = setUpItemToSell(Item.ITEM_SHIELD, percent);
-		sellCloth = setUpItemToSell(Item.ITEM_CLOTH, percent);
-		sellRing = setUpItemToSell(Item.ITEM_RING, percent);
+		double[] percent = randPercent(1.0, (byte) materialsEquip.length);
+		sellWeapon = setUpItemToSell(Item.ITEM_SWORD, percent, materialsEquip);
+		sellHelmet = setUpItemToSell(Item.ITEM_HELMET, percent, materialsEquip);
+		sellShield = setUpItemToSell(Item.ITEM_SHIELD, percent, materialsEquip);
+		sellCloth = setUpItemToSell(Item.ITEM_CLOTH, percent, materialsEquip);
+		sellRing = setUpItemToSell(Item.ITEM_RING, percent, materialsEquip);
 	}
 
-	private Equipment[] setUpItemToSell(int itemType, double[] percent) {
+	private Equipment[] setUpItemToSell(int itemType, double[] percent,
+			String[] materialsEquip) {
 		String des;
 		int base;
 		switch (itemType) {
@@ -126,8 +122,8 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 			base = player.getMaxMana();
 			break;
 		}
-		Equipment[] equip = new Equipment[5];
-		for (int i = 0; i < equip.length; ++i) {
+		Equipment[] equip = new Equipment[materialsEquip.length];
+		for (byte i = 0; i < equip.length; ++i) {
 			equip[i] = new Equipment(materialsEquip[i] + des, itemType);
 			equip[i].setStatNumber((int) (base * percent[i]));
 			equip[i].setPosition(i);
@@ -141,20 +137,20 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 	 * Set potion to sell in array.
 	 */
 	private void setUpPotionToSell() {
-		materialsPotion = new String[5];
-		materialsPotion[0] = "Small";
-		materialsPotion[1] = "Medium";
-		materialsPotion[2] = "Large";
-		materialsPotion[3] = "Super";
-		materialsPotion[4] = "Super Super";
+		String[] materialsPotion = { "Small", "Medium", "Large", "Super",
+				"Super Super" };
 
-		double[] percent = randPercent(0.0);
-		sellHealPotion = setUpPotionToSell(Item.ITEM_HEALTH_POTION, percent);
-		sellManaPotion = setUpPotionToSell(Item.ITEM_MANA_POTION, percent);
-		sellStaminaPotion = setUpPotionToSell(Item.ITEM_STAMINA_POTION, percent);
+		double[] percent = randPercent(0.0, (byte) materialsPotion.length);
+		sellHealPotion = setUpPotionToSell(Item.ITEM_HEALTH_POTION, percent,
+				materialsPotion);
+		sellManaPotion = setUpPotionToSell(Item.ITEM_MANA_POTION, percent,
+				materialsPotion);
+		sellStaminaPotion = setUpPotionToSell(Item.ITEM_STAMINA_POTION,
+				percent, materialsPotion);
 	}
 
-	private Potion[] setUpPotionToSell(int itemType, double[] percent) {
+	private Potion[] setUpPotionToSell(int itemType, double[] percent,
+			String[] materialsPotion) {
 		String des = " Potion";
 		int base;
 		switch (itemType) {
@@ -168,8 +164,8 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 			base = (int) (player.getMaxStm() * 0.4);
 			break;
 		}
-		Potion[] potion = new Potion[5];
-		for (int i = 0; i < potion.length; ++i) {
+		Potion[] potion = new Potion[materialsPotion.length];
+		for (byte i = 0; i < potion.length; ++i) {
 			potion[i] = new Potion(materialsPotion[i] + des, itemType);
 			potion[i].setStatNumber((int) (base * percent[i]));
 			potion[i].setPosition(i);
@@ -182,19 +178,21 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 
 	/**
 	 * Set up random percent for equipment and potion
+	 * 
+	 * @param length
 	 */
-	private double[] randPercent(double range) {
-		int[] num = new int[materialsEquip.length];
+	private double[] randPercent(double range, byte size) {
+		int[] num = new int[size];
 		double a = 0.1;
-		for (int i = 0; i < num.length; ++i, a += 0.1) {
+		for (int i = 0; i < size; ++i, a += 0.1) {
 			num[i] = (int) ((Math.random() + range + a) * 100);
 			System.out.println("Number-- " + num[i]);
 		}
 
 		int min;
-		for (int i = 0; i < num.length; ++i) {
+		for (int i = 0; i < size; ++i) {
 			min = num[i];
-			for (int j = i; j < num.length; ++j) {
+			for (int j = i; j < size; ++j) {
 				if (num[j] < min) {
 					min = num[j];
 					num[j] = num[i];
@@ -203,8 +201,8 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 			}
 		}
 
-		double[] rand = new double[num.length];
-		for (int i = 0; i < rand.length; ++i)
+		double[] rand = new double[size];
+		for (int i = 0; i < size; ++i)
 			rand[i] = num[i] * 0.01;
 		return rand;
 	}// End set up random percent********************
@@ -247,21 +245,50 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 		alertDialogSell.setTitle("Confirm selling...");
 	}
 
-	// A string to show what difference between old and new equipment.
-	private String compareStat;
-
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view,
 			final int position, long id) {
 		switch (parent.getId()) {
 		case R.id.listViewItems:
-			buying(parent, position);
+			String message = parent.getItemAtPosition(position).toString();
+			Item temp = getItemFromList(message);
+			System.out.println("Buy from shop--- " + message);
+			buying(message, temp);
 			break;
 		default:
 			selling(parent, position);
 			alertDialogSell.show();
 			break;
 		}
+	}
+
+	private Item getItemFromList(String e) {
+		Item temp = null;
+		if (e.contains("Sword"))
+			temp = search(sellWeapon, e);
+		else if (e.contains("Helmet"))
+			temp = search(sellHelmet, e);
+		else if (e.contains("Shield"))
+			temp = search(sellShield, e);
+		else if (e.contains("Cloth"))
+			temp = search(sellCloth, e);
+		else if (e.contains("Ring"))
+			temp = search(sellRing, e);
+		else if (e.contains("HP"))
+			temp = search(sellHealPotion, e);
+		else if (e.contains("STM"))
+			temp = search(sellStaminaPotion, e);
+		else
+			temp = search(sellManaPotion, e);
+		return temp;
+	}
+
+	private Item search(Item[] item, String e) {
+		for (int i = 0; i < item.length; ++i) {
+			if (item[i] != null && item[i].equals(e))
+				return item[i];
+		}
+		return null;
 	}
 
 	private void selling(AdapterView<?> parent, int position) {
@@ -286,7 +313,7 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 					break;
 				}
 			}
-			cost = (int) (temp.getCost() * 0.75);
+			cost = (int) (temp.getCost() * 0.8);
 			alertDialogSell.setMessage("Selling " + temp + " to get " + cost
 					+ " Gold");
 			setSellDialogButton(item, position, cost);
@@ -315,29 +342,34 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 				});
 	}
 
-	private void buying(AdapterView<?> parent, final int position) {
-		// TODO Auto-generated method stub
-
-		final String message = parent.getItemAtPosition(position).toString();
-		System.out.println("Buy from shop--- " + message);
-		int cost = cost(message);
+	private void buying(final String message, final Item item) {
 		if (player.isInventoryFull()) {
 			alertDialogCancelBuy.setTitle("Can't make a buy...");
 			alertDialogCancelBuy
 					.setMessage("You don't have enough inventory space to place a new item.");
 			alertDialogCancelBuy.show();
-		} else if (player.getGold() < cost) {
+		} else if (player.getGold() < item.getCost()) {
 			alertDialogCancelBuy.setTitle("Can't make a buy...");
 			alertDialogCancelBuy
 					.setMessage("You don't have enough gold to buy the item");
 			alertDialogCancelBuy.show();
 		} else {
-
 			// Setting Dialog Message
-			if (compareStat.length() != 0)
-				alertDialog.setMessage(message + "\n(" + compareStat + ")");
-			else
-				alertDialog.setMessage(message);
+			String compareStat = "";
+			switch (item.getItemType()) {
+			case Item.ITEM_SWORD:
+			case Item.ITEM_SHIELD:
+			case Item.ITEM_HELMET:
+			case Item.ITEM_CLOTH:
+			case Item.ITEM_RING:
+				int diff = item.getStatNumber()
+						- player.getPlayerEquip(item.getItemType())
+								.getStatNumber();
+				compareStat = "\n(" + (diff > 0 ? "+" : "-") + diff + " "
+						+ item.getStatName() + ")";
+				break;
+			}
+			alertDialog.setMessage(message + compareStat);
 
 			// Setting Positive "Yes" Btn
 			alertDialog.setPositiveButton("YES",
@@ -352,7 +384,7 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 							// Toast.makeText(getApplicationContext(), v,
 							// Toast.LENGTH_SHORT).show();
 							// listItems.setEnabled(false);
-							buyingStuff(message, position);
+							buyingStuff(message, item);
 							// new Handler().postDelayed(new Runnable() {
 							// @Override
 							// public void run() {
@@ -377,131 +409,64 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 		}
 	}
 
-	private int cost(String message) {
-		int i, temp;
-		if (message.contains("Sword")) {
-			i = position(message, sellWeapon);
-			temp = sellWeapon[i].getStatNumber()
-					- player.getPlayerEquip(Item.ITEM_SWORD).getStatNumber();
-			compareStat = (temp > 0 ? "+" : "-") + temp + " "
-					+ sellWeapon[i].getStatName();
-			return sellWeapon[i].getCost();
-		} else if (message.contains("Helmet")) {
-			i = position(message, sellHelmet);
-			temp = sellHelmet[i].getStatNumber()
-					- player.getPlayerEquip(Item.ITEM_HELMET).getStatNumber();
-			compareStat = (temp > 0 ? "+" : "-") + temp + " "
-					+ sellHelmet[i].getStatName();
-			return sellHelmet[i].getCost();
-		} else if (message.contains("Shield")) {
-			i = position(message, sellShield);
-			temp = sellShield[i].getStatNumber()
-					- player.getPlayerEquip(Item.ITEM_SHIELD).getStatNumber();
-			compareStat = (temp > 0 ? "+" : "-") + temp + " "
-					+ sellShield[i].getStatName();
-			return sellShield[i].getCost();
-		} else if (message.contains("Cloth")) {
-			i = position(message, sellCloth);
-			temp = sellCloth[i].getStatNumber()
-					- player.getPlayerEquip(Item.ITEM_CLOTH).getStatNumber();
-			compareStat = (temp > 0 ? "+" : "-") + temp + " "
-					+ sellCloth[i].getStatName();
-			return sellCloth[i].getCost();
-		} else if (message.contains("Ring")) {
-			i = position(message, sellRing);
-			temp = sellRing[i].getStatNumber()
-					- player.getPlayerEquip(Item.ITEM_RING).getStatNumber();
-			compareStat = (temp > 0 ? "+" : "-") + temp + " "
-					+ sellRing[i].getStatName();
-			return sellRing[i].getCost();
-		} else if (message.contains("HP")) {
-			i = position(message, sellHealPotion);
-			compareStat = "";
-			return sellHealPotion[i].getCost();
-		} else if (message.contains("STM")) {
-			i = position(message, sellStaminaPotion);
-			compareStat = "";
-			return sellHealPotion[i].getCost();
-		} else if (message.contains("MANA") && message.contains("Potion")) {
-			i = position(message, sellManaPotion);
-			compareStat = "";
-			return sellHealPotion[i].getCost();
-		}
-		return 0;
-	}
-
-	private void buyingStuff(String message, int pos) {
+	private void buyingStuff(String message, Item item) {
 		// if (adapterShop.getCount() > 0)
 		// adapterShop.clear();
-		if (message.contains("Sword")) {
-			pos = position(message, sellWeapon);
-			putUpdateSellItemToListView(pos, sellWeapon);
-			updateListToSell(pos, sellWeapon);
-			adapterShop.remove(message);
-		} else if (message.contains("Helmet")) {
-			pos = position(message, sellHelmet);
-			putUpdateSellItemToListView(pos, sellHelmet);
-			updateListToSell(pos, sellHelmet);
-			adapterShop.remove(message);
-
-		} else if (message.contains("Shield")) {
-			pos = position(message, sellShield);
-			putUpdateSellItemToListView(pos, sellShield);
-			updateListToSell(pos, sellShield);
-			adapterShop.remove(message);
-
-		} else if (message.contains("Cloth")) {
-			pos = position(message, sellCloth);
-			putUpdateSellItemToListView(pos, sellCloth);
-			updateListToSell(pos, sellCloth);
-			adapterShop.remove(message);
-
-		} else if (message.contains("Ring")) {
-			pos = position(message, sellRing);
-			putUpdateSellItemToListView(pos, sellRing);
-			updateListToSell(pos, sellRing);
-			adapterShop.remove(message);
-
-		} else if (message.contains("HP")) {
-			pos = position(message, sellHealPotion);
-			putUpdateSellItemToListView(pos, sellHealPotion);
-			updateListToSell(pos, sellHealPotion);
-			adapterShop.remove(message);
-
-		} else if (message.contains("STM")) {
-			pos = position(message, sellStaminaPotion);
-			putUpdateSellItemToListView(pos, sellStaminaPotion);
-			updateListToSell(pos, sellStaminaPotion);
-			adapterShop.remove(message);
-
-		} else if (message.contains("MANA") && message.contains("Potion")) {
-			pos = position(message, sellManaPotion);
-			putUpdateSellItemToListView(pos, sellManaPotion);
-			updateListToSell(pos, sellManaPotion);
-			adapterShop.remove(message);
-
+		switch (item.getItemType()) {
+		case Item.ITEM_SWORD:
+			updateListToSell(item.getPosition(), sellWeapon);
+			updateAfterBuying(message, item);
+			break;
+		case Item.ITEM_HELMET:
+			updateListToSell(item.getPosition(), sellHelmet);
+			updateAfterBuying(message, item);
+			break;
+		case Item.ITEM_SHIELD:
+			updateListToSell(item.getPosition(), sellShield);
+			updateAfterBuying(message, item);
+			break;
+		case Item.ITEM_CLOTH:
+			updateListToSell(item.getPosition(), sellCloth);
+			updateAfterBuying(message, item);
+			break;
+		case Item.ITEM_RING:
+			updateListToSell(item.getPosition(), sellRing);
+			updateAfterBuying(message, item);
+			break;
+		case Item.ITEM_HEALTH_POTION:
+			updateListToSell(item.getPosition(), sellHealPotion);
+			updateAfterBuying(message, item);
+			break;
+		case Item.ITEM_STAMINA_POTION:
+			updateListToSell(item.getPosition(), sellStaminaPotion);
+			updateAfterBuying(message, item);
+			break;
+		default:
+			updateListToSell(item.getPosition(), sellManaPotion);
+			updateAfterBuying(message, item);
+			break;
 		}
 		// listItems.setAdapter(adapterShop);
 	}
 
 	// ***********************************
 	// Update sell equipment and display.
-	private void updateListToSell(int pos, Equipment[] sellEquipment) {
-		sellEquipment[pos] = null;
-		for (int i = pos; i < sellEquipment.length - 1; ++i) {
-			if (sellEquipment[i + 1] != null) {
-				sellEquipment[i] = sellEquipment[i + 1];
-				sellEquipment[i + 1] = null;
+	private void updateListToSell(byte pos, Item[] sellItem) {
+		sellItem[pos] = null;
+		for (byte i = pos; i < sellItem.length - 1; ++i) {
+			if (sellItem[i + 1] != null) {
+				sellItem[i] = sellItem[i + 1];
+				sellItem[i + 1] = null;
 			}
 		}
 	}
 
-	private void putUpdateSellItemToListView(int pos, Equipment[] sellEquipment) {
-		Equipment equip = sellEquipment[pos];
-		player.insertItemToInventory(equip);
-		player.setGold(player.getGold() - equip.getCost());
+	private void updateAfterBuying(String message, Item item) {
+		player.insertItemToInventory(item);
+		player.setGold(player.getGold() - item.getCost());
 		txtViewGold.setText("Gold: " + player.getGold());
-		adapterInventory.add(equip.toString());
+		adapterInventory.add(item.toString());
+		adapterShop.remove(message);
 	}
 
 	// ***********************************
@@ -509,32 +474,23 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 
 	// ***********************************
 	// Update sell potion and display.
-	private void updateListToSell(int pos, Potion[] sellPotion) {
-		sellPotion[pos] = null;
-		for (int i = pos; i < sellPotion.length - 1; ++i) {
-			if (sellPotion[i + 1] != null) {
-				sellPotion[i] = sellPotion[i + 1];
-				sellPotion[i + 1] = null;
-			}
-		}
-	}
-
-	private void putUpdateSellItemToListView(int pos, Potion[] sellPotion) {
-		Potion equip = sellPotion[pos];
-		player.insertItemToInventory(equip);
-		player.setGold(player.getGold() - equip.getCost());
-		txtViewGold.setText("Gold: " + player.getGold());
-		adapterInventory.add(equip.toString());
-	}
-
-	private int position(String message, Item[] item) {
-		for (int i = 0; i < item.length; ++i)
-			if (item[i] != null && message.contains(item[i].getName()))
-				return i;
-		// if(item[i] != null)
-		// System.out.println("--- "+item[i].getName() + "--- "+ i);
-		return 0;
-	}
+	// private void updateListToSell(int pos, Potion[] sellPotion) {
+	// sellPotion[pos] = null;
+	// for (int i = pos; i < sellPotion.length - 1; ++i) {
+	// if (sellPotion[i + 1] != null) {
+	// sellPotion[i] = sellPotion[i + 1];
+	// sellPotion[i + 1] = null;
+	// }
+	// }
+	// }
+	//
+	// private void putUpdateSellItemToListView(int pos, Potion[] sellPotion) {
+	// Potion equip = sellPotion[pos];
+	// player.insertItemToInventory(equip);
+	// player.setGold(player.getGold() - equip.getCost());
+	// txtViewGold.setText("Gold: " + player.getGold());
+	// adapterInventory.add(equip.toString());
+	// }
 
 	// ***********************************
 	// Update sell potion and display.
@@ -646,8 +602,8 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 			startActivity(intentInventory);
 			break;
 		}
-//		listItems.setAdapter(adapterShop);
-//		listItemsInventory.setAdapter(adapterInventory);
+		// listItems.setAdapter(adapterShop);
+		// listItemsInventory.setAdapter(adapterInventory);
 	}
 
 	private void displayAll() {
@@ -720,36 +676,36 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 	/**
 	 * Data save when player doesn't play anymore.
 	 */
-//	protected void onPause() {
-//		super.onPause();
-//		System.out.println("onPause - shop");
-//
-//		File file = new File(getFilesDir(), Player.PLAYER_FILE);
-//		FileOutputStream outputStream;
-//
-//		try {
-//			if (!file.exists())
-//				file.createNewFile();
-//			outputStream = openFileOutput(Player.PLAYER_FILE,
-//					Context.MODE_PRIVATE);
-//			player.writeToFile(player, outputStream);
-//			// System.out.println("Test file");
-//			// BufferedReader inputReader = new BufferedReader(
-//			// new InputStreamReader(
-//			// openFileInput(Player.PLAYER_FILE)));
-//			//
-//			//
-//			// System.out.println(inputReader.readLine());
-//			// System.out.println(inputReader.readLine());
-//			// System.out.println(inputReader.readLine());
-//			// System.out.println(inputReader.readLine());
-//			// System.out.println(inputReader.readLine());
-//			// System.out.println(inputReader.readLine());
-//			// System.out.println(inputReader.readLine());
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
+	// protected void onPause() {
+	// super.onPause();
+	// System.out.println("onPause - shop");
+	//
+	// File file = new File(getFilesDir(), Player.PLAYER_FILE);
+	// FileOutputStream outputStream;
+	//
+	// try {
+	// if (!file.exists())
+	// file.createNewFile();
+	// outputStream = openFileOutput(Player.PLAYER_FILE,
+	// Context.MODE_PRIVATE);
+	// player.writeToFile(player, outputStream);
+	// // System.out.println("Test file");
+	// // BufferedReader inputReader = new BufferedReader(
+	// // new InputStreamReader(
+	// // openFileInput(Player.PLAYER_FILE)));
+	// //
+	// //
+	// // System.out.println(inputReader.readLine());
+	// // System.out.println(inputReader.readLine());
+	// // System.out.println(inputReader.readLine());
+	// // System.out.println(inputReader.readLine());
+	// // System.out.println(inputReader.readLine());
+	// // System.out.println(inputReader.readLine());
+	// // System.out.println(inputReader.readLine());
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// }
+	// }
 
 	protected void onStop() {
 		super.onStop();
@@ -774,7 +730,7 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+		if (id == R.id.effect) {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
