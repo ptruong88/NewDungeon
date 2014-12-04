@@ -15,6 +15,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -47,7 +48,7 @@ public class BattleActivity extends ActionBarActivity implements
 	private Player player;
 	
 	
-	private Button btnAttack, btnDenfend, btnMagic, btnItem, btnRun;
+	private Button btnAttack, btnDefend, btnMagic, btnItem, btnRun;
 	private String[] listAttack, listMagic, listItem;
 	private ArrayAdapter<String> adapterAttack, adapterMagic, adapterItem;
 	
@@ -144,6 +145,16 @@ public class BattleActivity extends ActionBarActivity implements
 		this.findViewById(R.id.buttonItem).setOnClickListener(this);
 		this.findViewById(R.id.buttonRun).setOnClickListener(this);
 	}
+	
+	private void enableButton(boolean enabled)
+	{
+		this.findViewById(R.id.buttonAttack).setClickable(enabled);
+		this.findViewById(R.id.buttonDefend).setClickable(enabled);
+		this.findViewById(R.id.buttonMagic).setClickable(enabled);
+		this.findViewById(R.id.buttonItem).setClickable(enabled);
+		this.findViewById(R.id.buttonRun).setClickable(enabled);
+	}
+	
 
 	public void onClick(View button) {
 		switch (button.getId()) {
@@ -162,6 +173,9 @@ public class BattleActivity extends ActionBarActivity implements
 						+ player.getMaxStm());
 
 			}
+			
+					 enableButton(false);
+				 
 			enemyTurn();// defending uses your turn
 		}
 			break;
@@ -260,6 +274,9 @@ public class BattleActivity extends ActionBarActivity implements
 					if (mob.getCurHp() <= 0) {
 						playerSetWin();
 					} else {
+						 
+								 enableButton(false);
+						
 						enemyTurn();// once you've attacked the enemy gets a
 									// turn
 					}
@@ -338,6 +355,10 @@ public class BattleActivity extends ActionBarActivity implements
 					if (mob.getCurHp() <= 0) {
 						playerSetWin();
 					} else {
+						
+							 
+								 enableButton(false);
+						
 						enemyTurn();// once you've attacked the enemy gets a
 									// turn
 					}
@@ -412,6 +433,9 @@ public class BattleActivity extends ActionBarActivity implements
 					if (mob.getCurHp() <= 0) {
 						playerSetWin();
 					} else {
+						
+								 enableButton(false);
+						
 						enemyTurn();// once you've attacked the enemy gets a
 									// turn
 					}
@@ -463,6 +487,9 @@ public class BattleActivity extends ActionBarActivity implements
 					if (mob.getCurHp() <= 0) {
 						playerSetWin();
 					} else {
+						
+								 enableButton(false);
+						
 						enemyTurn();// once you've attacked the enemy gets a
 									// turn
 					}
@@ -513,6 +540,9 @@ public class BattleActivity extends ActionBarActivity implements
 					if (mob.getCurHp() <= 0) {
 						playerSetWin();
 					} else {
+						
+								 enableButton(false);
+						
 						enemyTurn();// once you've attacked the enemy gets a
 									// turn
 					}
@@ -563,6 +593,9 @@ public class BattleActivity extends ActionBarActivity implements
 					if (mob.getCurHp() <= 0) {
 						playerSetWin();
 					} else {
+						
+								 enableButton(false);
+						
 						enemyTurn();// once you've attacked the enemy gets a
 									// turn
 					}
@@ -578,6 +611,10 @@ public class BattleActivity extends ActionBarActivity implements
 				.contains("Potion")) 
 		{
 			potionClick(parent.getItemAtPosition(position).toString(), position);
+			
+				 
+					 enableButton(false);
+			
 			enemyTurn();
 		}
 	}
@@ -828,7 +865,15 @@ public class BattleActivity extends ActionBarActivity implements
 					loseDialog.show();
 				}
 				playerDefending = false;// player's defense lasts only 1 turn
+				new Handler().postDelayed(new Runnable() 
+				 {
+					 @Override
+					 public void run() 
+					 {
+						 enableButton(true);
+					 }
 				
+				 }, Toast.LENGTH_LONG * 6000);
 
 			} else {
 				Toast.makeText(getApplicationContext(), "The goblin attacks!",
@@ -898,6 +943,15 @@ public class BattleActivity extends ActionBarActivity implements
 					atkVal = 0;
 					d10Roll = 0;
 					playerDefending = false;
+					new Handler().postDelayed(new Runnable() 
+					 {
+						 @Override
+						 public void run() 
+						 {
+							 enableButton(true);
+						 }
+					
+					 }, Toast.LENGTH_LONG * 6000);
 					if(player.getCurHp()<=0)
 					{
 						loseDialog.show();
@@ -969,6 +1023,15 @@ public class BattleActivity extends ActionBarActivity implements
 					atkVal = 0;
 					d10Roll = 0;
 					playerDefending = false;
+					new Handler().postDelayed(new Runnable() 
+					 {
+						 @Override
+						 public void run() 
+						 {
+							 enableButton(true);
+						 }
+					
+					 }, Toast.LENGTH_LONG * 6000);
 					if(player.getCurHp()<=0)
 					{
 						loseDialog.show();
@@ -1038,6 +1101,15 @@ public class BattleActivity extends ActionBarActivity implements
 					atkVal = 0;
 					d10Roll = 0;
 					playerDefending = false;
+					new Handler().postDelayed(new Runnable() 
+					 {
+						 @Override
+						 public void run() 
+						 {
+							 enableButton(true);
+						 }
+					
+					 }, Toast.LENGTH_LONG * 6000);
 					if(player.getCurHp()<=0)
 					{
 						loseDialog.show();
@@ -1050,6 +1122,15 @@ public class BattleActivity extends ActionBarActivity implements
 		if (player.getCurHp() == 0) {
 			Toast.makeText(getApplicationContext(), "You died!",
 					Toast.LENGTH_SHORT).show();
+			new Handler().postDelayed(new Runnable() 
+			 {
+				 @Override
+				 public void run() 
+				 {
+					 enableButton(true);
+				 }
+			
+			 }, Toast.LENGTH_LONG * 6000);
 		}
 
 	}
