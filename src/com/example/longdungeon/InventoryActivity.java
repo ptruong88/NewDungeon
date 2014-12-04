@@ -37,7 +37,8 @@ public class InventoryActivity extends ActionBarActivity implements
 	private Player player;
 	private MediaPlayer medplay;
 	private int exp = 10;
-	TextView txtEXP;
+	private TextView txtEXP;
+	private Equipment itemToEquip;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -191,95 +192,67 @@ public class InventoryActivity extends ActionBarActivity implements
 
 	private void displayWeapon() {
 		Equipment equipments = player.getPlayerEquip()[Item.ITEM_SWORD];
-		String name;
-
-		name = "+" + equipments.getStatNumber() + " "
-				+ equipments.getStatName() + " " + equipments.getName();
-		adapter.add(name);
+		
+		adapter.add(equipments.toString());
 
 		Item[] inventory = player.getPlayerInventory();
 		for (int i = 0; i < player.getInventoryCurSpace(); ++i) {
 			if (inventory[i].getItemType() == Item.ITEM_SWORD) {
 				equipments = (Equipment) inventory[i];
-				name = "+" + equipments.getStatNumber() + " "
-						+ equipments.getStatName() + " " + equipments.getName();
-				adapter.add(name);
+		
+				adapter.add(equipments.toString());
 			}
 		}
 	}
 
 	private void displayHelmet() {
 		Equipment equipments = player.getPlayerEquip()[Item.ITEM_HELMET];
-		String name;
-
-		name = "+" + equipments.getStatNumber() + " "
-				+ equipments.getStatName() + " " + equipments.getName();
-		adapter.add(name);
+		adapter.add(equipments.toString());
 
 		Item[] inventory = player.getPlayerInventory();
 		for (int i = 0; i < player.getInventoryCurSpace(); ++i) {
 			if (inventory[i].getItemType() == Item.ITEM_HELMET) {
 				equipments = (Equipment) inventory[i];
-				name = "+" + equipments.getStatNumber() + " "
-						+ equipments.getStatName() + " " + equipments.getName();
-				adapter.add(name);
+				adapter.add(equipments.toString());
 			}
 		}
 	}
 
 	private void displayShield() {
 		Equipment equipments = player.getPlayerEquip()[Item.ITEM_SHIELD];
-		String name;
-
-		name = "+" + equipments.getStatNumber() + " "
-				+ equipments.getStatName() + " " + equipments.getName();
-		adapter.add(name);
+		adapter.add(equipments.toString());
 
 		Item[] inventory = player.getPlayerInventory();
 		for (int i = 0; i < player.getInventoryCurSpace(); ++i) {
 			if (inventory[i].getItemType() == Item.ITEM_SHIELD) {
 				equipments = (Equipment) inventory[i];
-				name = "+" + equipments.getStatNumber() + " "
-						+ equipments.getStatName() + " " + equipments.getName();
-				adapter.add(name);
+				adapter.add(equipments.toString());
 			}
 		}
 	}
 
 	private void displayCloth() {
 		Equipment equipments = player.getPlayerEquip()[Item.ITEM_CLOTH];
-		String name;
-
-		name = "+" + equipments.getStatNumber() + " "
-				+ equipments.getStatName() + " " + equipments.getName();
-		adapter.add(name);
+		adapter.add(equipments.toString());
 
 		Item[] inventory = player.getPlayerInventory();
 		for (int i = 0; i < player.getInventoryCurSpace(); ++i) {
 			if (inventory[i].getItemType() == Item.ITEM_CLOTH) {
 				equipments = (Equipment) inventory[i];
-				name = "+" + equipments.getStatNumber() + " "
-						+ equipments.getStatName() + " " + equipments.getName();
-				adapter.add(name);
+				adapter.add(equipments.toString());
 			}
 		}
 	}
 
 	private void displayRing() {
 		Equipment equipments = player.getPlayerEquip()[Item.ITEM_RING];
-		String name;
-
-		name = "+" + equipments.getStatNumber() + " "
-				+ equipments.getStatName() + " " + equipments.getName();
-		adapter.add(name);
+		adapter.add(equipments.toString());
 
 		Item[] inventory = player.getPlayerInventory();
 		for (int i = 0; i < player.getInventoryCurSpace(); ++i) {
 			if (inventory[i].getItemType() == Item.ITEM_RING) {
 				equipments = (Equipment) inventory[i];
-				name = "+" + equipments.getStatNumber() + " "
-						+ equipments.getStatName() + " " + equipments.getName();
-				adapter.add(name);
+				adapter.add(equipments.toString());
 			}
 		}
 	}
@@ -343,8 +316,14 @@ public class InventoryActivity extends ActionBarActivity implements
 						// Toast.makeText(getApplicationContext(),
 						// "You clicked on YES",
 						// Toast.LENGTH_SHORT).show();
-						equipItem(message, position);
-						String v = "Equiped " + message;
+						String v = "null";
+						if(!message.contains("Potion")){
+							equipItem(message, position);
+							v = "Equiped " + message;
+						}else{
+							v = "Cannot equip potion!";
+						}
+						
 						Toast.makeText(getApplicationContext(), v,
 								Toast.LENGTH_SHORT).show();
 					}
@@ -383,12 +362,69 @@ public class InventoryActivity extends ActionBarActivity implements
 	}
 	
 	private void equipItem(String message, int position){
-		if (message.contains("Sword")) {
-			//position = position(message, listWeapon);
-			//Toast.makeText(this, listWeapon.toString(), Toast.LENGTH_SHORT).show();
-			//player.setSword(listWeapon[position]);
-			adapter.remove(message);
-		}
+		//if(!message.contains("Potion")){
+			for(int i =0; i<player.getInventoryCurSpace(); i++){
+				if(player.getPlayerInventory()[i].equals(message)){
+					itemToEquip = (Equipment) player.getPlayerInventory()[i];
+					Equipment itemToUnequip = player.getPlayerEquip(itemToEquip.getItemType());
+					player.insertItemToInventory(itemToUnequip, i);
+					player.insertNewEquipment(itemToEquip);
+					itemToUnequip.setEquipped((byte) 0);
+					itemToEquip.setEquipped((byte) 1);
+					switch(itemToEquip.getItemType()){
+						case 0: player.setDamage(player.getDamage()-itemToUnequip.getStatNumber()+itemToEquip.getStatNumber());
+								txtViewPlayerDmg = (TextView) this
+										.findViewById(R.id.textViewPlayerDamage);
+								txtViewPlayerDmg.setText(player.getDamage() + "");
+								if(!adapter.isEmpty()){
+									adapter.clear();
+								}
+								displayWeapon();
+							break;
+						case 1: player.setDef(player.getDef()-itemToUnequip.getStatNumber()+itemToEquip.getStatNumber());
+								txtViewPlayerDef = (TextView) this
+										.findViewById(R.id.textViewPlayerDefend);
+								txtViewPlayerDef.setText(player.getDef() + "");
+								if(!adapter.isEmpty()){
+									adapter.clear();
+								}
+								displayHelmet();
+							break;
+						case 2: player.setDef(player.getDef()-itemToUnequip.getStatNumber()+itemToEquip.getStatNumber());
+								txtViewPlayerDef = (TextView) this
+										.findViewById(R.id.textViewPlayerDefend);
+								txtViewPlayerDef.setText(player.getDef() + "");
+								if(!adapter.isEmpty()){
+									adapter.clear();
+								}
+								displayShield();
+							break;
+						case 3: player.setDef(player.getDef()-itemToUnequip.getStatNumber()+itemToEquip.getStatNumber());
+								txtViewPlayerDef = (TextView) this
+										.findViewById(R.id.textViewPlayerDefend);
+								txtViewPlayerDef.setText(player.getDef() + "");
+								if(!adapter.isEmpty()){
+									adapter.clear();
+								}
+								displayCloth();
+							break;
+						case 4: int newMANA = (player.getMaxMana()-itemToUnequip.getStatNumber()+itemToEquip.getStatNumber());
+								player.setMaxMana(newMANA);
+								player.setCurMana(newMANA);
+								txtViewPlayerMana = (TextView) this
+										.findViewById(R.id.textViewPlayerMana);
+								txtViewPlayerMana.setText(player.getCurMana() + "/"
+										+ player.getMaxMana());
+								if(!adapter.isEmpty()){
+									adapter.clear();
+								}
+								displayRing();
+							break;
+					}
+					break;
+				}
+			}
+		//}
 	}
 	
 	private int position(String message, Item[] item) {

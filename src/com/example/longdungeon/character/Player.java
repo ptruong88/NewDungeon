@@ -217,6 +217,10 @@ public class Player extends Person implements Parcelable {
 		playerInventory[inventoryCurSpace] = item;
 		++inventoryCurSpace;
 	}
+	
+	public void insertItemToInventory(Item item, int position){
+		playerInventory[position]=item;
+	}
 
 	public void removeItemFromInventory(int position) {
 		playerInventory[position] = null;
