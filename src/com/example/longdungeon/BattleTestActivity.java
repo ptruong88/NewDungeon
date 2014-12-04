@@ -593,15 +593,26 @@ public class BattleTestActivity extends ActionBarActivity implements
 
 		// set animation listener
 		animShake.setAnimationListener(this);
+		final ImageView imageEffect = (ImageView)this.findViewById(R.id.imageViewEffect);
+		
 		new Handler().postDelayed(new Runnable() {
 
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
 				imageMob.startAnimation(animShake);
+				imageEffect.setImageResource(R.drawable.playerlightattack);
+				imageEffect.setVisibility(View.VISIBLE);
 			}
 		}, 800);
 
+		new Handler().postDelayed(new Runnable() {
+
+			@Override
+			public void run() {
+				imageEffect.setVisibility(View.INVISIBLE);
+			}
+		}, 1000);
 	}
 
 	private void setUpPlayer() {
@@ -1178,7 +1189,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+		if (id == R.id.effect) {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
