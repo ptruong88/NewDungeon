@@ -25,9 +25,11 @@ public class Player extends Person implements Parcelable {
 	private int inventoryMaxSpace, inventoryCurSpace;
 	private int curEquipment;// Track to know how many equipment player has.
 	private int skillPoint;
+	private String nameFile;
 
 	public static final String PLAYER_DATA = "com.example.longdungeon.character.Player";
-	public static final String PLAYER_FILE = "playerData";
+	public static final String PLAYER_FILE_1 = "playerData1";
+	public static final String PLAYER_FILE_2 = "playerData2";
 
 	// public final static int POSITION_SWORD = 0;
 	// public final static int POSITION_HELMET = 1;
@@ -110,6 +112,14 @@ public class Player extends Person implements Parcelable {
 		((Potion) playerInventory[2]).setStatNumber((int) (maxMana * 0.3));
 		((Potion) playerInventory[2]).setSize(5);
 		inventoryCurSpace = 3;
+	}
+
+	public String getNameFile() {
+		return nameFile;
+	}
+
+	public void setNameFile(String nameFile) {
+		this.nameFile = nameFile;
 	}
 
 	public int getScore() {
@@ -292,6 +302,7 @@ public class Player extends Person implements Parcelable {
 
 	public void writeToFile(Player player, FileOutputStream outputStream)
 			throws IOException {
+		outputStream.write((player.getNameFile() + "\n").getBytes());
 		outputStream.write((player.getName() + "\n").getBytes());
 		outputStream.write((player.getXP() + "\n").getBytes());
 		outputStream.write((player.getGold() + "\n").getBytes());
@@ -347,6 +358,7 @@ public class Player extends Person implements Parcelable {
 	
 	public void readFromFile(Player player, BufferedReader inputReader)
 			throws IOException {
+		player.setNameFile(inputReader.readLine());
 		player.setName(inputReader.readLine());
 		// System.out.println(inputReader.readLine());
 		// System.out.println(inputReader.readLine());
@@ -439,6 +451,7 @@ public class Player extends Person implements Parcelable {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		// TODO Auto-generated method stub
+		dest.writeString(nameFile);
 		dest.writeString(name);
 		dest.writeInt(XP);
 		dest.writeInt(gold);
@@ -465,6 +478,7 @@ public class Player extends Person implements Parcelable {
 	}
 
 	public void readFromParcel(Parcel in) {
+		nameFile = in.readString();
 		name = in.readString();
 		XP = in.readInt();
 		gold = in.readInt();

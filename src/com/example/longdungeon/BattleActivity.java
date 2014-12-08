@@ -1,5 +1,8 @@
 package com.example.longdungeon;
 
+import java.io.File;
+import java.io.FileOutputStream;
+
 import com.example.longdungeon.character.Mob;
 import com.example.longdungeon.character.Person;
 import com.example.longdungeon.character.Player;
@@ -752,7 +755,7 @@ public class BattleActivity extends ActionBarActivity implements
 						Intent intentShopping = new Intent(
 								BattleActivity.this,
 								ShoppingTestActivity.class);
-						player.setLevel(player.getLevel() == imgMobs.length-1 ? 0 : player
+						player.setLevel(player.getLevel() == (imgMobs.length-1) ? 0 : player
 								.getLevel() + 1);
 						intentShopping.putExtra(Player.PLAYER_DATA, player);
 						startActivity(intentShopping);
@@ -793,12 +796,13 @@ public class BattleActivity extends ActionBarActivity implements
 						// Toast.makeText(getApplicationContext(),
 						// "You clicked on YES",
 						// Toast.LENGTH_SHORT).show();
-						player.setLevel(player.getLevel() == imgMobs.length-1 ? 0 : player
+						player.setLevel(player.getLevel() == (imgMobs.length-1) ? 0 : player
 								.getLevel() + 1);
 						Intent intentShopping = new Intent(
 								BattleActivity.this,
 								ShoppingTestActivity.class);
 						intentShopping.putExtra(Player.PLAYER_DATA, player);
+						writeToFile();
 						startActivity(intentShopping);
 						finish();
 					}
@@ -1230,6 +1234,33 @@ public class BattleActivity extends ActionBarActivity implements
 		
 	}
 	
+	private void writeToFile(){
+		File file = new File(getFilesDir(), player.getNameFile());
+		FileOutputStream outputStream;
+
+		try {
+			if (!file.exists())
+				file.createNewFile();
+			outputStream = openFileOutput(player.getNameFile(),
+					Context.MODE_PRIVATE);
+			player.writeToFile(player, outputStream);
+			// System.out.println("Test file");
+			// BufferedReader inputReader = new BufferedReader(
+			// new InputStreamReader(
+			// openFileInput(Player.PLAYER_FILE)));
+			//
+			//
+			// System.out.println(inputReader.readLine());
+			// System.out.println(inputReader.readLine());
+			// System.out.println(inputReader.readLine());
+			// System.out.println(inputReader.readLine());
+			// System.out.println(inputReader.readLine());
+			// System.out.println(inputReader.readLine());
+			// System.out.println(inputReader.readLine());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	//Start music
 		private void playMusic(){
 			medplay= MediaPlayer.create(this.getApplicationContext(), R.raw.clinthammer_battle);

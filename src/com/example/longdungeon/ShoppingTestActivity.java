@@ -679,37 +679,37 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 	/**
 	 * Data save when player doesn't play anymore.
 	 */
-	 protected void onPause() {
-	 super.onPause();
-	 medplay.pause();
-	// System.out.println("onPause - shop");
-	//
-	// File file = new File(getFilesDir(), Player.PLAYER_FILE);
-	// FileOutputStream outputStream;
-	//
-	// try {
-	// if (!file.exists())
-	// file.createNewFile();
-	// outputStream = openFileOutput(Player.PLAYER_FILE,
-	// Context.MODE_PRIVATE);
-	// player.writeToFile(player, outputStream);
-	// // System.out.println("Test file");
-	// // BufferedReader inputReader = new BufferedReader(
-	// // new InputStreamReader(
-	// // openFileInput(Player.PLAYER_FILE)));
-	// //
-	// //
-	// // System.out.println(inputReader.readLine());
-	// // System.out.println(inputReader.readLine());
-	// // System.out.println(inputReader.readLine());
-	// // System.out.println(inputReader.readLine());
-	// // System.out.println(inputReader.readLine());
-	// // System.out.println(inputReader.readLine());
-	// // System.out.println(inputReader.readLine());
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// }
-	 }
+	protected void onPause() {
+		super.onPause();
+		medplay.pause();
+		System.out.println("onPause - shop");
+
+		File file = new File(getFilesDir(), player.getNameFile());
+		FileOutputStream outputStream;
+
+		try {
+			if (!file.exists())
+				file.createNewFile();
+			outputStream = openFileOutput(player.getNameFile(),
+					Context.MODE_PRIVATE);
+			player.writeToFile(player, outputStream);
+			// System.out.println("Test file");
+			// BufferedReader inputReader = new BufferedReader(
+			// new InputStreamReader(
+			// openFileInput(Player.PLAYER_FILE)));
+			//
+			//
+			// System.out.println(inputReader.readLine());
+			// System.out.println(inputReader.readLine());
+			// System.out.println(inputReader.readLine());
+			// System.out.println(inputReader.readLine());
+			// System.out.println(inputReader.readLine());
+			// System.out.println(inputReader.readLine());
+			// System.out.println(inputReader.readLine());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	protected void onStop() {
 		super.onStop();
@@ -721,7 +721,7 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 		System.out.println("onDestroy - shop");
 		medplay.stop();
 	}
-	
+
 	private void playMusic() {
 		medplay = MediaPlayer.create(this.getApplicationContext(),
 				R.raw.clinthammer_shop);
