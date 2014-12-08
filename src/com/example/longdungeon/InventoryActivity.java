@@ -791,9 +791,38 @@ public class InventoryActivity extends ActionBarActivity implements
 		medplay.start();
 	}
 	
-	@Override
-	public void onPause(){
-		super.onPause();
+	protected void onStart() {
+		super.onStart();
+		System.out.println("onStart - shop");
+	}
+
+	protected void onRestart() {
+		super.onRestart();
+		System.out.println("onRestart - shop");
+	}
+
+	protected void onResume() {
+		super.onResume();
+		System.out.println("onResume - shop");
+		medplay.start();
+	}
+
+	/**
+	 * Data save when player doesn't play anymore.
+	 */
+	 protected void onPause() {
+	 super.onPause();
+	 medplay.pause();
+	 }
+
+	protected void onStop() {
+		super.onStop();
+		System.out.println("onStop - shop");
+	}
+
+	protected void onDestroy() {
+		super.onDestroy();
+		System.out.println("onDestroy - shop");
 		medplay.stop();
 	}
 

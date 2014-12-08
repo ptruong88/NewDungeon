@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,6 +35,7 @@ public class InventoryTestActivity extends ActionBarActivity implements
 	private ArrayAdapter<String> adapter;
 	private AlertDialog.Builder alertDialog;
 	private Player player;
+	private MediaPlayer medplay;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,7 @@ public class InventoryTestActivity extends ActionBarActivity implements
 		setUpButtonAction();
 		setUpListItems();
 		setUpTextView();
+		playMusic();
 
 		alertDialog = new AlertDialog.Builder(this);
 	}
@@ -362,6 +365,48 @@ public class InventoryTestActivity extends ActionBarActivity implements
 				});
 		alertDialog.show();
 	}
+	
+	//Start music
+		private void playMusic(){
+			medplay= MediaPlayer.create(this.getApplicationContext(), R.raw.clinthammer_equip);
+			medplay.setLooping(true);
+			medplay.start();
+		}
+		
+		protected void onStart() {
+			super.onStart();
+			System.out.println("onStart - shop");
+		}
+
+		protected void onRestart() {
+			super.onRestart();
+			System.out.println("onRestart - shop");
+		}
+
+		protected void onResume() {
+			super.onResume();
+			System.out.println("onResume - shop");
+			medplay.start();
+		}
+
+		/**
+		 * Data save when player doesn't play anymore.
+		 */
+		 protected void onPause() {
+		 super.onPause();
+		 medplay.pause();
+		 }
+
+		protected void onStop() {
+			super.onStop();
+			System.out.println("onStop - shop");
+		}
+
+		protected void onDestroy() {
+			super.onDestroy();
+			System.out.println("onDestroy - shop");
+			medplay.stop();
+		}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

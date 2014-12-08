@@ -18,6 +18,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
@@ -44,6 +45,7 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 	private Equipment[] sellWeapon, sellHelmet, sellShield, sellCloth,
 			sellRing;
 	private Potion[] sellHealPotion, sellManaPotion, sellStaminaPotion;
+	private MediaPlayer medplay;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +61,7 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 		setUpCancelBuyingDialog();
 		setUpListSellAndInventory();
 		setUpButton();
-
+		playMusic();
 	}
 
 	/**
@@ -671,13 +673,15 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 	protected void onResume() {
 		super.onResume();
 		System.out.println("onResume - shop");
+		medplay.start();
 	}
 
 	/**
 	 * Data save when player doesn't play anymore.
 	 */
-	// protected void onPause() {
-	// super.onPause();
+	 protected void onPause() {
+	 super.onPause();
+	 medplay.pause();
 	// System.out.println("onPause - shop");
 	//
 	// File file = new File(getFilesDir(), Player.PLAYER_FILE);
@@ -705,7 +709,7 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 	// } catch (Exception e) {
 	// e.printStackTrace();
 	// }
-	// }
+	 }
 
 	protected void onStop() {
 		super.onStop();
@@ -715,6 +719,14 @@ public class ShoppingTestActivity extends ActionBarActivity implements
 	protected void onDestroy() {
 		super.onDestroy();
 		System.out.println("onDestroy - shop");
+		medplay.stop();
+	}
+	
+	private void playMusic() {
+		medplay = MediaPlayer.create(this.getApplicationContext(),
+				R.raw.clinthammer_shop);
+		medplay.setLooping(true);
+		medplay.start();
 	}
 
 	@Override
