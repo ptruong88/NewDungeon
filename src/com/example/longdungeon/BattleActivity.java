@@ -37,7 +37,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class BattleActivity extends ActionBarActivity implements
-		OnClickListener, OnItemClickListener {
+		OnClickListener, OnItemClickListener, AnimationListener {
 
 	private ListView listAbility;
 	private View lyoutBattle;
@@ -52,9 +52,9 @@ public class BattleActivity extends ActionBarActivity implements
 	private String[] listAttack, listMagic, listItem;
 	private ArrayAdapter<String> adapterAttack, adapterMagic, adapterItem;
 	
-	private static int[] imageMobs = new int[] { R.drawable.goblin,
+	private static int[] imgMobs = new int[] { R.drawable.goblin,
 			R.drawable.skeleton, R.drawable.spider, R.drawable.bats, R.drawable.dragon };
-	private ImageView imageMob, imagePlayer;
+	private ImageView imgMob, imgPlayer;
 
 	// gordon's variables for the game loop
 	// boolean playerTurn = true;
@@ -64,7 +64,7 @@ public class BattleActivity extends ActionBarActivity implements
 	int d10Roll = 0;
 	int atkVal;
 	// Animation
-    private Animation animMove;
+    
     
 	private Potion[] potions;
 	private MediaPlayer medplay;
@@ -621,37 +621,44 @@ public class BattleActivity extends ActionBarActivity implements
 
 	private void animationPlayerAttack() {
 		// load the animation
-        animMove = AnimationUtils.loadAnimation(getApplicationContext(),
-                R.anim.move);
-         
-        // set animation listener
-        animMove.setAnimationListener(new AnimationListener() {
-			
+		Animation animMove = AnimationUtils.loadAnimation(getApplicationContext(),
+				R.anim.move);
+
+		// set animation listener
+		animMove.setAnimationListener(this);
+
+		imgPlayer.startAnimation(animMove);
+
+		final Animation animShake = AnimationUtils.loadAnimation(
+				getApplicationContext(), R.anim.shake);
+
+		// set animation listener
+		animShake.setAnimationListener(this);
+		final ImageView imageEffect = (ImageView)this.findViewById(R.id.imageViewEffect);
+		
+		new Handler().postDelayed(new Runnable() {
+
 			@Override
-			public void onAnimationStart(Animation animation) {
+			public void run() {
 				// TODO Auto-generated method stub
-				
+				imgMob.startAnimation(animShake);
+				imageEffect.setImageResource(R.drawable.playerlightattack);
+				imageEffect.setVisibility(View.VISIBLE);
 			}
-			
+		}, 800);
+
+		new Handler().postDelayed(new Runnable() {
+
 			@Override
-			public void onAnimationRepeat(Animation animation) {
-				// TODO Auto-generated method stub
-				
+			public void run() {
+				imageEffect.setVisibility(View.INVISIBLE);
 			}
-			
-			@Override
-			public void onAnimationEnd(Animation animation) {
-				// TODO Auto-generated method stub
-				
-			}
-		});
-        
-        imagePlayer.startAnimation(animMove);
+		}, 1000);
 	}
 
 	private void setUpPlayer() {
 		//get player image
-		imagePlayer = (ImageView)this.findViewById(R.id.imagePlayer);
+		imgPlayer = (ImageView)this.findViewById(R.id.imagePlayer);
 		
 		txtViewPlayerName = (TextView) this
 				.findViewById(R.id.textViewPlayerName);
@@ -679,7 +686,8 @@ public class BattleActivity extends ActionBarActivity implements
 
 	private void setUpMob() {
 		// TODO Auto-generated method stub
-		String nameMob = "Goblin";
+		String[] mobNames = { "goblin", "skeleton", "spider", "bats", "dragon" };
+		String nameMob = mobNames[player.getLevel()];
 		mob = new Mob(nameMob);
 		txtViewMobName = (TextView) this.findViewById(R.id.textViewMobName);
 		txtViewMobName.setText(nameMob);
@@ -693,6 +701,9 @@ public class BattleActivity extends ActionBarActivity implements
 
 		mobMaxHp = mob.getMaxHp();
 		mobCurHp = mob.getCurHp();
+		
+		imgMob = (ImageView) this.findViewById(R.id.imageMob);
+		imgMob.setImageResource(imgMobs[player.getLevel()]);
 	}
 
 	private void setUpHideListView() {
@@ -741,7 +752,7 @@ public class BattleActivity extends ActionBarActivity implements
 						Intent intentShopping = new Intent(
 								BattleActivity.this,
 								ShoppingTestActivity.class);
-						player.setLevel(player.getLevel() == imageMobs.length-1 ? 0 : player
+						player.setLevel(player.getLevel() == imgMobs.length-1 ? 0 : player
 								.getLevel() + 1);
 						intentShopping.putExtra(Player.PLAYER_DATA, player);
 						startActivity(intentShopping);
@@ -782,7 +793,7 @@ public class BattleActivity extends ActionBarActivity implements
 						// Toast.makeText(getApplicationContext(),
 						// "You clicked on YES",
 						// Toast.LENGTH_SHORT).show();
-						player.setLevel(player.getLevel() == imageMobs.length-1 ? 0 : player
+						player.setLevel(player.getLevel() == imgMobs.length-1 ? 0 : player
 								.getLevel() + 1);
 						Intent intentShopping = new Intent(
 								BattleActivity.this,
@@ -824,37 +835,37 @@ public class BattleActivity extends ActionBarActivity implements
 				});
 	}
 
-	private void setUpPic() {
-		// TODO Auto-generated method stub
-		BattleLayout relLyoutPic = (BattleLayout) this
-				.findViewById(R.id.layoutPic);
-		int lyoutX = relLyoutPic.getMeasuredWidth();
-		int lyoutY = relLyoutPic.getMeasuredHeight();
-
-		System.out.println("Layout width " + lyoutX);
-		System.out.println("Layout height " + lyoutY);
-
-		ImageView imgMob = (ImageView) this.findViewById(R.id.imageMob);
-		imgMob.getLayoutParams().width = (int) (lyoutX * 0.6);
-		imgMob.getLayoutParams().height = lyoutY;
-		// RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-		// (int)(lyoutX*0.6), lyoutY);
-		// imgMob.setLayoutParams(params);
-
-		ImageView imgPlayer = (ImageView) this.findViewById(R.id.imagePlayer);
-		// params = new RelativeLayout.LayoutParams(
-		// lyoutX/2, lyoutY/2);
-		// imgPlayer.setLayoutParams(params);
-		imgPlayer.getLayoutParams().width = (int) (lyoutX * 0.5);
-		imgPlayer.getLayoutParams().height = (int) (lyoutY * 0.8);
-	}
+//	private void setUpPic() {
+//		// TODO Auto-generated method stub
+//		BattleLayout relLyoutPic = (BattleLayout) this
+//				.findViewById(R.id.layoutPic);
+//		int lyoutX = relLyoutPic.getMeasuredWidth();
+//		int lyoutY = relLyoutPic.getMeasuredHeight();
+//
+//		System.out.println("Layout width " + lyoutX);
+//		System.out.println("Layout height " + lyoutY);
+//
+//		imgMob = (ImageView) this.findViewById(R.id.imageMob);
+//		imgMob.getLayoutParams().width = (int) (lyoutX * 0.6);
+//		imgMob.getLayoutParams().height = lyoutY;
+//		// RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+//		// (int)(lyoutX*0.6), lyoutY);
+//		// imgMob.setLayoutParams(params);
+//
+//		imgPlayer = (ImageView) this.findViewById(R.id.imagePlayer);
+//		// params = new RelativeLayout.LayoutParams(
+//		// lyoutX/2, lyoutY/2);
+//		// imgPlayer.setLayoutParams(params);
+//		imgPlayer.getLayoutParams().width = (int) (lyoutX * 0.5);
+//		imgPlayer.getLayoutParams().height = (int) (lyoutY * 0.8);
+//	}
 
 	public void enemyTurn() {
 		{
 
 			if ((mob.getCurStm() <= 0)) {
 				Toast.makeText(getApplicationContext(),
-						"The goblin wheezes and stops to catch it's breath",
+						"The enemy wheezes and stops to catch it's breath",
 						Toast.LENGTH_SHORT).show();
 				mob.setCurStm(mob.getMaxStm());// enemy regains all stamina but
 												// is open for a free hit
@@ -876,7 +887,7 @@ public class BattleActivity extends ActionBarActivity implements
 				 }, Toast.LENGTH_LONG * 6000);
 
 			} else {
-				Toast.makeText(getApplicationContext(), "The goblin attacks!",
+				Toast.makeText(getApplicationContext(), "The enemy attacks!",
 						Toast.LENGTH_SHORT).show();
 				int enemyAtk = randomWithRange(1, 3);
 				if (enemyAtk == 1) {
@@ -893,7 +904,7 @@ public class BattleActivity extends ActionBarActivity implements
 					d10Roll = randomWithRange(1, 10);
 					if ((d10Roll == 1) || (d10Roll == 2)) {
 						Toast.makeText(getApplicationContext(),
-								"The goblin's attack missed!",
+								"The enemy's attack missed!",
 								Toast.LENGTH_SHORT).show();
 					}
 
@@ -905,7 +916,7 @@ public class BattleActivity extends ActionBarActivity implements
 						}
 						Toast.makeText(
 								getApplicationContext(),
-								"The goblin lands a glancing blow for" + atkVal
+								"The enemy lands a glancing blow for" + atkVal
 										+ "damage!", Toast.LENGTH_SHORT).show();
 						player.setCurHp(player.getCurHp() - atkVal);
 						txtViewPlayerHp.setText("HP: " + player.getCurHp()
@@ -919,7 +930,7 @@ public class BattleActivity extends ActionBarActivity implements
 
 						Toast.makeText(
 								getApplicationContext(),
-								"The goblin's attack hits for" + atkVal
+								"The enemy's attack hits for" + atkVal
 										+ "damage!", Toast.LENGTH_SHORT).show();
 						player.setCurHp(player.getCurHp() - atkVal);
 						txtViewPlayerHp.setText("HP: " + player.getCurHp()
@@ -933,7 +944,7 @@ public class BattleActivity extends ActionBarActivity implements
 
 						Toast.makeText(
 								getApplicationContext(),
-								"The goblin lands a critical hit for " + atkVal
+								"The enemy lands a critical hit for " + atkVal
 										+ " damage!", Toast.LENGTH_SHORT)
 								.show();
 						player.setCurHp(player.getCurHp() - atkVal);
@@ -973,7 +984,7 @@ public class BattleActivity extends ActionBarActivity implements
 					d10Roll = randomWithRange(1, 10);
 					if ((d10Roll == 1) || (d10Roll == 2)) {
 						Toast.makeText(getApplicationContext(),
-								"The goblin's attack missed!",
+								"The enemy's attack missed!",
 								Toast.LENGTH_SHORT).show();
 					}
 
@@ -985,7 +996,7 @@ public class BattleActivity extends ActionBarActivity implements
 						}
 						Toast.makeText(
 								getApplicationContext(),
-								"The goblin lands a glancing blow for" + atkVal
+								"The enemy lands a glancing blow for" + atkVal
 										+ "damage!", Toast.LENGTH_SHORT).show();
 						player.setCurHp(player.getCurHp() - atkVal);
 						txtViewPlayerHp.setText("HP: " + player.getCurHp()
@@ -999,7 +1010,7 @@ public class BattleActivity extends ActionBarActivity implements
 
 						Toast.makeText(
 								getApplicationContext(),
-								"The goblin's attack hits for" + atkVal
+								"The enemy's attack hits for" + atkVal
 										+ "damage!", Toast.LENGTH_SHORT).show();
 						player.setCurHp(player.getCurHp() - atkVal);
 						txtViewPlayerHp.setText("HP: " + player.getCurHp()
@@ -1013,7 +1024,7 @@ public class BattleActivity extends ActionBarActivity implements
 
 						Toast.makeText(
 								getApplicationContext(),
-								"The goblin lands a critical hit for " + atkVal
+								"The enemy lands a critical hit for " + atkVal
 										+ " damage!", Toast.LENGTH_SHORT)
 								.show();
 						player.setCurHp(player.getCurHp() - atkVal);
@@ -1051,7 +1062,7 @@ public class BattleActivity extends ActionBarActivity implements
 					d10Roll = randomWithRange(1, 10);
 					if ((d10Roll == 1) || (d10Roll == 2)) {
 						Toast.makeText(getApplicationContext(),
-								"The goblin's attack missed!",
+								"The enemy's attack missed!",
 								Toast.LENGTH_SHORT).show();
 					}
 
@@ -1063,7 +1074,7 @@ public class BattleActivity extends ActionBarActivity implements
 						}
 						Toast.makeText(
 								getApplicationContext(),
-								"The goblin lands a glancing blow for" + atkVal
+								"The enemy lands a glancing blow for" + atkVal
 										+ "damage!", Toast.LENGTH_SHORT).show();
 						player.setCurHp(player.getCurHp() - atkVal);
 						txtViewPlayerHp.setText("HP: " + player.getCurHp()
@@ -1077,7 +1088,7 @@ public class BattleActivity extends ActionBarActivity implements
 
 						Toast.makeText(
 								getApplicationContext(),
-								"The goblin's attack hits for" + atkVal
+								"The enemy's attack hits for" + atkVal
 										+ "damage!", Toast.LENGTH_SHORT).show();
 						player.setCurHp(player.getCurHp() - atkVal);
 						txtViewPlayerHp.setText("HP: " + player.getCurHp()
@@ -1091,7 +1102,7 @@ public class BattleActivity extends ActionBarActivity implements
 
 						Toast.makeText(
 								getApplicationContext(),
-								"The goblin lands a critical hit for " + atkVal
+								"The enemy lands a critical hit for " + atkVal
 										+ " damage!", Toast.LENGTH_SHORT)
 								.show();
 						player.setCurHp(player.getCurHp() - atkVal);
@@ -1275,6 +1286,24 @@ public class BattleActivity extends ActionBarActivity implements
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void onAnimationStart(Animation animation) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onAnimationEnd(Animation animation) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onAnimationRepeat(Animation animation) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
