@@ -30,15 +30,14 @@ public class InventoryActivity extends ActionBarActivity implements
 			txtViewPlayerStm, txtViewPlayerDmg, txtViewPlayerDef, txtViewGold,
 			txtViewScore;
 	private ListView listItems;
-	private String[] listAll, listWeapon, listHelmet, listShield, listCloth,
-			listPotion;
 	private ArrayAdapter<String> adapter;
 	private AlertDialog.Builder alertDialog;
 	private Player player;
 	private MediaPlayer medplay;
-	private int exp = 10;
+	private int exp;
 	private TextView txtEXP;
 	private Equipment itemToEquip;
+	private int prevHP, prevSTM, prevMANA, prevDMG, prevDEF;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,12 +49,12 @@ public class InventoryActivity extends ActionBarActivity implements
 		setUpListItems();
 		setUpTextView();
 		playMusic();
+		setStats();
 
 		alertDialog = new AlertDialog.Builder(this);
 	}
 
 	private void setUpTextView() {
-		// TODO Auto-generated method stub
 		txtViewPlayerName = (TextView) this
 				.findViewById(R.id.textViewPlayerName);
 		txtViewPlayerName.setText(player.getName());
@@ -87,13 +86,12 @@ public class InventoryActivity extends ActionBarActivity implements
 	}
 
 	private void getPlayerFromBundle() {
-		// TODO Auto-generated method stub
+
 		Bundle fromBattle = getIntent().getExtras();
 		player = fromBattle.getParcelable(Player.PLAYER_DATA);
 	}
 
 	private void setUpButtonAction() {
-		// TODO Auto-generated method stub
 		this.findViewById(R.id.buttonAll).setOnClickListener(this);
 		this.findViewById(R.id.buttonWeapon).setOnClickListener(this);
 		this.findViewById(R.id.buttonHelmet).setOnClickListener(this);
@@ -108,7 +106,6 @@ public class InventoryActivity extends ActionBarActivity implements
 
 	@Override
 	public void onClick(View button) {
-		// TODO Auto-generated method stub
 		if (adapter.getCount() > 0)
 			adapter.clear();
 		switch (button.getId()) {
@@ -274,7 +271,6 @@ public class InventoryActivity extends ActionBarActivity implements
 	}
 
 	private void setUpListItems() {
-		// TODO Auto-generated method stub
 		adapter = new ArrayAdapter<String>(getApplicationContext(),
 				android.R.layout.activity_list_item, android.R.id.text1);
 
@@ -295,7 +291,6 @@ public class InventoryActivity extends ActionBarActivity implements
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		// TODO Auto-generated method stub
 		String value = (String) parent.getItemAtPosition(position);
 		setUpConfirmBuy(value, position);
 	}
@@ -312,10 +307,6 @@ public class InventoryActivity extends ActionBarActivity implements
 		alertDialog.setPositiveButton("YES",
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
-						// Write your code here to execute after dialog
-						// Toast.makeText(getApplicationContext(),
-						// "You clicked on YES",
-						// Toast.LENGTH_SHORT).show();
 						String v = "null";
 						if(!message.contains("Potion")){
 							equipItem(message, position);
@@ -332,10 +323,6 @@ public class InventoryActivity extends ActionBarActivity implements
 		alertDialog.setNegativeButton("NO",
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
-						// Write your code here to execute after dialog
-						// Toast.makeText(getApplicationContext(),
-						// "You clicked on NO", Toast.LENGTH_SHORT)
-						// .show();
 						dialog.cancel();
 					}
 				});
@@ -361,8 +348,8 @@ public class InventoryActivity extends ActionBarActivity implements
 		return super.onOptionsItemSelected(item);
 	}
 	
+	//Equip item and update affected player stats and inventory screen
 	private void equipItem(String message, int position){
-		//if(!message.contains("Potion")){
 			for(int i =0; i<player.getInventoryCurSpace(); i++){
 				if(player.getPlayerInventory()[i].equals(message)){
 					itemToEquip = (Equipment) player.getPlayerInventory()[i];
@@ -376,6 +363,7 @@ public class InventoryActivity extends ActionBarActivity implements
 								txtViewPlayerDmg = (TextView) this
 										.findViewById(R.id.textViewPlayerDamage);
 								txtViewPlayerDmg.setText(player.getDamage() + "");
+								prevDMG = player.getDamage();
 								if(!adapter.isEmpty()){
 									adapter.clear();
 								}
@@ -385,6 +373,7 @@ public class InventoryActivity extends ActionBarActivity implements
 								txtViewPlayerDef = (TextView) this
 										.findViewById(R.id.textViewPlayerDefend);
 								txtViewPlayerDef.setText(player.getDef() + "");
+								prevDEF = player.getDef();
 								if(!adapter.isEmpty()){
 									adapter.clear();
 								}
@@ -394,6 +383,7 @@ public class InventoryActivity extends ActionBarActivity implements
 								txtViewPlayerDef = (TextView) this
 										.findViewById(R.id.textViewPlayerDefend);
 								txtViewPlayerDef.setText(player.getDef() + "");
+								prevDEF = player.getDef();
 								if(!adapter.isEmpty()){
 									adapter.clear();
 								}
@@ -403,6 +393,7 @@ public class InventoryActivity extends ActionBarActivity implements
 								txtViewPlayerDef = (TextView) this
 										.findViewById(R.id.textViewPlayerDefend);
 								txtViewPlayerDef.setText(player.getDef() + "");
+								prevDEF = player.getDef();
 								if(!adapter.isEmpty()){
 									adapter.clear();
 								}
@@ -415,6 +406,7 @@ public class InventoryActivity extends ActionBarActivity implements
 										.findViewById(R.id.textViewPlayerMana);
 								txtViewPlayerMana.setText(player.getCurMana() + "/"
 										+ player.getMaxMana());
+								prevMANA = player.getMaxMana();
 								if(!adapter.isEmpty()){
 									adapter.clear();
 								}
@@ -424,16 +416,19 @@ public class InventoryActivity extends ActionBarActivity implements
 					break;
 				}
 			}
-		//}
 	}
 	
-	private int position(String message, Item[] item) {
-		for (int i = 0; i < item.length; ++i)
-			if (item[i] != null && message.contains(item[i].getName()))
-				return i;
-		return 0;
+	//Sets player stats at start
+	private void setStats(){
+		exp = player.getSkillPoint();
+		prevHP = player.getMaxHp();
+		prevSTM = player.getMaxStm();
+		prevMANA = player.getMaxMana();
+		prevDMG = player.getDamage();
+		prevDEF = player.getDef();
 	}
 	
+	//Listeners for Skill menu
 	public void onClickplusHP(View v){
 		TextView txtHP = (TextView) this.findViewById(R.id.textViewSkillHpInput);
 		if(exp > 0){
@@ -443,6 +438,13 @@ public class InventoryActivity extends ActionBarActivity implements
 			exp--;
 			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
 			txtEXP.setText(Integer.toString(exp));
+			int newHP = (prevHP+Integer.parseInt((String) txtHP.getText()));
+			player.setMaxHp(newHP);
+			player.setCurHp(newHP);
+			txtViewPlayerHp = (TextView) this
+					.findViewById(R.id.textViewPlayerHp);
+			txtViewPlayerHp.setText(player.getCurHp() + "/"
+					+ player.getMaxHp());
 		}
 	}
 	
@@ -454,6 +456,13 @@ public class InventoryActivity extends ActionBarActivity implements
 			exp++;
 			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
 			txtEXP.setText(Integer.toString(exp));
+			int newHP = (prevHP+Integer.parseInt((String) txtHP.getText()));
+			player.setMaxHp(newHP);
+			player.setCurHp(newHP);
+			txtViewPlayerHp = (TextView) this
+					.findViewById(R.id.textViewPlayerHp);
+			txtViewPlayerHp.setText(player.getCurHp() + "/"
+					+ player.getMaxHp());
 		}
 	}
 	
@@ -465,6 +474,13 @@ public class InventoryActivity extends ActionBarActivity implements
 			exp=0;
 			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
 			txtEXP.setText(Integer.toString(exp));
+			int newHP = (prevHP+Integer.parseInt((String) txtHP.getText()));
+			player.setMaxHp(newHP);
+			player.setCurHp(newHP);
+			txtViewPlayerHp = (TextView) this
+					.findViewById(R.id.textViewPlayerHp);
+			txtViewPlayerHp.setText(player.getCurHp() + "/"
+					+ player.getMaxHp());
 		}
 	}
 	
@@ -476,6 +492,12 @@ public class InventoryActivity extends ActionBarActivity implements
 			exp+=hp;
 			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
 			txtEXP.setText(Integer.toString(exp));
+			player.setMaxHp(prevHP);
+			player.setCurHp(prevHP);
+			txtViewPlayerHp = (TextView) this
+					.findViewById(R.id.textViewPlayerHp);
+			txtViewPlayerHp.setText(player.getCurHp() + "/"
+					+ player.getMaxHp());
 		}
 	}
 	
@@ -488,6 +510,13 @@ public class InventoryActivity extends ActionBarActivity implements
 			exp--;
 			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
 			txtEXP.setText(Integer.toString(exp));
+			int newSTM = (prevSTM+Integer.parseInt((String) txtSTM.getText()));
+			player.setMaxStm(newSTM);
+			player.setCurStm(newSTM);
+			txtViewPlayerStm = (TextView) this
+					.findViewById(R.id.textViewPlayerStm);
+			txtViewPlayerStm.setText(player.getCurStm() + "/"
+					+ player.getMaxStm());
 		}
 	}
 	
@@ -499,6 +528,13 @@ public class InventoryActivity extends ActionBarActivity implements
 			exp++;
 			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
 			txtEXP.setText(Integer.toString(exp));
+			int newSTM = (prevSTM+Integer.parseInt((String) txtSTM.getText()));
+			player.setMaxStm(newSTM);
+			player.setCurStm(newSTM);
+			txtViewPlayerStm = (TextView) this
+					.findViewById(R.id.textViewPlayerStm);
+			txtViewPlayerStm.setText(player.getCurStm() + "/"
+					+ player.getMaxStm());
 		}
 	}
 	
@@ -510,6 +546,13 @@ public class InventoryActivity extends ActionBarActivity implements
 			exp=0;
 			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
 			txtEXP.setText(Integer.toString(exp));
+			int newSTM = (prevSTM+Integer.parseInt((String) txtSTM.getText()));
+			player.setMaxStm(newSTM);
+			player.setCurStm(newSTM);
+			txtViewPlayerStm = (TextView) this
+					.findViewById(R.id.textViewPlayerStm);
+			txtViewPlayerStm.setText(player.getCurStm() + "/"
+					+ player.getMaxStm());
 		}
 	}
 	
@@ -521,6 +564,12 @@ public class InventoryActivity extends ActionBarActivity implements
 			exp+=STM;
 			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
 			txtEXP.setText(Integer.toString(exp));
+			player.setMaxStm(prevSTM);
+			player.setCurStm(prevSTM);
+			txtViewPlayerStm = (TextView) this
+					.findViewById(R.id.textViewPlayerStm);
+			txtViewPlayerStm.setText(player.getCurStm() + "/"
+					+ player.getMaxStm());
 		}
 	}
 	
@@ -533,6 +582,13 @@ public class InventoryActivity extends ActionBarActivity implements
 			exp--;
 			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
 			txtEXP.setText(Integer.toString(exp));
+			int newMANA = (prevMANA+Integer.parseInt((String) txtMANA.getText()));
+			player.setMaxMana(newMANA);
+			player.setCurMana(newMANA);
+			txtViewPlayerMana = (TextView) this
+					.findViewById(R.id.textViewPlayerMana);
+			txtViewPlayerMana.setText(player.getCurMana() + "/"
+					+ player.getMaxMana());
 		}
 	}
 	
@@ -544,6 +600,13 @@ public class InventoryActivity extends ActionBarActivity implements
 			exp++;
 			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
 			txtEXP.setText(Integer.toString(exp));
+			int newMANA = (prevMANA+Integer.parseInt((String) txtMANA.getText()));
+			player.setMaxMana(newMANA);
+			player.setCurMana(newMANA);
+			txtViewPlayerMana = (TextView) this
+					.findViewById(R.id.textViewPlayerMana);
+			txtViewPlayerMana.setText(player.getCurMana() + "/"
+					+ player.getMaxMana());
 		}
 	}
 	
@@ -555,6 +618,13 @@ public class InventoryActivity extends ActionBarActivity implements
 			exp=0;
 			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
 			txtEXP.setText(Integer.toString(exp));
+			int newMANA = (prevMANA+Integer.parseInt((String) txtMANA.getText()));
+			player.setMaxMana(newMANA);
+			player.setCurMana(newMANA);
+			txtViewPlayerMana = (TextView) this
+					.findViewById(R.id.textViewPlayerMana);
+			txtViewPlayerMana.setText(player.getCurMana() + "/"
+					+ player.getMaxMana());
 		}
 	}
 	
@@ -566,6 +636,12 @@ public class InventoryActivity extends ActionBarActivity implements
 			exp+=MANA;
 			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
 			txtEXP.setText(Integer.toString(exp));
+			player.setMaxMana(prevMANA);
+			player.setCurMana(prevMANA);
+			txtViewPlayerMana = (TextView) this
+					.findViewById(R.id.textViewPlayerMana);
+			txtViewPlayerMana.setText(player.getCurMana() + "/"
+					+ player.getMaxMana());
 		}
 	}
 	
@@ -578,6 +654,12 @@ public class InventoryActivity extends ActionBarActivity implements
 			exp--;
 			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
 			txtEXP.setText(Integer.toString(exp));
+			DMGValue = (String) txtDMG.getText();
+			int newDMG = (prevDMG+Integer.parseInt(DMGValue));
+			player.setDamage(newDMG);
+			txtViewPlayerDmg = (TextView) this
+					.findViewById(R.id.textViewPlayerDamage);
+			txtViewPlayerDmg.setText(player.getDamage()+"");
 		}
 	}
 	
@@ -589,6 +671,13 @@ public class InventoryActivity extends ActionBarActivity implements
 			exp++;
 			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
 			txtEXP.setText(Integer.toString(exp));
+			String DMGValue = (String) txtDMG.getText();
+			DMGValue = (String) txtDMG.getText();
+			int newDMG = (prevDMG+Integer.parseInt(DMGValue));
+			player.setDamage(newDMG);
+			txtViewPlayerDmg = (TextView) this
+					.findViewById(R.id.textViewPlayerDamage);
+			txtViewPlayerDmg.setText(player.getDamage()+"");
 		}
 	}
 	
@@ -600,6 +689,13 @@ public class InventoryActivity extends ActionBarActivity implements
 			exp=0;
 			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
 			txtEXP.setText(Integer.toString(exp));
+			String DMGValue = (String) txtDMG.getText();
+			DMGValue = (String) txtDMG.getText();
+			int newDMG = (prevDMG+Integer.parseInt(DMGValue));
+			player.setDamage(newDMG);
+			txtViewPlayerDmg = (TextView) this
+					.findViewById(R.id.textViewPlayerDamage);
+			txtViewPlayerDmg.setText(player.getDamage()+"");
 		}
 	}
 	
@@ -611,6 +707,10 @@ public class InventoryActivity extends ActionBarActivity implements
 			exp+=DMG;
 			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
 			txtEXP.setText(Integer.toString(exp));
+			player.setDamage(prevDMG);
+			txtViewPlayerDmg = (TextView) this
+					.findViewById(R.id.textViewPlayerDamage);
+			txtViewPlayerDmg.setText(player.getDamage()+"");
 		}
 	}
 	
@@ -623,6 +723,12 @@ public class InventoryActivity extends ActionBarActivity implements
 			exp--;
 			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
 			txtEXP.setText(Integer.toString(exp));
+			DFNDValue = (String) txtDFND.getText();
+			int newDEF = (prevDEF+Integer.parseInt(DFNDValue));
+			player.setDef(newDEF);
+			txtViewPlayerDef = (TextView) this
+					.findViewById(R.id.textViewPlayerDefend);
+			txtViewPlayerDef.setText(player.getDef()+"");
 		}
 	}
 	
@@ -634,6 +740,13 @@ public class InventoryActivity extends ActionBarActivity implements
 			exp++;
 			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
 			txtEXP.setText(Integer.toString(exp));
+			String DFNDValue = (String) txtDFND.getText();
+			DFNDValue = (String) txtDFND.getText();
+			int newDEF = (prevDEF+Integer.parseInt(DFNDValue));
+			player.setDef(newDEF);
+			txtViewPlayerDef = (TextView) this
+					.findViewById(R.id.textViewPlayerDefend);
+			txtViewPlayerDef.setText(player.getDef()+"");
 		}
 	}
 	
@@ -645,6 +758,13 @@ public class InventoryActivity extends ActionBarActivity implements
 			exp=0;
 			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
 			txtEXP.setText(Integer.toString(exp));
+			String DFNDValue = (String) txtDFND.getText();
+			DFNDValue = (String) txtDFND.getText();
+			int newDEF = (prevDEF+Integer.parseInt(DFNDValue));
+			player.setDef(newDEF);
+			txtViewPlayerDef = (TextView) this
+					.findViewById(R.id.textViewPlayerDefend);
+			txtViewPlayerDef.setText(player.getDef()+"");
 		}
 	}
 	
@@ -656,8 +776,13 @@ public class InventoryActivity extends ActionBarActivity implements
 			exp+=DFND;
 			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
 			txtEXP.setText(Integer.toString(exp));
+			player.setDef(prevDEF);
+			txtViewPlayerDef = (TextView) this
+					.findViewById(R.id.textViewPlayerDefend);
+			txtViewPlayerDef.setText(player.getDef()+"");
 		}
 	}
+	//End listeners for skills
 
 	//Start music
 	private void playMusic(){
