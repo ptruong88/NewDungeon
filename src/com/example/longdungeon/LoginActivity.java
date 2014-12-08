@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,12 +16,13 @@ import android.widget.Button;
 import android.widget.EditText;
 
 public class LoginActivity extends ActionBarActivity {
+	private MediaPlayer medplay;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-
+		playMusic();
 		final EditText edTxtLogin = (EditText) this
 				.findViewById(R.id.editTextLogin);
 		final Button btnLogin = (Button) this.findViewById(R.id.buttonLogin);
@@ -84,5 +86,31 @@ public class LoginActivity extends ActionBarActivity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	//Start music
+	private void playMusic(){
+		medplay= MediaPlayer.create(this.getApplicationContext(), R.raw.clinthammer_opening);
+		medplay.setLooping(true);
+		medplay.start();
+	}
+	
+	protected void onResume() {
+		super.onResume();
+		medplay.start();
+	}
+
+	protected void onPause() {
+		super.onPause();
+		medplay.pause();
+	}
+
+	protected void onStop() {
+		super.onStop();
+	}
+
+	protected void onDestroy() {
+		super.onDestroy();
+		medplay.stop();
 	}
 }

@@ -1251,12 +1251,13 @@ public class BattleActivity extends ActionBarActivity implements
 	protected void onResume() {
 		super.onResume();
 		System.out.println("onResume - battle");
+		medplay.start();
 	}
 
 	protected void onPause() {
 		super.onPause();
 		System.out.println("onPause - battle");
-		medplay.stop();
+		medplay.pause();
 	}
 
 	protected void onStop() {
@@ -1267,6 +1268,7 @@ public class BattleActivity extends ActionBarActivity implements
 	protected void onDestroy() {
 		super.onDestroy();
 		System.out.println("onDestroy - battle");
+		medplay.stop();
 	}
 
 	@Override
