@@ -276,13 +276,20 @@ public class BattleActivity extends ActionBarActivity implements
 					atkVal = 0;// clear attack val;
 					if (mob.getCurHp() <= 0) {
 						playerSetWin();
-					} else {
+					} 
+					else {
 						 
 								 enableButton(false);
 						
 						enemyTurn();// once you've attacked the enemy gets a
 									// turn
 					}
+				}
+				else if (player.getCurStm() < 10)
+				{
+					String atkString = "you don't have enough stamina!";
+					Toast.makeText(getApplicationContext(), atkString,
+							Toast.LENGTH_SHORT).show();
 				}
 				break;
 			case 1:// medium attack case based on it being in the 1st position
@@ -366,6 +373,12 @@ public class BattleActivity extends ActionBarActivity implements
 									// turn
 					}
 				}
+				else if (player.getCurStm() < 20)
+				{
+					String atkString = "you don't have enough stamina!";
+					Toast.makeText(getApplicationContext(), atkString,
+							Toast.LENGTH_SHORT).show();
+				}
 				break;
 			default:// heavy attack case based on it being in the 2nd position
 				if (player.getCurStm() >= 30) {
@@ -442,6 +455,12 @@ public class BattleActivity extends ActionBarActivity implements
 						enemyTurn();// once you've attacked the enemy gets a
 									// turn
 					}
+				}
+				else if (player.getCurStm() < 20)
+				{
+					String atkString = "you don't have enough stamina!";
+					Toast.makeText(getApplicationContext(), atkString,
+							Toast.LENGTH_SHORT).show();
 				}
 				break;
 			}
@@ -754,7 +773,7 @@ public class BattleActivity extends ActionBarActivity implements
 						// Toast.LENGTH_SHORT).show();
 						Intent intentShopping = new Intent(
 								BattleActivity.this,
-								ShoppingTestActivity.class);
+								ShoppingActivity.class);
 						player.setLevel(player.getLevel() == (imgMobs.length-1) ? 0 : player
 								.getLevel() + 1);
 						intentShopping.putExtra(Player.PLAYER_DATA, player);
@@ -800,7 +819,7 @@ public class BattleActivity extends ActionBarActivity implements
 								.getLevel() + 1);
 						Intent intentShopping = new Intent(
 								BattleActivity.this,
-								ShoppingTestActivity.class);
+								ShoppingActivity.class);
 						intentShopping.putExtra(Player.PLAYER_DATA, player);
 						writeToFile();
 						startActivity(intentShopping);
