@@ -147,12 +147,14 @@ public class InventoryActivity extends ActionBarActivity implements
 			Intent intentShop = new Intent(InventoryActivity.this,
 					ShoppingActivity.class);
 			intentShop.putExtra(Player.PLAYER_DATA, player);
+			player.setSkillPoint(exp);
 			startActivity(intentShop);
 			break;
 		case R.id.buttonBattle:
 			Intent intentBattle = new Intent(InventoryActivity.this,
 					BattleActivity.class);
 			intentBattle.putExtra(Player.PLAYER_DATA, player);
+			player.setSkillPoint(exp);
 			startActivity(intentBattle);
 			break;
 		case R.id.buttonSkill:
@@ -164,6 +166,8 @@ public class InventoryActivity extends ActionBarActivity implements
 						View.INVISIBLE);
 				this.findViewById(R.id.layoutSkill).setVisibility(View.VISIBLE);
 				btn.setText("Inventory");
+				txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
+				txtEXP.setText("Skill Points: "+Integer.toString(exp));
 			} else {
 				this.findViewById(R.id.scrollViewCategory).setVisibility(
 						View.VISIBLE);
@@ -456,7 +460,7 @@ public class InventoryActivity extends ActionBarActivity implements
 			txtHP.setText(Integer.toString(hpint + 1));
 			exp--;
 			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
-			txtEXP.setText(Integer.toString(exp));
+			txtEXP.setText("Skill Points: "+Integer.toString(exp));
 			int newHP = (prevHP + Integer.parseInt((String) txtHP.getText()));
 			player.setMaxHp(newHP);
 			player.setCurHp(newHP);
@@ -475,7 +479,7 @@ public class InventoryActivity extends ActionBarActivity implements
 			txtHP.setText(Integer.toString(hp - 1));
 			exp++;
 			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
-			txtEXP.setText(Integer.toString(exp));
+			txtEXP.setText("Skill Points: "+Integer.toString(exp));
 			int newHP = (prevHP + Integer.parseInt((String) txtHP.getText()));
 			player.setMaxHp(newHP);
 			player.setCurHp(newHP);
@@ -494,7 +498,7 @@ public class InventoryActivity extends ActionBarActivity implements
 			txtHP.setText(Integer.toString(hp + exp));
 			exp = 0;
 			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
-			txtEXP.setText(Integer.toString(exp));
+			txtEXP.setText("Skill Points: "+Integer.toString(exp));
 			int newHP = (prevHP + Integer.parseInt((String) txtHP.getText()));
 			player.setMaxHp(newHP);
 			player.setCurHp(newHP);
@@ -513,7 +517,7 @@ public class InventoryActivity extends ActionBarActivity implements
 			txtHP.setText("0");
 			exp += hp;
 			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
-			txtEXP.setText(Integer.toString(exp));
+			txtEXP.setText("Skill Points: "+Integer.toString(exp));
 			player.setMaxHp(prevHP);
 			player.setCurHp(prevHP);
 			txtViewPlayerHp = (TextView) this
@@ -532,7 +536,7 @@ public class InventoryActivity extends ActionBarActivity implements
 			txtSTM.setText(Integer.toString(STMint + 1));
 			exp--;
 			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
-			txtEXP.setText(Integer.toString(exp));
+			txtEXP.setText("Skill Points: "+Integer.toString(exp));
 			int newSTM = (prevSTM + Integer.parseInt((String) txtSTM.getText()));
 			player.setMaxStm(newSTM);
 			player.setCurStm(newSTM);
@@ -551,7 +555,7 @@ public class InventoryActivity extends ActionBarActivity implements
 			txtSTM.setText(Integer.toString(STM - 1));
 			exp++;
 			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
-			txtEXP.setText(Integer.toString(exp));
+			txtEXP.setText("Skill Points: "+Integer.toString(exp));
 			int newSTM = (prevSTM + Integer.parseInt((String) txtSTM.getText()));
 			player.setMaxStm(newSTM);
 			player.setCurStm(newSTM);
@@ -570,7 +574,7 @@ public class InventoryActivity extends ActionBarActivity implements
 			txtSTM.setText(Integer.toString(STM + exp));
 			exp = 0;
 			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
-			txtEXP.setText(Integer.toString(exp));
+			txtEXP.setText("Skill Points: "+Integer.toString(exp));
 			int newSTM = (prevSTM + Integer.parseInt((String) txtSTM.getText()));
 			player.setMaxStm(newSTM);
 			player.setCurStm(newSTM);
@@ -589,7 +593,7 @@ public class InventoryActivity extends ActionBarActivity implements
 			txtSTM.setText("0");
 			exp += STM;
 			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
-			txtEXP.setText(Integer.toString(exp));
+			txtEXP.setText("Skill Points: "+Integer.toString(exp));
 			player.setMaxStm(prevSTM);
 			player.setCurStm(prevSTM);
 			txtViewPlayerStm = (TextView) this
@@ -608,7 +612,7 @@ public class InventoryActivity extends ActionBarActivity implements
 			txtMANA.setText(Integer.toString(MANAint + 1));
 			exp--;
 			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
-			txtEXP.setText(Integer.toString(exp));
+			txtEXP.setText("Skill Points: "+Integer.toString(exp));
 			int newMANA = (prevMANA + Integer.parseInt((String) txtMANA
 					.getText()));
 			player.setMaxMana(newMANA);
@@ -628,7 +632,7 @@ public class InventoryActivity extends ActionBarActivity implements
 			txtMANA.setText(Integer.toString(MANA - 1));
 			exp++;
 			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
-			txtEXP.setText(Integer.toString(exp));
+			txtEXP.setText("Skill Points: "+Integer.toString(exp));
 			int newMANA = (prevMANA + Integer.parseInt((String) txtMANA
 					.getText()));
 			player.setMaxMana(newMANA);
@@ -648,7 +652,7 @@ public class InventoryActivity extends ActionBarActivity implements
 			txtMANA.setText(Integer.toString(MANA + exp));
 			exp = 0;
 			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
-			txtEXP.setText(Integer.toString(exp));
+			txtEXP.setText("Skill Points: "+Integer.toString(exp));
 			int newMANA = (prevMANA + Integer.parseInt((String) txtMANA
 					.getText()));
 			player.setMaxMana(newMANA);
@@ -668,7 +672,7 @@ public class InventoryActivity extends ActionBarActivity implements
 			txtMANA.setText("0");
 			exp += MANA;
 			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
-			txtEXP.setText(Integer.toString(exp));
+			txtEXP.setText("Skill Points: "+Integer.toString(exp));
 			player.setMaxMana(prevMANA);
 			player.setCurMana(prevMANA);
 			txtViewPlayerMana = (TextView) this
@@ -687,7 +691,7 @@ public class InventoryActivity extends ActionBarActivity implements
 			txtDMG.setText(Integer.toString(DMGint + 1));
 			exp--;
 			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
-			txtEXP.setText(Integer.toString(exp));
+			txtEXP.setText("Skill Points: "+Integer.toString(exp));
 			DMGValue = (String) txtDMG.getText();
 			int newDMG = (prevDMG + Integer.parseInt(DMGValue));
 			player.setDamage(newDMG);
@@ -705,7 +709,7 @@ public class InventoryActivity extends ActionBarActivity implements
 			txtDMG.setText(Integer.toString(DMG - 1));
 			exp++;
 			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
-			txtEXP.setText(Integer.toString(exp));
+			txtEXP.setText("Skill Points: "+Integer.toString(exp));
 			String DMGValue = (String) txtDMG.getText();
 			DMGValue = (String) txtDMG.getText();
 			int newDMG = (prevDMG + Integer.parseInt(DMGValue));
@@ -724,7 +728,7 @@ public class InventoryActivity extends ActionBarActivity implements
 			txtDMG.setText(Integer.toString(DMG + exp));
 			exp = 0;
 			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
-			txtEXP.setText(Integer.toString(exp));
+			txtEXP.setText("Skill Points: "+Integer.toString(exp));
 			String DMGValue = (String) txtDMG.getText();
 			DMGValue = (String) txtDMG.getText();
 			int newDMG = (prevDMG + Integer.parseInt(DMGValue));
@@ -743,7 +747,7 @@ public class InventoryActivity extends ActionBarActivity implements
 			txtDMG.setText("0");
 			exp += DMG;
 			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
-			txtEXP.setText(Integer.toString(exp));
+			txtEXP.setText("Skill Points: "+Integer.toString(exp));
 			player.setDamage(prevDMG);
 			txtViewPlayerDmg = (TextView) this
 					.findViewById(R.id.textViewPlayerDamage);
@@ -760,7 +764,7 @@ public class InventoryActivity extends ActionBarActivity implements
 			txtDFND.setText(Integer.toString(DFNDint + 1));
 			exp--;
 			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
-			txtEXP.setText(Integer.toString(exp));
+			txtEXP.setText("Skill Points: "+Integer.toString(exp));
 			DFNDValue = (String) txtDFND.getText();
 			int newDEF = (prevDEF + Integer.parseInt(DFNDValue));
 			player.setDef(newDEF);
@@ -778,7 +782,7 @@ public class InventoryActivity extends ActionBarActivity implements
 			txtDFND.setText(Integer.toString(DFND - 1));
 			exp++;
 			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
-			txtEXP.setText(Integer.toString(exp));
+			txtEXP.setText("Skill Points: "+Integer.toString(exp));
 			String DFNDValue = (String) txtDFND.getText();
 			DFNDValue = (String) txtDFND.getText();
 			int newDEF = (prevDEF + Integer.parseInt(DFNDValue));
@@ -797,7 +801,7 @@ public class InventoryActivity extends ActionBarActivity implements
 			txtDFND.setText(Integer.toString(DFND + exp));
 			exp = 0;
 			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
-			txtEXP.setText(Integer.toString(exp));
+			txtEXP.setText("Skill Points: "+Integer.toString(exp));
 			String DFNDValue = (String) txtDFND.getText();
 			DFNDValue = (String) txtDFND.getText();
 			int newDEF = (prevDEF + Integer.parseInt(DFNDValue));
@@ -816,7 +820,7 @@ public class InventoryActivity extends ActionBarActivity implements
 			txtDFND.setText("0");
 			exp += DFND;
 			txtEXP = (TextView) this.findViewById(R.id.textViewSkillNumber);
-			txtEXP.setText(Integer.toString(exp));
+			txtEXP.setText("Skill Points: "+Integer.toString(exp));
 			player.setDef(prevDEF);
 			txtViewPlayerDef = (TextView) this
 					.findViewById(R.id.textViewPlayerDefend);

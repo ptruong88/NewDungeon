@@ -330,6 +330,8 @@
                 android:id="@+id/textViewSkillNumber"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
+                android:layout_gravity="left"
+                android:layout_marginLeft="15dp"
                 android:layout_weight="1"
                 android:text="Skill Points: 5"
                 android:textColor="@color/white"
@@ -339,6 +341,7 @@
                 android:id="@+id/layoutHp"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
+                android:layout_gravity="center_horizontal"
                 android:layout_weight="1" >
 
                 <TextView
@@ -355,7 +358,7 @@
                     style="?android:attr/buttonStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="45dp"
                     android:layout_toRightOf="@+id/textViewSkillHp"
                     android:onClick="onClickminusminusHP"
                     android:text="- -"
@@ -414,6 +417,7 @@
                 android:id="@+id/layoutStamina"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
+                android:layout_gravity="center_horizontal"
                 android:layout_weight="1" >
 
                 <TextView
@@ -430,7 +434,7 @@
                     style="?android:attr/buttonStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="35dp"
                     android:layout_toRightOf="@+id/textViewSkillStamina"
                     android:onClick="onClickminusminusSTM"
                     android:text="- -"
@@ -489,6 +493,7 @@
                 android:id="@+id/layoutMana"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
+                android:layout_gravity="center_horizontal"
                 android:layout_weight="1" >
 
                 <TextView
@@ -505,7 +510,7 @@
                     style="?android:attr/buttonStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="23dp"
                     android:layout_toRightOf="@+id/textViewSkillMana"
                     android:onClick="onClickminusminusMANA"
                     android:text="- -"
@@ -564,6 +569,7 @@
                 android:id="@+id/layoutDMG"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
+                android:layout_gravity="center_horizontal"
                 android:layout_weight="1" >
 
                 <TextView
@@ -580,7 +586,7 @@
                     style="?android:attr/buttonStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="33dp"
                     android:layout_toRightOf="@+id/textViewSkillDMG"
                     android:onClick="onClickminusminusDMG"
                     android:text="- -"
@@ -639,6 +645,7 @@
                 android:id="@+id/layoutDEFEND"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
+                android:layout_gravity="center_horizontal"
                 android:layout_weight="1" >
 
                 <TextView
