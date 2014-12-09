@@ -709,7 +709,7 @@ public class BattleActivity extends ActionBarActivity implements
 	private void setUpMob() {
 		// TODO Auto-generated method stub
 		String[] mobNames = { "goblin", "skeleton", "spider", "bats", "dragon" };
-		String nameMob = mobNames[player.getLevel()];
+		String nameMob = mobNames[player.getLevel()%5];
 		mob = new Mob(nameMob);
 		txtViewMobName = (TextView) this.findViewById(R.id.textViewMobName);
 		txtViewMobName.setText(nameMob);
@@ -725,7 +725,7 @@ public class BattleActivity extends ActionBarActivity implements
 		mobCurHp = mob.getCurHp();
 		
 		imgMob = (ImageView) this.findViewById(R.id.imageMob);
-		imgMob.setImageResource(imgMobs[player.getLevel()]);
+		imgMob.setImageResource(imgMobs[(player.getLevel()%5)]);
 	}
 
 	private void setUpHideListView() {
@@ -774,8 +774,7 @@ public class BattleActivity extends ActionBarActivity implements
 						Intent intentShopping = new Intent(
 								BattleActivity.this,
 								ShoppingActivity.class);
-						player.setLevel(player.getLevel() == (imgMobs.length-1) ? 0 : player
-								.getLevel() + 1);
+						player.setLevel(player.getLevel() + 1);
 						intentShopping.putExtra(Player.PLAYER_DATA, player);
 						startActivity(intentShopping);
 						finish();
@@ -815,8 +814,7 @@ public class BattleActivity extends ActionBarActivity implements
 						// Toast.makeText(getApplicationContext(),
 						// "You clicked on YES",
 						// Toast.LENGTH_SHORT).show();
-						player.setLevel(player.getLevel() == (imgMobs.length-1) ? 0 : player
-								.getLevel() + 1);
+						player.setLevel( player.getLevel() + 1);
 						Intent intentShopping = new Intent(
 								BattleActivity.this,
 								ShoppingActivity.class);
