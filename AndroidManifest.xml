@@ -12,12 +12,12 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme" >
         <activity
-            android:name="com.example.longdungeon.LoginActivity"
+            android:name=".LoadingActivity"
+            
             android:label="@string/app_name"
-            android:screenOrientation="landscape"
-             >
+            android:screenOrientation="landscape" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,41 +25,44 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.longdungeon.BattleActivity"
-            android:label="@string/title_activity_battle"
-            android:screenOrientation="landscape" >
-        </activity>
-        
-        <activity
-            android:name="com.example.longdungeon.BattleTestActivity"
+            android:name=".BattleActivity"
             android:label="@string/title_activity_battle"
             android:screenOrientation="landscape" >
         </activity>
         <activity
-            android:name="com.example.longdungeon.ShoppingActivity"
-            android:label="@string/title_activity_shopping"
+            android:name=".BattleTestActivity"
+            android:label="@string/title_activity_battle"
             android:screenOrientation="landscape" >
         </activity>
-         <activity
-            android:name="com.example.longdungeon.ShoppingTestActivity"
+        <activity
+            android:name=".ShoppingActivity"
             android:label="@string/title_activity_shopping"
             android:screenOrientation="landscape" >
         </activity>
         <activity
-            android:name="com.example.longdungeon.CongrateActivity"
+            android:name=".ShoppingTestActivity"
+            android:label="@string/title_activity_shopping"
+            android:screenOrientation="landscape" >
+        </activity>
+        <activity
+            android:name=".CongrateActivity"
             android:label="@string/title_activity_congrate"
             android:screenOrientation="landscape" >
         </activity>
         <activity
-            android:name="com.example.longdungeon.InventoryActivity"
+            android:name=".InventoryActivity"
             android:label="@string/title_activity_inventory"
             android:screenOrientation="landscape" >
         </activity>
-        
-         <activity
-            android:name="com.example.longdungeon.InventoryTestActivity"
+        <activity
+            android:name=".InventoryTestActivity"
             android:label="@string/title_activity_test"
             android:screenOrientation="landscape" >
+        </activity>
+        <activity
+            android:label="@string/title_activity_loading" 
+            android:name=".LoginActivity"
+            android:screenOrientation="landscape">
         </activity>
     </application>
 

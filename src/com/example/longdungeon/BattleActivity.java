@@ -1,5 +1,5 @@
 package com.example.longdungeon;
-
+//
 import java.io.File;
 import java.io.FileOutputStream;
 
@@ -849,7 +849,7 @@ public class BattleActivity extends ActionBarActivity implements
 						// Toast.LENGTH_SHORT).show();
 						Intent intentLogin = new Intent(
 								BattleActivity.this,
-								LoginTestActivity.class);
+								LoginActivity.class);
 						startActivity(intentLogin);
 						finish();
 					}
