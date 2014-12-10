@@ -149,6 +149,7 @@ public class InventoryActivity extends ActionBarActivity implements
 			intentShop.putExtra(Player.PLAYER_DATA, player);
 			player.setSkillPoint(exp);
 			startActivity(intentShop);
+			finish();
 			break;
 		case R.id.buttonBattle:
 			Intent intentBattle = new Intent(InventoryActivity.this,
@@ -156,6 +157,7 @@ public class InventoryActivity extends ActionBarActivity implements
 			intentBattle.putExtra(Player.PLAYER_DATA, player);
 			player.setSkillPoint(exp);
 			startActivity(intentBattle);
+			finish();
 			break;
 		case R.id.buttonSkill:
 			Button btn = (Button) this.findViewById(R.id.buttonSkill);

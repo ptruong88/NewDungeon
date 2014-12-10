@@ -602,6 +602,7 @@ public class ShoppingActivity extends ActionBarActivity implements
 			// player.sortInventory();
 			intentInventory.putExtra(Player.PLAYER_DATA, player);
 			startActivity(intentInventory);
+			finish();
 			break;
 		}
 		// listItems.setAdapter(adapterShop);

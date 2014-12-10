@@ -27,36 +27,49 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener 
 	private Player player1, player2;
 	private boolean buttonPress1;
 	private AlertDialog.Builder alertDialog;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		playMusic();
-		this.findViewById(R.id.layoutLoginText).setVisibility(View.INVISIBLE);
-		this.findViewById(R.id.layoutLoginChoose).setVisibility(View.VISIBLE);
+		loadingNewLoad();
+		setUpButton();
+		setUpDeleteDialog();
+	}
 
-		player1 = getPlayerFromFile(Player.PLAYER_FILE_1);
-		player2 = getPlayerFromFile(Player.PLAYER_FILE_2);
-		displayOnLoginChoose((byte) 1, player1,
-				(Button) this.findViewById(R.id.buttonData1));
-		displayOnLoginChoose((byte) 2, player2,
-				(Button) this.findViewById(R.id.buttonData2));
-
+	private void setUpButton() {
+		((Button) this.findViewById(R.id.buttonNew)).setOnClickListener(this);
+		((Button) this.findViewById(R.id.buttonLoad)).setOnClickListener(this);
 		((Button) this.findViewById(R.id.buttonData1)).setOnClickListener(this);
 		((Button) this.findViewById(R.id.buttonData2)).setOnClickListener(this);
 		((Button) this.findViewById(R.id.buttonPlay)).setOnClickListener(this);
-		((Button) this.findViewById(R.id.buttonNew)).setOnClickListener(this);
-		
+		((Button) this.findViewById(R.id.buttonDelete))
+				.setOnClickListener(this);
+
 		((Button) this.findViewById(R.id.buttonPlay)).setEnabled(false);
-		((Button) this.findViewById(R.id.buttonNew)).setEnabled(false);
-		setUpNewDialog();
+		((Button) this.findViewById(R.id.buttonDelete)).setEnabled(false);
+	}
+
+	private void loadingNewLoad() {
+		this.findViewById(R.id.layoutLoginText).setVisibility(View.INVISIBLE);
+		this.findViewById(R.id.layoutLoginChoose).setVisibility(View.INVISIBLE);
+		this.findViewById(R.id.layoutLoginNewLoad).setVisibility(View.VISIBLE);
+
+		player1 = getPlayerFromFile(Player.PLAYER_FILE_1);
+		player2 = getPlayerFromFile(Player.PLAYER_FILE_2);
 	}
 
 	@Override
 	public void onClick(View v) {
 		String a;
 		switch (v.getId()) {
+		case R.id.buttonNew:
+			buttonClickNew();
+			break;
+		case R.id.buttonLoad:
+			buttonClickLoad();
+			break;
 		case R.id.buttonData1:
 			a = ((Button) v).getText().toString();
 			if (a.contains("No data"))
@@ -66,7 +79,8 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener 
 				((Button) this.findViewById(R.id.buttonData2)).setEnabled(true);
 				buttonPress1 = true;
 				((Button) this.findViewById(R.id.buttonPlay)).setEnabled(true);
-				((Button) this.findViewById(R.id.buttonNew)).setEnabled(true);
+				((Button) this.findViewById(R.id.buttonDelete))
+						.setEnabled(true);
 			}
 			break;
 		case R.id.buttonData2:
@@ -78,7 +92,8 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener 
 				((Button) this.findViewById(R.id.buttonData1)).setEnabled(true);
 				buttonPress1 = false;
 				((Button) this.findViewById(R.id.buttonPlay)).setEnabled(true);
-				((Button) this.findViewById(R.id.buttonNew)).setEnabled(true);
+				((Button) this.findViewById(R.id.buttonDelete))
+						.setEnabled(true);
 			}
 			break;
 		case R.id.buttonPlay:
@@ -95,21 +110,42 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener 
 		}
 	}
 
-	private void setUpNewDialog() {
+	private void buttonClickLoad() {
+		this.findViewById(R.id.layoutLoginText).setVisibility(View.INVISIBLE);
+		this.findViewById(R.id.layoutLoginChoose).setVisibility(View.VISIBLE);
+		this.findViewById(R.id.layoutLoginNewLoad)
+				.setVisibility(View.INVISIBLE);
+		displayOnLoginChoose((byte) 1, player1,
+				(Button) this.findViewById(R.id.buttonData1));
+		displayOnLoginChoose((byte) 2, player2,
+				(Button) this.findViewById(R.id.buttonData2));
+	}
+
+	private void buttonClickNew() {
+		if (player1 == null || (player1 != null && player2 != null))
+			newPlayer(Player.PLAYER_FILE_1);
+		else if (player2 == null)
+			newPlayer(Player.PLAYER_FILE_2);
+	}
+
+	private void setUpDeleteDialog() {
 		alertDialog = new AlertDialog.Builder(this);
 
 		// Setting Dialog Title
-		alertDialog.setTitle("New file...");
+		alertDialog.setTitle("Delete file...");
 
 		// Setting Dialog Message
-		alertDialog.setMessage("Are you sure you want to overwrite?");
+		alertDialog
+				.setMessage("Are you sure you want to delete the save data?");
 
 		// Setting Positive "Yes" Btn
 		alertDialog.setPositiveButton("YES",
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
-						newPlayer(buttonPress1 ? player1.getNameFile()
-								: player2.getNameFile());
+						if (buttonPress1)
+							deleteData((byte) 1);
+						else
+							deleteData((byte) 2);
 					}
 				});
 		// Setting Negative "NO" Btn
@@ -123,6 +159,25 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener 
 						dialog.cancel();
 					}
 				});
+	}
+
+	protected void deleteData(byte b) {
+		switch (b) {
+		case 1:
+			player1 = null;
+			displayOnLoginChoose((byte) 1, player1,
+					((Button) this.findViewById(R.id.buttonData1)));
+			((Button) this.findViewById(R.id.buttonData1)).setEnabled(true);
+			deleteFile(Player.PLAYER_FILE_1);
+			break;
+		default:
+			player2 = null;
+			displayOnLoginChoose((byte) 2, player2,
+					((Button) this.findViewById(R.id.buttonData2)));
+			((Button) this.findViewById(R.id.buttonData2)).setEnabled(true);
+			deleteFile(Player.PLAYER_FILE_2);
+			break;
+		}
 	}
 
 	private void displayOnLoginChoose(byte num, Player player, Button button) {
@@ -154,7 +209,9 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener 
 	private void newPlayer(final String playerFile) {
 		this.findViewById(R.id.layoutLoginText).setVisibility(View.VISIBLE);
 		this.findViewById(R.id.layoutLoginChoose).setVisibility(View.INVISIBLE);
-		
+		this.findViewById(R.id.layoutLoginNewLoad)
+				.setVisibility(View.INVISIBLE);
+
 		final EditText edTxtLogin = (EditText) this
 				.findViewById(R.id.editTextLogin);
 		final Button btnLogin = (Button) this.findViewById(R.id.buttonLogin);
@@ -219,14 +276,15 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener 
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
-	//Start music
-	private void playMusic(){
-		medplay= MediaPlayer.create(this.getApplicationContext(), R.raw.clinthammer_opening);
+
+	// Start music
+	private void playMusic() {
+		medplay = MediaPlayer.create(this.getApplicationContext(),
+				R.raw.clinthammer_opening);
 		medplay.setLooping(true);
 		medplay.start();
 	}
-	
+
 	protected void onResume() {
 		super.onResume();
 		medplay.start();
