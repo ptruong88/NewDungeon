@@ -494,10 +494,6 @@ public class BattleActivity extends ActionBarActivity implements
 				.findViewById(R.id.textViewPlayerName);
 		Intent intentLogin = getIntent();
 		player = intentLogin.getExtras().getParcelable(Player.PLAYER_DATA);
-		// For demo, player hp will be 7 times than default mob damage.
-		Mob m = new Mob();
-		player.setCurHp(m.getDamage() * 7);
-		player.setMaxHp(m.getDamage() * 7);
 		txtViewPlayerName.setText(player.getName());
 
 		txtViewPlayerScore = (TextView) this
@@ -661,19 +657,11 @@ public class BattleActivity extends ActionBarActivity implements
 						// Toast.makeText(getApplicationContext(),
 						// "You clicked on YES",
 						// Toast.LENGTH_LONG).show();
-						new Handler().postDelayed(new Runnable() {
-
-							@Override
-							public void run() {
-								Intent intentLogin = new Intent(
-										BattleActivity.this,
-										LoginActivity.class);
-								deleteFile(player.getNameFile());
-								startActivity(intentLogin);
-								finish();
-							}
-						}, Toast.LENGTH_LONG * 2700 * count);
-
+						Intent intentLogin = new Intent(BattleActivity.this,
+								LoginActivity.class);
+						deleteFile(player.getNameFile());
+						startActivity(intentLogin);
+						finish();
 					}
 				});
 	}
@@ -716,7 +704,13 @@ public class BattleActivity extends ActionBarActivity implements
 					+ mob.getMaxStm());
 			if (player.getCurHp() <= 0) {
 				txtViewPlayerHp.setText("HP: 0" + "/" + player.getMaxHp());
-				loseDialog.show();
+				new Handler().postDelayed(new Runnable() {
+
+					@Override
+					public void run() {
+						loseDialog.show();
+					}
+				}, Toast.LENGTH_LONG * 2700 * count);
 			}
 			playerDefending = false;// player's defense lasts only 1 turn
 			new Handler().postDelayed(new Runnable() {
@@ -965,8 +959,13 @@ public class BattleActivity extends ActionBarActivity implements
 				player.getPlayerInventory()[i] = potions[i];
 			}
 		}
-		winDialog.show();
+		new Handler().postDelayed(new Runnable() {
 
+			@Override
+			public void run() {
+				winDialog.show();
+			}
+		}, Toast.LENGTH_LONG * 2000 * count);
 	}
 
 	private void writeToFile() {

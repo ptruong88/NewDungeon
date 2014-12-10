@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import com.example.longdungeon.character.Mob;
 import com.example.longdungeon.character.Player;
 
 import android.support.v7.app.ActionBarActivity;
@@ -249,6 +250,10 @@ public class LoginActivity extends ActionBarActivity implements OnClickListener 
 			public void onClick(View arg0) {
 				Player player = new Player(edTxtLogin.getText().toString());
 				player.setNameFile(playerFile);
+				// For demo, player hp will be 7 times than default mob damage.
+				Mob m = new Mob();
+				player.setCurHp(m.getDamage() * 7);
+				player.setMaxHp(m.getDamage() * 7);
 				Intent intentBattle = new Intent(LoginActivity.this,
 						BattleActivity.class);
 				intentBattle.putExtra(Player.PLAYER_DATA, player);
