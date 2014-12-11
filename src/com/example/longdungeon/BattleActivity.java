@@ -523,6 +523,7 @@ public class BattleActivity extends ActionBarActivity implements
 		mob.setCurHp(player.getDamage() * 7);
 		mob.setMaxHp(player.getDamage() * 7);
 		// For the demo, mob stamina will be 5 times its damage.
+		mob.setCurStm(mob.getDamage() * 5);
 		mob.setMaxStm(mob.getDamage() * 5);
 
 		txtViewMobName = (TextView) this.findViewById(R.id.textViewMobName);
@@ -586,6 +587,7 @@ public class BattleActivity extends ActionBarActivity implements
 						// Toast.LENGTH_LONG).show();
 						Intent intentShopping = new Intent(BattleActivity.this,
 								ShoppingActivity.class);
+						player.setLevel(player.getLevel()+1);
 						intentShopping.putExtra(Player.PLAYER_DATA, player);
 						startActivity(intentShopping);
 						finish();
