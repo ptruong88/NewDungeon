@@ -11,7 +11,6 @@ import com.example.longdungeon.character.Player;
 import com.example.longdungeon.item.Item;
 import com.example.longdungeon.item.Potion;
 import com.example.longdungeon.layout.BattleLayout;
-import com.example.longdungeon.layout.PlayerImage;
 
 import android.support.v7.app.ActionBarActivity;
 import android.app.AlertDialog;
@@ -19,10 +18,10 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -37,17 +36,17 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class BattleTestActivity extends ActionBarActivity implements
+public class BattleTestAnimation extends ActionBarActivity implements
 		OnClickListener, OnItemClickListener, AnimationListener {
 
 	private ListView listAbility;
-	private View lyoutBattle;
 	private TextView txtViewMobName, txtViewMobHp, txtViewPlayerName,
 			txtViewPlayerScore, txtViewPlayerHp, txtViewPlayerMana,
 			txtViewStamina, txtViewMobStamina;
@@ -82,18 +81,11 @@ public class BattleTestActivity extends ActionBarActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_battle_test);
+		setContentView(R.layout.activity_battle_test_animation);
 		rand = new Random();
-		setUpPlayer();
-		setUpMob();
-		setUpListView();
-		setUpStringForListView();
-		setUpButtonAction();
-		setUpHideListView();
-		setUpDialogForRun();
-		setUpWinDialog();
-		setLoseDialog();
+
 		playMusic();
+
 	}
 
 	private void setUpListView() {
@@ -172,42 +164,43 @@ public class BattleTestActivity extends ActionBarActivity implements
 		this.findViewById(R.id.buttonRun).setClickable(enabled);
 	}
 
+	boolean run;
 	public void onClick(View button) {
 		switch (button.getId()) {
 		case R.id.buttonAttack:
-			listAbility.setAdapter(adapterAttack);
-			listAbility.setVisibility(View.VISIBLE);
-//			PlayerImage playerView = (PlayerImage)this.findViewById(R.id.imagePlayer);
-//			playerView.runKnightStand();
+//			listAbility.setAdapter(adapterAttack);
+//			listAbility.setVisibility(View.VISIBLE);
+			lyoutBattle.setRun(run);
+			run = run == false;
 			break;
-		case R.id.buttonDefend: {
-			playerDefending = true;
-			if (player.getCurStm() < player.getMaxStm()) {
-				int stmRegen = (player.getCurStm() / 5);
-				player.setCurStm(stmRegen + player.getCurStm());// get back 1/5
-																// of your
-																// stamina
-				txtViewStamina.setText("Stamina: " + player.getCurStm() + "/"
-						+ player.getMaxStm());
-
-			}
-
-			enableButton(false);
-
-			enemyTurn();// defending uses your turn
-		}
-			break;
-		case R.id.buttonMagic:
-			listAbility.setAdapter(adapterMagic);
-			listAbility.setVisibility(View.VISIBLE);
-			break;
-		case R.id.buttonItem:
-			listAbility.setAdapter(adapterItem);
-			listAbility.setVisibility(View.VISIBLE);
-			break;
-		default:// button run way
-			alertDialog.show();
-			break;
+//		case R.id.buttonDefend: {
+//			playerDefending = true;
+//			if (player.getCurStm() < player.getMaxStm()) {
+//				int stmRegen = (player.getCurStm() / 5);
+//				player.setCurStm(stmRegen + player.getCurStm());// get back 1/5
+//																// of your
+//																// stamina
+//				txtViewStamina.setText("Stamina: " + player.getCurStm() + "/"
+//						+ player.getMaxStm());
+//
+//			}
+//
+//			enableButton(false);
+//
+//			enemyTurn();// defending uses your turn
+//		}
+//			break;
+//		case R.id.buttonMagic:
+//			listAbility.setAdapter(adapterMagic);
+//			listAbility.setVisibility(View.VISIBLE);
+//			break;
+//		case R.id.buttonItem:
+//			listAbility.setAdapter(adapterItem);
+//			listAbility.setVisibility(View.VISIBLE);
+//			break;
+//		default:// button run way
+//			alertDialog.show();
+//			break;
 		}
 
 	}
@@ -229,16 +222,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 			// mobCurHp -= baseDamage;
 			switch (position) {
 			case 0:// basic attack case based on it being in the 0th position
-//				attackPlayer(baseDamage, baseStm, 0);
-				PlayerImage playerView = (PlayerImage)this.findViewById(R.id.imagePlayer);
-				playerView.animationKnight();
-				new Handler().postDelayed(new Runnable() {
-					@Override
-					public void run() {
-						enableButton(true);
-					}
-
-				}, 4000);
+				attackPlayer(baseDamage, baseStm, 0);
 				break;
 			case 1:// medium attack case based on it being in the 1st position
 					// medium damage is more 4/3 than normal attack
@@ -427,20 +411,20 @@ public class BattleTestActivity extends ActionBarActivity implements
 			attackPhysicAnimation(imageEffect);
 			break;
 		case 3:
-			ImageView imageMagic = (ImageView) this
-					.findViewById(R.id.imageViewMagic);
-			imageMagic.setImageResource(R.drawable.playerfireball);
-			attackMagicAnimation(imageMagic);
+//			ImageView imageMagic = (ImageView) this
+//					.findViewById(R.id.imageViewMagic);
+//			imageMagic.setImageResource(R.drawable.playerfireball);
+//			attackMagicAnimation(imageMagic);
 			break;
 		case 4:
-			imageMagic = (ImageView) this.findViewById(R.id.imageViewMagic);
-			imageMagic.setImageResource(R.drawable.playericeblast);
-			attackMagicAnimation(imageMagic);
+//			imageMagic = (ImageView) this.findViewById(R.id.imageViewMagic);
+//			imageMagic.setImageResource(R.drawable.playericeblast);
+//			attackMagicAnimation(imageMagic);
 			break;
 		default:
-			imageMagic = (ImageView) this.findViewById(R.id.imageViewMagic);
-			imageMagic.setImageResource(R.drawable.playerlightning);
-			attackMagicAnimation(imageMagic);
+//			imageMagic = (ImageView) this.findViewById(R.id.imageViewMagic);
+//			imageMagic.setImageResource(R.drawable.playerlightning);
+//			attackMagicAnimation(imageMagic);
 			break;
 		}
 
@@ -488,10 +472,6 @@ public class BattleTestActivity extends ActionBarActivity implements
 		animFadeout.setAnimationListener(this);
 
 		imgPlayer.startAnimation(animMove);
-		// now start walk
-		AnimationDrawable theKnightAnimation = (AnimationDrawable) imgPlayer
-				.getBackground();
-		theKnightAnimation.start();
 		new Handler().postDelayed(new Runnable() {
 
 			@Override
@@ -503,9 +483,13 @@ public class BattleTestActivity extends ActionBarActivity implements
 		}, animMove.getDuration() + 200);
 	}
 
-	private void setUpPlayer() {
+	private void setUpPlayer(int parentWidth, int parentHeight) {
+
 		// get player image
-//		imgPlayer = (ImageView) this.findViewById(R.id.imagePlayer);
+		imgPlayer = (ImageView) this.findViewById(R.id.imagePlayer);
+		imgPlayer.setLayoutParams(new LayoutParams(parentWidth / 2,
+				parentHeight / 2));
+		imgPlayer.setScaleType(ScaleType.FIT_XY);
 
 		txtViewPlayerName = (TextView) this
 				.findViewById(R.id.textViewPlayerName);
@@ -531,7 +515,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 				+ player.getMaxStm());
 	}
 
-	private void setUpMob() {
+	private void setUpMob(int parentWidth, int parentHeight) {
 
 		String[] mobNames = { "Goblin", "Skeleton", "Spider", "Bats", "Dragon" };
 		String nameMob = mobNames[player.getLevel() % 5];
@@ -562,7 +546,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 
 	private void setUpHideListView() {
 
-		lyoutBattle = (View) this.findViewById(R.id.layoutBattle);
+		lyoutBattle = (BattleLayout) this.findViewById(R.id.layoutBattle);
 		lyoutBattle.setOnTouchListener(new OnTouchListener() {
 			@Override
 			public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -602,9 +586,8 @@ public class BattleTestActivity extends ActionBarActivity implements
 						// Toast.makeText(getApplicationContext(),
 						// "You clicked on YES",
 						// Toast.LENGTH_LONG).show();
-						Intent intentShopping = new Intent(
-								BattleTestActivity.this,
-								ShoppingTestActivity.class);
+						Intent intentShopping = new Intent(BattleTestAnimation.this,
+								ShoppingActivity.class);
 						player.setLevel(player.getLevel() + 1);
 						intentShopping.putExtra(Player.PLAYER_DATA, player);
 						startActivity(intentShopping);
@@ -646,9 +629,8 @@ public class BattleTestActivity extends ActionBarActivity implements
 						// "You clicked on YES",
 						// Toast.LENGTH_LONG).show();
 						player.setLevel(player.getLevel() + 1);
-						Intent intentShopping = new Intent(
-								BattleTestActivity.this,
-								ShoppingTestActivity.class);
+						Intent intentShopping = new Intent(BattleTestAnimation.this,
+								ShoppingActivity.class);
 						intentShopping.putExtra(Player.PLAYER_DATA, player);
 						writeToFile();
 						startActivity(intentShopping);
@@ -678,9 +660,8 @@ public class BattleTestActivity extends ActionBarActivity implements
 						// Toast.makeText(getApplicationContext(),
 						// "You clicked on YES",
 						// Toast.LENGTH_LONG).show();
-						Intent intentLogin = new Intent(
-								BattleTestActivity.this,
-								LoginTestActivity.class);
+						Intent intentLogin = new Intent(BattleTestAnimation.this,
+								LoginActivity.class);
 						deleteFile(player.getNameFile());
 						startActivity(intentLogin);
 						finish();
@@ -854,22 +835,22 @@ public class BattleTestActivity extends ActionBarActivity implements
 	private void animationEnemyAttack(int attackType) {
 		switch (attackType) {
 		case 0:
-			ImageView imageEffect = (ImageView) this
-					.findViewById(R.id.imageViewEffectToPlayer);
-			imageEffect.setImageResource(R.drawable.moblightattack);
-			attackEnemyPhysicAnimation(imageEffect);
+//			ImageView imageEffect = (ImageView) this
+//					.findViewById(R.id.imageViewEffectToPlayer);
+//			imageEffect.setImageResource(R.drawable.moblightattack);
+//			attackEnemyPhysicAnimation(imageEffect);
 			break;
 		case 1:
-			imageEffect = (ImageView) this
-					.findViewById(R.id.imageViewEffectToPlayer);
-			imageEffect.setImageResource(R.drawable.mobmediumattack);
-			attackEnemyPhysicAnimation(imageEffect);
+//			imageEffect = (ImageView) this
+//					.findViewById(R.id.imageViewEffectToPlayer);
+//			imageEffect.setImageResource(R.drawable.mobmediumattack);
+//			attackEnemyPhysicAnimation(imageEffect);
 			break;
 		case 2:
-			imageEffect = (ImageView) this
-					.findViewById(R.id.imageViewEffectToPlayer);
-			imageEffect.setImageResource(R.drawable.mobheavyattack);
-			attackEnemyPhysicAnimation(imageEffect);
+//			imageEffect = (ImageView) this
+//					.findViewById(R.id.imageViewEffectToPlayer);
+//			imageEffect.setImageResource(R.drawable.mobheavyattack);
+//			attackEnemyPhysicAnimation(imageEffect);
 			break;
 		}
 
@@ -1023,7 +1004,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 		medplay = MediaPlayer.create(this.getApplicationContext(),
 				R.raw.clinthammer_battle);
 		medplay.setLooping(true);
-		medplay.start();
+		// medplay.start();
 	}
 
 	protected void onStart() {
@@ -1036,10 +1017,33 @@ public class BattleTestActivity extends ActionBarActivity implements
 		System.out.println("onRestart - battle");
 	}
 
+	private boolean setUpPlayer;
+	BattleLayout lyoutBattle;
 	protected void onResume() {
 		super.onResume();
 		System.out.println("onResume - battle");
 		medplay.start();
+		if (!setUpPlayer) {
+			lyoutBattle = (BattleLayout) this
+					.findViewById(R.id.layoutPic);
+			Log.i("Get layout width", "" + lyoutBattle.getWidth());
+			Log.i("Get layout heigh", "" + lyoutBattle.getHeight());
+			Log.i("Get layout left", "" + lyoutBattle.getLeft());
+			Log.i("Get layout right", "" + lyoutBattle.getRight());
+			Log.i("Get layout top", "" + lyoutBattle.getTop());
+			Log.i("Get layout bottom", "" + lyoutBattle.getBottom());
+
+//			setUpPlayer(lyoutBattle.getWidth(), lyoutBattle.getHeight());
+//			setUpMob(lyoutBattle.getWidth(), lyoutBattle.getHeight());
+//			setUpListView();
+//			setUpStringForListView();
+			setUpButtonAction();
+//			setUpHideListView();
+//			setUpDialogForRun();
+//			setUpWinDialog();
+//			setLoseDialog();
+			setUpPlayer = true;
+		}
 	}
 
 	protected void onPause() {

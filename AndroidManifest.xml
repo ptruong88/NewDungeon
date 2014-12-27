@@ -34,6 +34,11 @@
             android:label="@string/title_activity_battle"
             android:screenOrientation="landscape" >
         </activity>
+         <activity
+            android:name=".BattleTestAnimation"
+            android:label="@string/title_activity_battle"
+            android:screenOrientation="landscape" >
+        </activity>
         <activity
             android:name=".ShoppingActivity"
             android:label="@string/title_activity_shopping"
@@ -64,6 +69,12 @@
             android:name=".LoginActivity"
             android:screenOrientation="landscape">
         </activity>
+        <activity
+            android:label="@string/title_activity_loading" 
+            android:name=".LoginTestActivity"
+            android:screenOrientation="landscape">
+        </activity>
+        
     </application>
 
 </manifest>

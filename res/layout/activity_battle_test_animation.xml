@@ -16,7 +16,7 @@
         android:scaleType="fitStart"
         android:src="@drawable/banner" />
 
-    <RelativeLayout
+    <com.example.longdungeon.layout.BattleLayout
         android:id="@+id/layoutPic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -25,49 +25,7 @@
         android:layout_below="@+id/imageLogo"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_toLeftOf="@+id/scrollViewAbility" >
-
-        <ImageView
-            android:id="@+id/imageMob"
-            android:layout_width="300dp"
-            android:layout_height="300dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:scaleType="fitXY"
-            android:src="@drawable/goblin" />
-
-        <com.example.longdungeon.layout.PlayerImage
-            android:id="@+id/imagePlayer"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_alignParentBottom="true" />
-
-        <ImageView
-            android:id="@+id/imageViewEffectToPlayer"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_alignLeft="@+id/imagePlayer"
-            android:visibility="invisible"
-            android:src="@null" />
-
-        <ImageView
-            android:id="@+id/imageViewMagic"
-            android:layout_width="150dp"
-            android:layout_height="100dp"
-			android:layout_toLeftOf="@+id/imagePlayer"
-            android:layout_alignTop="@+id/imagePlayer"
-            android:visibility="invisible"
-            android:src="@null" />
-
-        <ImageView
-            android:id="@+id/imageViewEffect"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignRight="@+id/imageMob"
-            android:src="@null"
-            android:visibility="invisible" />
-
-    </RelativeLayout>
+    </com.example.longdungeon.layout.BattleLayout>
 
     <RelativeLayout
         android:id="@+id/layoutInfo"
@@ -105,7 +63,6 @@
                 android:text="HP: 76/76"
                 android:textColor="@color/white"
                 android:textSize="@dimen/font_size" />
-
         </RelativeLayout>
 
         <RelativeLayout
@@ -131,9 +88,9 @@
                 android:id="@+id/textViewPlayerName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/textViewPlayerStm"
                 android:layout_alignParentTop="true"
                 android:layout_toRightOf="@+id/textViewPlayerScore"
-                android:layout_alignLeft="@+id/textViewPlayerStm"
                 android:text="Sir Awesome"
                 android:textColor="@color/white"
                 android:textSize="@dimen/font_size" />
@@ -162,9 +119,9 @@
                 android:id="@+id/textViewPlayerStm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/textViewPlayerHp"
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@+id/textViewPlayerMana"
-                android:layout_alignTop="@+id/textViewPlayerHp"
                 android:text="STM: 100/100"
                 android:textColor="@color/white"
                 android:textSize="@dimen/font_size" />
@@ -179,7 +136,6 @@
             android:text="Stamina: 60/60"
             android:textColor="@color/white"
             android:textSize="@dimen/font_size" />
-
     </RelativeLayout>
 
     <ScrollView

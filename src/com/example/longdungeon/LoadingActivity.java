@@ -12,7 +12,8 @@ public class LoadingActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_loading);
-		Intent loginIntent= new Intent(LoadingActivity.this,LoginActivity.class);
+//		Intent loginIntent= new Intent(LoadingActivity.this,LoginActivity.class);
+		Intent loginIntent= new Intent(LoadingActivity.this,LoginTestActivity.class);
 		startActivity(loginIntent);
 		finish();
 	}

@@ -21,6 +21,7 @@ import android.text.TextWatcher;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
@@ -94,6 +95,8 @@ public class LoginTestActivity extends ActionBarActivity implements
 		case R.id.buttonPlay:
 			Intent intentBattle = new Intent(LoginTestActivity.this,
 					BattleTestActivity.class);
+//			Intent intentBattle = new Intent(LoginTestActivity.this,
+//					BattleTestAnimation.class);
 			intentBattle.putExtra(Player.PLAYER_DATA, buttonPress1 ? player1
 					: player2);
 			startActivity(intentBattle);
@@ -206,6 +209,8 @@ public class LoginTestActivity extends ActionBarActivity implements
 				player.setNameFile(playerFile);
 				Intent intentBattle = new Intent(LoginTestActivity.this,
 						BattleTestActivity.class);
+//				Intent intentBattle = new Intent(LoginTestActivity.this,
+//						BattleTestAnimation.class);
 				intentBattle.putExtra(Player.PLAYER_DATA, player);
 				startActivity(intentBattle);
 				finish();
