@@ -11,6 +11,8 @@ import com.example.longdungeon.character.Player;
 import com.example.longdungeon.item.Item;
 import com.example.longdungeon.item.Potion;
 import com.example.longdungeon.layout.BattleLayout;
+import com.example.longdungeon.layout.ImageBattle;
+import com.example.longdungeon.layout.MobImage;
 import com.example.longdungeon.layout.PlayerImage;
 
 import android.support.v7.app.ActionBarActivity;
@@ -61,7 +63,8 @@ public class BattleTestActivity extends ActionBarActivity implements
 	private static int[] imgMobs = new int[] { R.drawable.goblin,
 			R.drawable.skeleton, R.drawable.spider, R.drawable.bats,
 			R.drawable.dragon };
-	private ImageView imgMob, imgPlayer;
+	MobImage imgMob;
+	private ImageView imgPlayer;
 
 	// gordon's variables for the game loop
 	// boolean playerTurn = true;
@@ -227,11 +230,15 @@ public class BattleTestActivity extends ActionBarActivity implements
 		enableButton(false);
 		if (parent.getItemAtPosition(position).toString().contains("Attack")) {
 			// mobCurHp -= baseDamage;
+			ImageBattle imgBattle = (ImageBattle)this.findViewById(R.id.imagePlayer);
 			switch (position) {
 			case 0:// basic attack case based on it being in the 0th position
 //				attackPlayer(baseDamage, baseStm, 0);
-				PlayerImage playerView = (PlayerImage)this.findViewById(R.id.imagePlayer);
-				playerView.animationKnight();
+				
+//				imgBattle.setStand();
+				imgBattle.setPlayerAttack();
+//				MobImage mobView = (MobImage)this.findViewById(R.id.imageMob);
+//				mobView.animationMob();
 				new Handler().postDelayed(new Runnable() {
 					@Override
 					public void run() {
@@ -242,8 +249,16 @@ public class BattleTestActivity extends ActionBarActivity implements
 				break;
 			case 1:// medium attack case based on it being in the 1st position
 					// medium damage is more 4/3 than normal attack
-				attackPlayer((int) (baseDamage * mediumRatio),
-						(int) (baseStm * mediumRatio), 1);
+//				attackPlayer((int) (baseDamage * mediumRatio),
+//						(int) (baseStm * mediumRatio), 1);
+				imgBattle.setMobAttack();
+				new Handler().postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						enableButton(true);
+					}
+
+				}, 4000);
 				break;
 			default:// heavy attack case based on it being in the 2nd
 					// position
@@ -464,7 +479,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 
 			@Override
 			public void run() {
-				imgMob.startAnimation(animShake);
+//				imgMob.startAnimation(animShake);
 				// imageMagic.setVisibility(View.INVISIBLE);
 			}
 		}, animMove.getDuration() + 100);
@@ -497,7 +512,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				imgMob.startAnimation(animShake);
+//				imgMob.startAnimation(animShake);
 				imageEffect.startAnimation(animFadeout);
 			}
 		}, animMove.getDuration() + 200);
@@ -556,8 +571,8 @@ public class BattleTestActivity extends ActionBarActivity implements
 		mobMaxHp = mob.getMaxHp();
 		mobCurHp = mob.getCurHp();
 
-		imgMob = (ImageView) this.findViewById(R.id.imageMob);
-		imgMob.setImageResource(imgMobs[(player.getLevel() % 5)]);
+//		imgMob = (MobImage) this.findViewById(R.id.imageMob);
+//		imgMob.setImageResource(imgMobs[(player.getLevel() % 5)]);
 	}
 
 	private void setUpHideListView() {
@@ -881,7 +896,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 		// set animation listener
 		animMove.setAnimationListener(this);
 
-		imgMob.startAnimation(animMove);
+//		imgMob.startAnimation(animMove);
 
 		final Animation animShake = AnimationUtils.loadAnimation(
 				getApplicationContext(), R.anim.shake);
