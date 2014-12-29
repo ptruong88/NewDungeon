@@ -263,19 +263,6 @@ public class BattleActivity extends ActionBarActivity implements
 
 	int count = 1;
 
-	private int defenseModDamage(int baseDmg,int defenseRating)
-	{
-		int modDamage=0;
-		int d3Roll = rand.nextInt(3);
-		if (d3Roll < 1){modDamage = baseDmg;}
-		if (d3Roll < 2){modDamage = baseDmg-(defenseRating/2);}
-		if (d3Roll < 3){modDamage = baseDmg-defenseRating;}
-		if(modDamage<0){modDamage=0;}
-		return modDamage;
-		
-	}
-	
-	
 	private void magicPlayer(int damage, int mana, int attackType) {
 		if (player.getCurMana() >= mana) {
 			player.setCurMana((player.getCurMana()) - mana);
@@ -347,13 +334,11 @@ public class BattleActivity extends ActionBarActivity implements
 			// Half damage
 			else if (d10Roll < 4) {
 				damage /= 2;
-				damage = defenseModDamage(damage,mob.getDef());
 				String atkString = "Glancing hit for ";
 				attackPlayerFinishMove(damage, atkString, attackType);
 			}
 			// Full damage
 			else if (d10Roll < 8) {
-				damage = defenseModDamage(damage,mob.getDef());
 				String atkString = "Attack hits for ";
 				attackPlayerFinishMove(damage, atkString, attackType);
 			}
@@ -361,7 +346,6 @@ public class BattleActivity extends ActionBarActivity implements
 			else if (d10Roll < 10) {
 				damage *= 2;// critical attack doubles
 				// damage
-				damage = defenseModDamage(damage,mob.getDef());
 				String atkString = "Critical attack hits for ";
 				attackPlayerFinishMove(damage, atkString, attackType);
 			}
@@ -795,18 +779,15 @@ public class BattleActivity extends ActionBarActivity implements
 			System.out.println("___----" + count);
 		} else if (d10Roll < 5) {
 			damage /= 2;
-			damage = defenseModDamage(damage,player.getDef());
 			attackEnemyFinishMove(damage, mob.getName()
 					+ " lands a glancing blow for ", 0);
 
 		} else if (d10Roll < 8) {
 			// no modification to base damage
-			damage = defenseModDamage(damage,player.getDef());
 			attackEnemyFinishMove(damage,
 					mob.getName() + "'s attack hits for ", 1);
 		} else if (d10Roll < 10) {
 			damage = (int) (damage * 1.5);
-			damage = defenseModDamage(damage,player.getDef());
 			attackEnemyFinishMove(damage, mob.getName()
 					+ " lands a critical hit for ", 2);
 		}
