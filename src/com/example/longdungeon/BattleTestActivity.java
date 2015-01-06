@@ -12,8 +12,7 @@ import com.example.longdungeon.item.Item;
 import com.example.longdungeon.item.Potion;
 import com.example.longdungeon.layout.BattleLayout;
 import com.example.longdungeon.layout.ImageBattle;
-import com.example.longdungeon.layout.MobImage;
-import com.example.longdungeon.layout.PlayerImage;
+import com.example.longdungeon.layout.ImageObject;
 
 import android.support.v7.app.ActionBarActivity;
 import android.app.AlertDialog;
@@ -63,7 +62,6 @@ public class BattleTestActivity extends ActionBarActivity implements
 	private static int[] imgMobs = new int[] { R.drawable.goblin,
 			R.drawable.skeleton, R.drawable.spider, R.drawable.bats,
 			R.drawable.dragon };
-	MobImage imgMob;
 	private ImageView imgPlayer;
 
 	// gordon's variables for the game loop
@@ -180,8 +178,9 @@ public class BattleTestActivity extends ActionBarActivity implements
 		case R.id.buttonAttack:
 			listAbility.setAdapter(adapterAttack);
 			listAbility.setVisibility(View.VISIBLE);
-//			PlayerImage playerView = (PlayerImage)this.findViewById(R.id.imagePlayer);
-//			playerView.runKnightStand();
+			// PlayerImage playerView =
+			// (PlayerImage)this.findViewById(R.id.imagePlayer);
+			// playerView.runKnightStand();
 			break;
 		case R.id.buttonDefend: {
 			playerDefending = true;
@@ -230,15 +229,17 @@ public class BattleTestActivity extends ActionBarActivity implements
 		enableButton(false);
 		if (parent.getItemAtPosition(position).toString().contains("Attack")) {
 			// mobCurHp -= baseDamage;
-			ImageBattle imgBattle = (ImageBattle)this.findViewById(R.id.imagePlayer);
+			ImageBattle imgBattle = (ImageBattle) this
+					.findViewById(R.id.imagePlayer);
 			switch (position) {
 			case 0:// basic attack case based on it being in the 0th position
-//				attackPlayer(baseDamage, baseStm, 0);
-				
-//				imgBattle.setStand();
+					// attackPlayer(baseDamage, baseStm, 0);
+
+				// imgBattle.setStand();
 				imgBattle.setPlayerAttack();
-//				MobImage mobView = (MobImage)this.findViewById(R.id.imageMob);
-//				mobView.animationMob();
+				// MobImage mobView =
+				// (MobImage)this.findViewById(R.id.imageMob);
+				// mobView.animationMob();
 				new Handler().postDelayed(new Runnable() {
 					@Override
 					public void run() {
@@ -249,9 +250,10 @@ public class BattleTestActivity extends ActionBarActivity implements
 				break;
 			case 1:// medium attack case based on it being in the 1st position
 					// medium damage is more 4/3 than normal attack
-//				attackPlayer((int) (baseDamage * mediumRatio),
-//						(int) (baseStm * mediumRatio), 1);
-				imgBattle.setMobAttack();
+					// attackPlayer((int) (baseDamage * mediumRatio),
+				// (int) (baseStm * mediumRatio), 1);
+				 imgBattle.setMobAttack();
+//				imgBattle.setMobAttack();
 				new Handler().postDelayed(new Runnable() {
 					@Override
 					public void run() {
@@ -263,7 +265,17 @@ public class BattleTestActivity extends ActionBarActivity implements
 			default:// heavy attack case based on it being in the 2nd
 					// position
 				// Heavy attack value is 2 times the base attack
-				attackPlayer(baseDamage * heavyRatio, baseStm * heavyRatio, 2);
+				// attackPlayer(baseDamage * heavyRatio, baseStm * heavyRatio,
+				// 2);
+				// imgBattle.setPlayerAttack(2);
+//				imgBattle.setPlayerMagic(0);
+				new Handler().postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						enableButton(true);
+					}
+
+				}, 4000);
 				break;
 			}
 		} else if (parent.getItemAtPosition(position).toString()
@@ -479,7 +491,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 
 			@Override
 			public void run() {
-//				imgMob.startAnimation(animShake);
+				// imgMob.startAnimation(animShake);
 				// imageMagic.setVisibility(View.INVISIBLE);
 			}
 		}, animMove.getDuration() + 100);
@@ -512,7 +524,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-//				imgMob.startAnimation(animShake);
+				// imgMob.startAnimation(animShake);
 				imageEffect.startAnimation(animFadeout);
 			}
 		}, animMove.getDuration() + 200);
@@ -520,7 +532,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 
 	private void setUpPlayer() {
 		// get player image
-//		imgPlayer = (ImageView) this.findViewById(R.id.imagePlayer);
+		// imgPlayer = (ImageView) this.findViewById(R.id.imagePlayer);
 
 		txtViewPlayerName = (TextView) this
 				.findViewById(R.id.textViewPlayerName);
@@ -571,8 +583,8 @@ public class BattleTestActivity extends ActionBarActivity implements
 		mobMaxHp = mob.getMaxHp();
 		mobCurHp = mob.getCurHp();
 
-//		imgMob = (MobImage) this.findViewById(R.id.imageMob);
-//		imgMob.setImageResource(imgMobs[(player.getLevel() % 5)]);
+		// imgMob = (MobImage) this.findViewById(R.id.imageMob);
+		// imgMob.setImageResource(imgMobs[(player.getLevel() % 5)]);
 	}
 
 	private void setUpHideListView() {
@@ -896,7 +908,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 		// set animation listener
 		animMove.setAnimationListener(this);
 
-//		imgMob.startAnimation(animMove);
+		// imgMob.startAnimation(animMove);
 
 		final Animation animShake = AnimationUtils.loadAnimation(
 				getApplicationContext(), R.anim.shake);
