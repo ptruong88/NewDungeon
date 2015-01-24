@@ -240,55 +240,35 @@ public class BattleTestActivity extends ActionBarActivity implements
 		if (parent.getItemAtPosition(position).toString().contains("Attack")) {
 			// mobCurHp -= baseDamage;
 
-			imgBattle.setPlayerAttack();
+			
 			switch (position) {
 			case 0:// basic attack case based on it being in the 0th position
-					// attackPlayer(baseDamage, baseStm, 0);
-
+					
 				// imgBattle.setStand();
-				attackPlayer(baseDamage, 10, 3);
+
+				attackPlayer(baseDamage, baseStm, 3);
 				
 				// MobImage mobView =
 				// (MobImage)this.findViewById(R.id.imageMob);
 				// mobView.animationMob();
-				new Handler().postDelayed(new Runnable() {
-					@Override
-					public void run() {
-						enableButton(true);
-					}
 
-				}, 4000);
-				break;
 			case 1:// medium attack case based on it being in the 1st position
 					// medium damage is more 4/3 than normal attack
-					// attackPlayer((int) (baseDamage * mediumRatio),
-				// (int) (baseStm * mediumRatio), 1);
-				 
-				 attackPlayer((int) (baseDamage * mediumRatio), 13, 3);
-//				imgBattle.setMobAttack();
-				new Handler().postDelayed(new Runnable() {
-					@Override
-					public void run() {
-						enableButton(true);
-					}
-
-				}, 4000);
+				
+				attackPlayer((int) (baseDamage * mediumRatio),
+						 (int) (baseStm * mediumRatio), 3);
 				break;
+//				imgBattle.setMobAttack();
+
 			default:// heavy attack case based on it being in the 2nd
 					// position
 				// Heavy attack value is 2 times the base attack
-				// attackPlayer(baseDamage * heavyRatio, baseStm * heavyRatio,
-				// 2);
+				
+				attackPlayer(baseDamage * heavyRatio, baseStm * heavyRatio,3);
+			
 				// imgBattle.setPlayerAttack(2);
-//				imgBattle.setPlayerMagic(0);
-				 attackPlayer((int) (baseDamage * heavyRatio), 20, 3);
-				new Handler().postDelayed(new Runnable() {
-					@Override
-					public void run() {
-						enableButton(true);
-					}
+				// imgBattle.setPlayerMagic(0);
 
-				}, 4000);
 				break;
 			}
 		} else if (parent.getItemAtPosition(position).toString()
@@ -379,6 +359,9 @@ public class BattleTestActivity extends ActionBarActivity implements
 
 			d10Roll = rand.nextInt(10);
 			
+			//starts the attack animation
+			imgBattle.setPlayerAttack();
+			
 			// Attack missing
 			if (d10Roll < 2) {
 				Toast.makeText(getApplicationContext(), "Your attack missed!",
@@ -428,6 +411,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 		}
 	}
 
+	//if the attack is not a miss, this method will run
 	private void attackPlayerFinishMove(int damage, String atkString,
 			int attackType) {
 		enemyDefending = getEnemyDefending();
@@ -449,6 +433,8 @@ public class BattleTestActivity extends ActionBarActivity implements
 		return a > 7;
 	}
 
+	
+	
 	private void animationPlayerAttack(int attackType) {
 		// load the animation
 		switch (attackType) {
@@ -456,40 +442,43 @@ public class BattleTestActivity extends ActionBarActivity implements
 			ImageView imageEffect = (ImageView) this
 					.findViewById(R.id.imageViewEffect);
 			imageEffect.setImageResource(R.drawable.playerlightattack);
-			attackPhysicAnimation(imageEffect);
+			playerPhysicalAttackAnimation(imageEffect);
 			break;
 		case 1:
 			imageEffect = (ImageView) this.findViewById(R.id.imageViewEffect);
 			imageEffect.setImageResource(R.drawable.playermediumattack);
-			attackPhysicAnimation(imageEffect);
+			playerPhysicalAttackAnimation(imageEffect);
 			break;
 		case 2:
 			imageEffect = (ImageView) this.findViewById(R.id.imageViewEffect);
 			imageEffect.setImageResource(R.drawable.playerheavyattack);
-			attackPhysicAnimation(imageEffect);
+			playerPhysicalAttackAnimation(imageEffect);
 			break;
 		case 3:
 			ImageView imageMagic = (ImageView) this
 					.findViewById(R.id.imageViewMagic);
 			imageMagic.setImageResource(R.drawable.playerfireball);
-			attackMagicAnimation(imageMagic);
+			playerMagicAttackAnimation(imageMagic);
 			break;
 		case 4:
 			imageMagic = (ImageView) this.findViewById(R.id.imageViewMagic);
 			imageMagic.setImageResource(R.drawable.playericeblast);
-			attackMagicAnimation(imageMagic);
+			playerMagicAttackAnimation(imageMagic);
 			break;
 		default:
 			imageMagic = (ImageView) this.findViewById(R.id.imageViewMagic);
 			imageMagic.setImageResource(R.drawable.playerlightning);
-			attackMagicAnimation(imageMagic);
+			playerMagicAttackAnimation(imageMagic);
 			break;
 		}
 
 	}
 
-	private void attackMagicAnimation(final ImageView imageMagic) {
-		Animation animMove = AnimationUtils.loadAnimation(
+	//if the player does a magic attack, this is the method that
+	//will run the animation
+	private void playerMagicAttackAnimation(final ImageView imageMagic) {
+/*
+ * 		Animation animMove = AnimationUtils.loadAnimation(
 				getApplicationContext(), R.anim.move_magic_player);
 		// set animation listener
 		animMove.setAnimationListener(this);
@@ -498,22 +487,29 @@ public class BattleTestActivity extends ActionBarActivity implements
 
 		final Animation animShake = AnimationUtils.loadAnimation(
 				getApplicationContext(), R.anim.shake);
+ */
+		final Animation animFadeout = AnimationUtils.loadAnimation(
+				getApplicationContext(), R.anim.fade_out);
 
 		// set animation listener
-		animShake.setAnimationListener(this);
-
+		animFadeout.setAnimationListener(this);
+		
 		new Handler().postDelayed(new Runnable() {
 
 			@Override
 			public void run() {
 				// imgMob.startAnimation(animShake);
-				// imageMagic.setVisibility(View.INVISIBLE);
+				imageMagic.startAnimation(animFadeout);
+				//imageMagic.setVisibility(View.INVISIBLE);
 			}
-		}, animMove.getDuration() + 100);
+		}, 300);
 	}
 
-	private void attackPhysicAnimation(final ImageView imageEffect) {
-		Animation animMove = AnimationUtils.loadAnimation(
+	//if the player does a physical attack, this is the 
+	//method that will run the animation
+	private void playerPhysicalAttackAnimation(final ImageView imageEffect) {
+/*
+ * 		Animation animMove = AnimationUtils.loadAnimation(
 				getApplicationContext(), R.anim.move);
 
 		// set animation listener
@@ -523,17 +519,20 @@ public class BattleTestActivity extends ActionBarActivity implements
 				getApplicationContext(), R.anim.shake);
 		// set animation listener
 		animShake.setAnimationListener(this);
+ */
+
 
 		final Animation animFadeout = AnimationUtils.loadAnimation(
 				getApplicationContext(), R.anim.fade_out);
 		// set animation listener
 		animFadeout.setAnimationListener(this);
 
-		imgPlayer.startAnimation(animMove);
+		/*imgPlayer.startAnimation(animMove);
 		// now start walk
 		AnimationDrawable theKnightAnimation = (AnimationDrawable) imgPlayer
 				.getBackground();
-		theKnightAnimation.start();
+		theKnightAnimation.start();*/
+		
 		new Handler().postDelayed(new Runnable() {
 
 			@Override
@@ -542,7 +541,9 @@ public class BattleTestActivity extends ActionBarActivity implements
 				// imgMob.startAnimation(animShake);
 				imageEffect.startAnimation(animFadeout);
 			}
-		}, animMove.getDuration() + 200);
+		},  1000);
+	
+	
 	}
 
 	private void setUpPlayer() {
@@ -792,10 +793,19 @@ public class BattleTestActivity extends ActionBarActivity implements
 		
 		//if enemy does have stamina left at the start of the turn
 		else {
-			Toast.makeText(getApplicationContext(),
-					mob.getName() + " attacks!", Toast.LENGTH_LONG).show();
-			++count;
-			System.out.println("___----" + count);
+			
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					//start the enemy attack animation
+					//when the previous animation is finished
+					imgBattle.setMobAttack();
+				}
+
+			}, 4000);
+
+			
+			
 			int enemyAtk = rand.nextInt(3);
 			// Light attack
 			if (enemyAtk < 1) {
@@ -831,15 +841,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 
 	private void attackEnemy(int damage) {
 
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				enableButton(true);
-				imgBattle.setMobAttack();
-			}
 
-		}, 4000);
-		
 		
 		
 		if (mob.getCurStm() >= damage) {
@@ -906,7 +908,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 			public void run() {
 				animationEnemyAttack(attackType);
 			}
-		}, Toast.LENGTH_LONG * 1000 * count);
+		}, Toast.LENGTH_LONG * 1000 * count+2000);
 
 	}
 
@@ -935,7 +937,9 @@ public class BattleTestActivity extends ActionBarActivity implements
 	}
 
 	private void attackEnemyPhysicAnimation(final ImageView imageEffect) {
-		Animation animMove = AnimationUtils.loadAnimation(
+
+/*
+ * 		Animation animMove = AnimationUtils.loadAnimation(
 				getApplicationContext(), R.anim.move_right);
 		// set animation listener
 		animMove.setAnimationListener(this);
@@ -947,6 +951,8 @@ public class BattleTestActivity extends ActionBarActivity implements
 
 		// set animation listener
 		animShake.setAnimationListener(this);
+ */
+		
 
 		final Animation animFadeout = AnimationUtils.loadAnimation(
 				getApplicationContext(), R.anim.fade_out);
@@ -961,7 +967,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 				//imgPlayer.startAnimation(animShake);
 				imageEffect.startAnimation(animFadeout);
 			}
-		}, animMove.getDuration() + 100);
+		},  300);
 	}
 
 	public void potionClick(String e, int position) {
@@ -1027,9 +1033,9 @@ public class BattleTestActivity extends ActionBarActivity implements
 	// }
 
 	public void playerSetWin() {
-		player.setCurHp(player.getMaxHp());
-		player.setCurMana(player.getMaxMana());
-		player.setCurStm(player.getMaxStm());
+		player.setCurHp(player.getMaxHp()); //restore health
+		player.setCurMana(player.getMaxMana()); //restore mana
+		player.setCurStm(player.getMaxStm()); //restore stamina
 		player.setScore(player.getScore() + mob.getXP());
 		player.setGold(player.getGold() + mob.getGold());
 		player.setLevel(player.getLevel() + 1);

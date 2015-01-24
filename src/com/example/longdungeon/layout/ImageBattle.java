@@ -121,6 +121,8 @@ public class ImageBattle extends View {
 	}
 
 	// For each choice, the player object will update its frame and move.
+	//this method is always running during the battle
+	//it's what continuously updates the animation on the player
 	private void playerChoice() {
 		switch (playerChoice) {
 		case MOVE_LEFT:
@@ -160,6 +162,8 @@ public class ImageBattle extends View {
 	}
 
 	// For each choice, the mob object will update its frame and move.
+	//this method is always running during the battle
+	//it's what continuously updates the animation on the mob
 	private void mobChoice() {
 		switch (mobChoice) {
 		case MOVE_LEFT:
