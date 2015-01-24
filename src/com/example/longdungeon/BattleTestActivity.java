@@ -63,6 +63,8 @@ public class BattleTestActivity extends ActionBarActivity implements
 			R.drawable.skeleton, R.drawable.spider, R.drawable.bats,
 			R.drawable.dragon };
 	private ImageView imgPlayer;
+	
+	private ImageBattle imgBattle;
 
 	// gordon's variables for the game loop
 	// boolean playerTurn = true;
@@ -95,6 +97,9 @@ public class BattleTestActivity extends ActionBarActivity implements
 		setUpWinDialog();
 		setLoseDialog();
 		playMusic();
+		
+		imgBattle = (ImageBattle) this
+				.findViewById(R.id.imagePlayer);
 	}
 
 	private void setUpListView() {
@@ -111,12 +116,12 @@ public class BattleTestActivity extends ActionBarActivity implements
 		// "Light Attack 20DMG/20STM" };
 		baseDamage = player.getDamage();
 		baseStm = player.getMaxStm() / 10;
-		String attack = nameSkill("Light Attack ", baseDamage, baseStm, "STM");
+		String attack = generateSkillDescription("Light Attack ", baseDamage, baseStm, "STM");
 		listAttack[0] = attack;
-		attack = nameSkill("Medium Attack ", (int) (baseDamage * mediumRatio),
+		attack = generateSkillDescription("Medium Attack ", (int) (baseDamage * mediumRatio),
 				(int) (baseStm * mediumRatio), "STM");
 		listAttack[1] = attack;
-		attack = nameSkill("Heavy Attack ", baseDamage * heavyRatio, baseStm
+		attack = generateSkillDescription("Heavy Attack ", baseDamage * heavyRatio, baseStm
 				* heavyRatio, "STM");
 		listAttack[2] = attack;
 		adapterAttack = new ArrayAdapter<String>(getApplicationContext(),
@@ -125,12 +130,12 @@ public class BattleTestActivity extends ActionBarActivity implements
 
 		baseMana = player.getMaxMana() / 10;
 		listMagic = new String[3];
-		attack = nameSkill("Fire Magic ", baseDamage, baseMana, "MANA");
+		attack = generateSkillDescription("Fire Magic ", baseDamage, baseMana, "MANA");
 		listMagic[0] = attack;
-		attack = nameSkill("Ice Magic ", (int) (baseDamage * mediumRatio),
+		attack = generateSkillDescription("Ice Magic ", (int) (baseDamage * mediumRatio),
 				(int) (baseMana * mediumRatio), "MANA");
 		listMagic[1] = attack;
-		attack = nameSkill("Lightning Magic ", baseDamage * heavyRatio,
+		attack = generateSkillDescription("Lightning Magic ", baseDamage * heavyRatio,
 				baseMana * heavyRatio, "MANA");
 		listMagic[2] = attack;
 		adapterMagic = new ArrayAdapter<String>(getApplicationContext(),
@@ -152,9 +157,11 @@ public class BattleTestActivity extends ActionBarActivity implements
 
 	}
 
-	private String nameSkill(String string, int damage, int baseCost,
-			String string2) {
-		return string + damage + "DMG / " + baseCost + string2;
+	//returns string that describes skills, used when attack or magic buttons are pressed
+	//example: "Ice Magic 10DMG / 7MANA"
+	private String generateSkillDescription(String skillName, int damage, int baseCost,
+			String resourceBeingSpent) {
+		return skillName + damage + "DMG / " + baseCost + resourceBeingSpent;
 	}
 
 	private void setUpButtonAction() {
@@ -175,14 +182,14 @@ public class BattleTestActivity extends ActionBarActivity implements
 
 	public void onClick(View button) {
 		switch (button.getId()) {
-		case R.id.buttonAttack:
+		case R.id.buttonAttack: //if attack button is pressed
 			listAbility.setAdapter(adapterAttack);
 			listAbility.setVisibility(View.VISIBLE);
 			// PlayerImage playerView =
 			// (PlayerImage)this.findViewById(R.id.imagePlayer);
 			// playerView.runKnightStand();
 			break;
-		case R.id.buttonDefend: {
+		case R.id.buttonDefend: { //if defend button is pressed
 			playerDefending = true;
 			if (player.getCurStm() < player.getMaxStm()) {
 				int stmRegen = (player.getCurStm() / 5);
@@ -199,11 +206,11 @@ public class BattleTestActivity extends ActionBarActivity implements
 			enemyTurn();// defending uses your turn
 		}
 			break;
-		case R.id.buttonMagic:
+		case R.id.buttonMagic: //if magic button is pressed
 			listAbility.setAdapter(adapterMagic);
 			listAbility.setVisibility(View.VISIBLE);
 			break;
-		case R.id.buttonItem:
+		case R.id.buttonItem: //if item button is pressed
 			listAbility.setAdapter(adapterItem);
 			listAbility.setVisibility(View.VISIBLE);
 			break;
@@ -227,16 +234,19 @@ public class BattleTestActivity extends ActionBarActivity implements
 		// Toast.LENGTH_LONG).show();
 		listAbility.setVisibility(View.INVISIBLE);
 		enableButton(false);
+		
+		//when the player does a regular attack
 		if (parent.getItemAtPosition(position).toString().contains("Attack")) {
 			// mobCurHp -= baseDamage;
-			ImageBattle imgBattle = (ImageBattle) this
-					.findViewById(R.id.imagePlayer);
+
+			imgBattle.setPlayerAttack();
 			switch (position) {
 			case 0:// basic attack case based on it being in the 0th position
 					// attackPlayer(baseDamage, baseStm, 0);
 
 				// imgBattle.setStand();
-				imgBattle.setPlayerAttack();
+				attackPlayer(baseDamage, 10, 3);
+				
 				// MobImage mobView =
 				// (MobImage)this.findViewById(R.id.imageMob);
 				// mobView.animationMob();
@@ -252,7 +262,8 @@ public class BattleTestActivity extends ActionBarActivity implements
 					// medium damage is more 4/3 than normal attack
 					// attackPlayer((int) (baseDamage * mediumRatio),
 				// (int) (baseStm * mediumRatio), 1);
-				 imgBattle.setMobAttack();
+				 
+				 attackPlayer((int) (baseDamage * mediumRatio), 13, 3);
 //				imgBattle.setMobAttack();
 				new Handler().postDelayed(new Runnable() {
 					@Override
@@ -269,6 +280,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 				// 2);
 				// imgBattle.setPlayerAttack(2);
 //				imgBattle.setPlayerMagic(0);
+				 attackPlayer((int) (baseDamage * heavyRatio), 20, 3);
 				new Handler().postDelayed(new Runnable() {
 					@Override
 					public void run() {
@@ -303,6 +315,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 
 	int count = 1;
 
+	//used when player does a magic attack
 	private void magicPlayer(int damage, int mana, int attackType) {
 		if (player.getCurMana() >= mana) {
 			player.setCurMana((player.getCurMana()) - mana);
@@ -364,6 +377,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 											// or not
 
 			d10Roll = rand.nextInt(10);
+			
 			// Attack missing
 			if (d10Roll < 2) {
 				Toast.makeText(getApplicationContext(), "Your attack missed!",
@@ -532,7 +546,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 
 	private void setUpPlayer() {
 		// get player image
-		// imgPlayer = (ImageView) this.findViewById(R.id.imagePlayer);
+		 //imgPlayer = (ImageView) this.findViewById(R.id.imagePlayer);
 
 		txtViewPlayerName = (TextView) this
 				.findViewById(R.id.textViewPlayerName);
@@ -740,7 +754,9 @@ public class BattleTestActivity extends ActionBarActivity implements
 	// imgPlayer.getLayoutParams().height = (int) (lyoutY * 0.8);
 	// }
 
+	
 	public void enemyTurn() {
+		//if the enemy has no stamina left
 		if (mob.getCurStm() < 1) {
 			Toast.makeText(getApplicationContext(),
 					mob.getName() + " wheezes and stops to catch it's breath",
@@ -771,7 +787,10 @@ public class BattleTestActivity extends ActionBarActivity implements
 
 			}, Toast.LENGTH_LONG * 2700 * count);
 
-		} else {
+		} 
+		
+		//if enemy does have stamina left at the start of the turn
+		else {
 			Toast.makeText(getApplicationContext(),
 					mob.getName() + " attacks!", Toast.LENGTH_LONG).show();
 			++count;
@@ -810,6 +829,18 @@ public class BattleTestActivity extends ActionBarActivity implements
 	}
 
 	private void attackEnemy(int damage) {
+
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				enableButton(true);
+				imgBattle.setMobAttack();
+			}
+
+		}, 4000);
+		
+		
+		
 		if (mob.getCurStm() >= damage) {
 			mob.setCurStm(mob.getCurStm() - damage);// costs base stamina
 		} else {
@@ -926,7 +957,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 
 			@Override
 			public void run() {
-				imgPlayer.startAnimation(animShake);
+				//imgPlayer.startAnimation(animShake);
 				imageEffect.startAnimation(animFadeout);
 			}
 		}, animMove.getDuration() + 100);

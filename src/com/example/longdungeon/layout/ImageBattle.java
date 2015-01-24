@@ -17,6 +17,9 @@ public class ImageBattle extends View {
 	private ImageObject mob;
 	private int atkType;// The atkTypeition of effect
 	private int width, height;// Screen size
+	
+	private boolean isPlayerAttackFinished=true;
+	private boolean isMobAttackFinished=true;
 
 	public ImageBattle(Context context) {
 		super(context);
@@ -106,9 +109,11 @@ public class ImageBattle extends View {
 	private int playerChoice, mobChoice;
 
 	public void setPlayerAttack() {
+		
 		player.setMove(-1);
 		playerChoice = MOVE_LEFT;
 		playerChoice();
+		
 	}
 
 	public void setMobAttack() {
