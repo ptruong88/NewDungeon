@@ -110,38 +110,39 @@ public class BattleTestActivity extends ActionBarActivity implements
 	private int baseDamage;// Player Attack
 
 	private void setUpStringForListView() {
-		listAttack = new String[3];
+	
 		// { "Heavy Attack 10DMG/10STM",
 		// "Medium Attack 15DMG/15STM",
 		// "Light Attack 20DMG/20STM" };
+		//setting up description of regular attacks
 		baseDamage = player.getDamage();
 		baseStm = player.getMaxStm() / 10;
-		String attack = generateSkillDescription("Light Attack ", baseDamage, baseStm, "STM");
-		listAttack[0] = attack;
-		attack = generateSkillDescription("Medium Attack ", (int) (baseDamage * mediumRatio),
-				(int) (baseStm * mediumRatio), "STM");
-		listAttack[1] = attack;
-		attack = generateSkillDescription("Heavy Attack ", baseDamage * heavyRatio, baseStm
+		
+		listAttack = new String[3];
+		listAttack[0] = generateSkillDescription("Light Attack ", baseDamage, baseStm, "STM");		
+		listAttack[1] = generateSkillDescription("Medium Attack ", (int) (baseDamage * mediumRatio),
+				(int) (baseStm * mediumRatio), "STM");	
+		listAttack[2] = generateSkillDescription("Heavy Attack ", baseDamage * heavyRatio, baseStm
 				* heavyRatio, "STM");
-		listAttack[2] = attack;
+	
 		adapterAttack = new ArrayAdapter<String>(getApplicationContext(),
 				android.R.layout.activity_list_item, android.R.id.text1,
 				listAttack);
 
+		//setting up descriptions of magic attacks
 		baseMana = player.getMaxMana() / 10;
-		listMagic = new String[3];
-		attack = generateSkillDescription("Fire Magic ", baseDamage, baseMana, "MANA");
-		listMagic[0] = attack;
-		attack = generateSkillDescription("Ice Magic ", (int) (baseDamage * mediumRatio),
+		listMagic = new String[3];	
+		listMagic[0] = generateSkillDescription("Fire Magic ", baseDamage, baseMana, "MANA");
+		listMagic[1] = generateSkillDescription("Ice Magic ", (int) (baseDamage * mediumRatio),
 				(int) (baseMana * mediumRatio), "MANA");
-		listMagic[1] = attack;
-		attack = generateSkillDescription("Lightning Magic ", baseDamage * heavyRatio,
+		listMagic[2] = generateSkillDescription("Lightning Magic ", baseDamage * heavyRatio,
 				baseMana * heavyRatio, "MANA");
-		listMagic[2] = attack;
+
 		adapterMagic = new ArrayAdapter<String>(getApplicationContext(),
 				android.R.layout.activity_list_item, android.R.id.text1,
 				listMagic);
 
+		//setting up descriptions of item options
 		adapterItem = new ArrayAdapter<String>(getApplicationContext(),
 				android.R.layout.activity_list_item, android.R.id.text1);
 
@@ -887,12 +888,12 @@ public class BattleTestActivity extends ActionBarActivity implements
 		}
 	}
 
-	private void attackEnemyFinishMove(int damage, String string,
+	private void attackEnemyFinishMove(int damage, String attackDescription,
 			final int attackType) {
 		if (playerDefending) {
 			damage /= 2;
 		}
-		Toast.makeText(getApplicationContext(), string + damage + "damage!",
+		Toast.makeText(getApplicationContext(), attackDescription + damage + " damage!",
 				Toast.LENGTH_LONG).show();
 		++count;
 		System.out.println("___----" + count);
@@ -967,52 +968,54 @@ public class BattleTestActivity extends ActionBarActivity implements
 		for (int i = 0; i < potions.length; i++) {
 			if (potions[i] != null && potions[i].equals(e)
 					&& potions[i].getSize() > 0) {
+				
 				if (potions[i].getItemType() == Item.ITEM_HEALTH_POTION) {
-					if (potions[i].getSize() > 0) {
-						player.setCurHp(player.getCurHp()
-								+ potions[i].getStatNumber());
-						if (player.getCurHp() > player.getMaxHp()) {
-							player.setCurHp(player.getMaxHp());
-						}
-						player.setCurHp(player.getCurHp()
-								+ potions[i].getStatNumber());
-						potions[i].setSize(potions[i].getSize() - 1);
-						txtViewPlayerHp.setText("HP: " + player.getCurHp()
-								+ "/" + player.getMaxHp());
-						adapterItem.remove(e);
-						adapterItem.insert(potions[i].toString(), position);
-						break;
+					player.setCurHp(player.getCurHp()
+							+ potions[i].getStatNumber());
+					if (player.getCurHp() > player.getMaxHp()) {
+						player.setCurHp(player.getMaxHp());
 					}
-				} else if (potions[i].getItemType() == Item.ITEM_MANA_POTION) {
-					if (potions[i].getSize() > 0) {
-						player.setCurMana(player.getCurMana()
-								+ potions[i].getStatNumber());
-						if (player.getCurMana() > player.getMaxMana()) {
-							player.setCurMana(player.getMaxMana());
-						}
-						potions[i].setSize(potions[i].getSize() - 1);
-						txtViewPlayerMana.setText("Mana: "
-								+ player.getCurMana() + "/"
-								+ player.getMaxMana());
-						adapterItem.remove(e);
-						adapterItem.insert(potions[i].toString(), position);
-						break;
+				
+					txtViewPlayerHp.setText("HP: " + player.getCurHp()
+							+ "/" + player.getMaxHp());	
+				} 
+				
+				else if (potions[i].getItemType() == Item.ITEM_MANA_POTION) {
+
+					player.setCurMana(player.getCurMana()
+							+ potions[i].getStatNumber());
+					if (player.getCurMana() > player.getMaxMana()) {
+						player.setCurMana(player.getMaxMana());
 					}
-				} else if (potions[i].getItemType() == Item.ITEM_STAMINA_POTION) {
-					if (potions[i].getSize() > 0) {
-						player.setCurStm(player.getCurStm()
-								+ potions[i].getStatNumber());
-						if (player.getCurStm() > player.getMaxStm()) {
-							player.setCurStm(player.getMaxStm());
-						}
-						potions[i].setSize(potions[i].getSize() - 1);
-						txtViewStamina.setText("Stamina: " + player.getCurStm()
-								+ "/" + player.getMaxStm());
-						adapterItem.remove(e);
-						adapterItem.insert(potions[i].toString(), position);
-						break;
+
+					txtViewPlayerMana.setText("Mana: "
+							+ player.getCurMana() + "/"
+							+ player.getMaxMana());
+				} 
+				
+				else if (potions[i].getItemType() == Item.ITEM_STAMINA_POTION) {
+
+					player.setCurStm(player.getCurStm()
+							+ potions[i].getStatNumber());
+					if (player.getCurStm() > player.getMaxStm()) {
+						player.setCurStm(player.getMaxStm());
 					}
+					potions[i].setSize(potions[i].getSize() - 1);
+					txtViewStamina.setText("Stamina: " + player.getCurStm()
+							+ "/" + player.getMaxStm());
 				}
+				
+				//reduce amount of potions, because one has been used
+				potions[i].setSize(potions[i].getSize() - 1);
+				
+				//update the potion amount
+				adapterItem.remove(e);
+				if(potions[i].getSize()>0)
+				{
+					adapterItem.insert(potions[i].toString(), position);
+				}
+				
+				break;
 			}
 		}
 	}

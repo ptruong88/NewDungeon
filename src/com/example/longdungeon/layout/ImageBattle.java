@@ -18,8 +18,6 @@ public class ImageBattle extends View {
 	private int atkType;// The atkTypeition of effect
 	private int width, height;// Screen size
 	
-	private boolean isPlayerAttackFinished=true;
-	private boolean isMobAttackFinished=true;
 
 	public ImageBattle(Context context) {
 		super(context);
