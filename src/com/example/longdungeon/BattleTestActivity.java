@@ -122,6 +122,14 @@ public class BattleTestActivity extends ActionBarActivity implements
 	
 	int mobMaxHp, mobCurHp;
 
+	//pops up a window when the battle is exited
+	private AlertDialog.Builder alertDialog;
+
+	//pops up a window when the battle is won
+	private AlertDialog.Builder winDialog;
+	
+	//pops up a window when the battle is lost
+	private AlertDialog.Builder loseDialog;
 
 	
 	//onCreate runs when the Battle Activity Start
@@ -357,6 +365,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 		}
 	}
 
+	//used to count the amount of toast notifications
 	int count = 1;
 
 	//used when player does a magic attack
@@ -368,19 +377,23 @@ public class BattleTestActivity extends ActionBarActivity implements
 											// miss or not
 
 			int d3Roll = rand.nextInt(3);
+			
+			// die roll 1 is a miss
 			if (d3Roll < 1) {
 				Toast.makeText(getApplicationContext(), "Your spell missed!",
 						Toast.LENGTH_LONG).show();
 				++count;
 				System.out.println("___----" + count);
 			}
-
+			
+			//die roll 2 is a regular attack
 			else if (d3Roll < 2) {
 				// spells ignore defense
 				String atkString = "Spell hits for ";
 				attackPlayerFinishMove(damage, atkString, attackType);
 			}
 
+			//die roll 3 is a critical hit
 			else if (d3Roll < 3) {
 				damage *= 2;// critical attack doubles
 							// damage
@@ -451,6 +464,8 @@ public class BattleTestActivity extends ActionBarActivity implements
 				attackPlayerFinishMove(damage, atkString, attackType);
 			}
 			atkVal = 0;// clear attack val;
+			
+			//if the enemy has no health, you win. Otherwise, enemy turn.
 			if (mob.getCurHp() <= 0) {
 				playerSetWin();
 			} else {
@@ -488,9 +503,12 @@ public class BattleTestActivity extends ActionBarActivity implements
 		System.out.println("___----" + count);
 		mob.setCurHp(mob.getCurHp() - damage);
 		txtViewMobHp.setText("HP: " + mob.getCurHp() + "/" + mob.getMaxHp());
+		
+		//starts the player attacking animation
 		animationPlayerAttack(attackType);
 	}
 
+	//roll 10 sided die, if greater than 10, then enemy is defending
 	private boolean getEnemyDefending() {
 		int a = rand.nextInt(10);
 		return a > 7;
@@ -609,12 +627,15 @@ public class BattleTestActivity extends ActionBarActivity implements
 	
 	}
 
+	//sets up player stats and info
 	private void setUpPlayer() {
 		// get player image
 		 //imgPlayer = (ImageView) this.findViewById(R.id.imagePlayer);
 
 		txtViewPlayerName = (TextView) this
 				.findViewById(R.id.textViewPlayerName);
+	
+		//if game has been played previously, player data will be available at the login
 		Intent intentLogin = getIntent();
 		player = intentLogin.getExtras().getParcelable(Player.PLAYER_DATA);
 		txtViewPlayerName.setText(player.getName());
@@ -637,6 +658,9 @@ public class BattleTestActivity extends ActionBarActivity implements
 				+ player.getMaxStm());
 	}
 
+	
+
+	//set up mob stats and information
 	private void setUpMob() {
 
 		String[] mobNames = { "Goblin", "Skeleton", "Spider", "Bats", "Dragon" };
@@ -666,6 +690,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 		// imgMob.setImageResource(imgMobs[(player.getLevel() % 5)]);
 	}
 
+	//hides submenu if you click away
 	private void setUpHideListView() {
 
 		lyoutBattle = (View) this.findViewById(R.id.layoutBattle);
@@ -673,23 +698,15 @@ public class BattleTestActivity extends ActionBarActivity implements
 			@Override
 			public boolean onTouch(View view, MotionEvent motionEvent) {
 				listAbility.setVisibility(View.INVISIBLE);
-				// listAbility.postDelayed(new Runnable() {
-				// @Override
-				// public void run() {
-				// listAbility.setVisibility(View.GONE); // or
-				// // View.INVISIBLE
-				// // as Jason
-				// // Leung wrote
-				// }
-				// }, 3000);
+
 				return true;
 			}
 		});
 
 	}
 
-	private AlertDialog.Builder alertDialog;
-
+	
+	//dialog that displays when you press run away
 	private void setUpDialogForRun() {
 
 		alertDialog = new AlertDialog.Builder(this);
@@ -704,16 +721,15 @@ public class BattleTestActivity extends ActionBarActivity implements
 		alertDialog.setPositiveButton("YES",
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
-						// Write your code here to execute after dialog
-						// Toast.makeText(getApplicationContext(),
-						// "You clicked on YES",
-						// Toast.LENGTH_LONG).show();
+
+						//brings up the shopping screen
 						Intent intentShopping = new Intent(
 								BattleTestActivity.this,
 								ShoppingTestActivity.class);
 						player.setLevel(player.getLevel() + 1);
 						intentShopping.putExtra(Player.PLAYER_DATA, player);
 						startActivity(intentShopping);
+						//ends battle activity
 						finish();
 					}
 				});
@@ -721,17 +737,13 @@ public class BattleTestActivity extends ActionBarActivity implements
 		alertDialog.setNegativeButton("NO",
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
-						// Write your code here to execute after dialog
-						// Toast.makeText(getApplicationContext(),
-						// "You clicked on NO", Toast.LENGTH_LONG)
-						// .show();
 						dialog.cancel();
 					}
 				});
 	}
 
-	private AlertDialog.Builder winDialog;
-
+	
+	//runs when the player wins
 	private void setUpWinDialog() {
 
 		winDialog = new AlertDialog.Builder(this);
@@ -743,14 +755,11 @@ public class BattleTestActivity extends ActionBarActivity implements
 		imageV.setImageResource(R.drawable.victory);
 		winDialog.setView(imageV);
 
-		// Setting Positive "Yes" Btn
+		// User can only hit an OK button
 		winDialog.setPositiveButton("OK",
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
-						// Write your code here to execute after dialog
-						// Toast.makeText(getApplicationContext(),
-						// "You clicked on YES",
-						// Toast.LENGTH_LONG).show();
+
 						player.setLevel(player.getLevel() + 1);
 						Intent intentShopping = new Intent(
 								BattleTestActivity.this,
@@ -763,8 +772,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 				});
 	}
 
-	private AlertDialog.Builder loseDialog;
-
+	//runs when you lose
 	private void setLoseDialog() {
 
 		loseDialog = new AlertDialog.Builder(this);
@@ -776,14 +784,10 @@ public class BattleTestActivity extends ActionBarActivity implements
 		imageL.setImageResource(R.drawable.defeat);
 		loseDialog.setView(imageL);
 
-		// Setting Positive "Yes" Btn
+		// User can only hit an OK button
 		loseDialog.setPositiveButton("OK",
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
-						// Write your code here to execute after dialog
-						// Toast.makeText(getApplicationContext(),
-						// "You clicked on YES",
-						// Toast.LENGTH_LONG).show();
 						Intent intentLogin = new Intent(
 								BattleTestActivity.this,
 								LoginTestActivity.class);
@@ -794,32 +798,9 @@ public class BattleTestActivity extends ActionBarActivity implements
 				});
 	}
 
-	// private void setUpPic() {
-	//
-	// BattleLayout relLyoutPic = (BattleLayout) this
-	// .findViewById(R.id.layoutPic);
-	// int lyoutX = relLyoutPic.getMeasuredWidth();
-	// int lyoutY = relLyoutPic.getMeasuredHeight();
-	//
-	// System.out.println("Layout width " + lyoutX);
-	// System.out.println("Layout height " + lyoutY);
-	//
-	// imgMob = (ImageView) this.findViewById(R.id.imageMob);
-	// imgMob.getLayoutParams().width = (int) (lyoutX * 0.6);
-	// imgMob.getLayoutParams().height = lyoutY;
-	// // RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-	// // (int)(lyoutX*0.6), lyoutY);
-	// // imgMob.setLayoutParams(params);
-	//
-	// imgPlayer = (ImageView) this.findViewById(R.id.imagePlayer);
-	// // params = new RelativeLayout.LayoutParams(
-	// // lyoutX/2, lyoutY/2);
-	// // imgPlayer.setLayoutParams(params);
-	// imgPlayer.getLayoutParams().width = (int) (lyoutX * 0.5);
-	// imgPlayer.getLayoutParams().height = (int) (lyoutY * 0.8);
-	// }
 
-	
+
+	//this is what runs when the enemy starts their turn
 	public void enemyTurn() {
 		//if the enemy has no stamina left
 		if (mob.getCurStm() < 1) {
@@ -832,6 +813,8 @@ public class BattleTestActivity extends ActionBarActivity implements
 											// is open for a free hit
 			txtViewMobStamina.setText("Stamina: " + mob.getCurStm() + "/"
 					+ mob.getMaxStm());
+					
+			//this should be removed
 			if (player.getCurHp() <= 0) {
 				txtViewPlayerHp.setText("HP: 0" + "/" + player.getMaxHp());
 				new Handler().postDelayed(new Runnable() {
@@ -888,7 +871,8 @@ public class BattleTestActivity extends ActionBarActivity implements
 			}
 		}
 
-		if (player.getCurHp() == 0) {
+		//if the player dies
+000		if (player.getCurHp() <= 0) {
 			Toast.makeText(getApplicationContext(), "You died!",
 					Toast.LENGTH_LONG).show();
 			new Handler().postDelayed(new Runnable() {
@@ -902,9 +886,8 @@ public class BattleTestActivity extends ActionBarActivity implements
 		}
 	}
 
+	
 	private void attackEnemy(int damage) {
-
-
 		
 		
 		if (mob.getCurStm() >= damage) {
