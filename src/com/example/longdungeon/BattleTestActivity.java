@@ -250,7 +250,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 		this.findViewById(R.id.buttonRun).setClickable(enabled);
 	}
 
-	//if anything is clicked
+	// If "attack", "defend", "magic", "item", or "run away" is pressed.	
 	public void onClick(View button) {
 		switch (button.getId()) {
 		case R.id.buttonAttack: //if attack button is pressed
@@ -295,8 +295,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 
 	}
 
-	// Display what item is click on list view, such attack type, magic item, or
-	// item type.
+	//if an item in the "attack", "magic", or "item" sub-menu is clicked
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
@@ -356,8 +355,9 @@ public class BattleTestActivity extends ActionBarActivity implements
 				magicPlayer(baseDamage * heavyRatio, baseMana * heavyRatio, 5);
 				break;
 			}
-		}//
+		}
 
+		//uses a potion
 		else if (parent.getItemAtPosition(position).toString()
 				.contains("Potion")) {
 			potionClick(parent.getItemAtPosition(position).toString(), position);
@@ -425,6 +425,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 		}
 	}
 
+	//runs when the player attacks
 	private void attackPlayer(int damage, int stm, int attackType) {
 		if (player.getCurStm() >= stm) {
 			player.setCurStm((player.getCurStm()) - stm);
@@ -508,14 +509,14 @@ public class BattleTestActivity extends ActionBarActivity implements
 		animationPlayerAttack(attackType);
 	}
 
-	//roll 10 sided die, if greater than 10, then enemy is defending
+	//roll 10 sided die, if greater than 7, then enemy is defending
 	private boolean getEnemyDefending() {
 		int a = rand.nextInt(10);
 		return a > 7;
 	}
 
 	
-	
+	//loads the static attack animations when the player attacks
 	private void animationPlayerAttack(int attackType) {
 		// load the animation
 		switch (attackType) {
@@ -729,11 +730,12 @@ public class BattleTestActivity extends ActionBarActivity implements
 						player.setLevel(player.getLevel() + 1);
 						intentShopping.putExtra(Player.PLAYER_DATA, player);
 						startActivity(intentShopping);
+
 						//ends battle activity
 						finish();
 					}
 				});
-		// Setting Negative "NO" Btn
+		// When the user clicks "NO", the pop-up window goes away
 		alertDialog.setNegativeButton("NO",
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
@@ -850,8 +852,6 @@ public class BattleTestActivity extends ActionBarActivity implements
 
 			}, 4000);
 
-			
-			
 			int enemyAtk = rand.nextInt(3);
 			// Light attack
 			if (enemyAtk < 1) {
@@ -872,7 +872,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 		}
 
 		//if the player dies
-000		if (player.getCurHp() <= 0) {
+		if (player.getCurHp() <= 0) {
 			Toast.makeText(getApplicationContext(), "You died!",
 					Toast.LENGTH_LONG).show();
 			new Handler().postDelayed(new Runnable() {
@@ -886,7 +886,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 		}
 	}
 
-	
+	// when the enemy attacks
 	private void attackEnemy(int damage) {
 		
 		
@@ -898,22 +898,30 @@ public class BattleTestActivity extends ActionBarActivity implements
 		txtViewMobStamina.setText("Stamina: " + mob.getCurStm() + "/"
 				+ mob.getMaxStm());
 		d10Roll = rand.nextInt(10);
+	
+		// die roll 1 is a miss
 		if (d10Roll < 2) {
 			Toast.makeText(getApplicationContext(),
 					mob.getName() + "'s attack missed!", Toast.LENGTH_LONG)
 					.show();
 			++count;
 			System.out.println("___----" + count);
-		} else if (d10Roll < 5) {
+		} 
+		//die roll 2-4 is reduced damage attack
+		else if (d10Roll < 5) {
 			damage /= 2;
 			attackEnemyFinishMove(damage, mob.getName()
 					+ " lands a glancing blow for ", 0);
 
-		} else if (d10Roll < 8) {
+		}
+		//die roll 5-7 is normal attack
+		else if (d10Roll < 8) {
 			// no modification to base damage
 			attackEnemyFinishMove(damage,
 					mob.getName() + "'s attack hits for ", 1);
-		} else if (d10Roll < 10) {
+		} 
+		//die roll 9 is a critical hit
+		else if (d10Roll < 10) {
 			damage = (int) (damage * 1.5);
 			attackEnemyFinishMove(damage, mob.getName()
 					+ " lands a critical hit for ", 2);
@@ -936,6 +944,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 		}
 	}
 
+	//if the enemy doesn't miss, this will run
 	private void attackEnemyFinishMove(int damage, String attackDescription,
 			final int attackType) {
 		if (playerDefending) {
@@ -958,6 +967,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 
 	}
 
+	//animates enemy attack
 	private void animationEnemyAttack(int attackType) {
 		switch (attackType) {
 		case 0:
@@ -982,6 +992,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 
 	}
 
+	//runs the animation when the enemy does a physical attack
 	private void attackEnemyPhysicAnimation(final ImageView imageEffect) {
 
 /*
@@ -1016,6 +1027,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 		},  300);
 	}
 
+	//runs when the user clicks on a potion
 	public void potionClick(String e, int position) {
 		for (int i = 0; i < potions.length; i++) {
 			if (potions[i] != null && potions[i].equals(e)
@@ -1072,12 +1084,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 		}
 	}
 
-	// public int randomWithRange(int min, int max)// used for rolls to hit
-	// {
-	// int range = (max - min) + 1;
-	// return (int) (Math.random() * range) + min;
-	// }
-
+	//runs when the player wins, updates player stats
 	public void playerSetWin() {
 		player.setCurHp(player.getMaxHp()); //restore health
 		player.setCurMana(player.getMaxMana()); //restore mana
@@ -1089,7 +1096,9 @@ public class BattleTestActivity extends ActionBarActivity implements
 															// points for
 															// defeating an
 															// enemy
-		for (int i = 0; i < potions.length; i++) {
+
+			//removes null potions from inventory
+			for (int i = 0; i < potions.length; i++) {
 			if (potions[i] != null) {
 				player.getPlayerInventory()[i] = potions[i];
 			}
@@ -1103,6 +1112,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 		}, Toast.LENGTH_LONG * 2000 * count);
 	}
 
+	//runs when the player wins, saves player info to a text file
 	private void writeToFile() {
 		File file = new File(getFilesDir(), player.getNameFile());
 		FileOutputStream outputStream;
