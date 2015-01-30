@@ -47,46 +47,97 @@ import android.widget.Toast;
 public class BattleTestActivity extends ActionBarActivity implements
 		OnClickListener, OnItemClickListener, AnimationListener {
 
+	//A group of strings used to generate options that the player can choose from
 	private ListView listAbility;
+	
+	//tied to something in battle.xml
 	private View lyoutBattle;
+	
+	//actual bit of text that is in the GUI
 	private TextView txtViewMobName, txtViewMobHp, txtViewPlayerName,
 			txtViewPlayerScore, txtViewPlayerHp, txtViewPlayerMana,
 			txtViewStamina, txtViewMobStamina;
+	
+	//used to manage enemy
 	private Mob mob;
+	
+	//used to manage player
 	private Player player;
 
+	//currently not used
 	private Button btnAttack, btnDefend, btnMagic, btnItem, btnRun;
+	
 	private String[] listAttack, listMagic, listItem;
+	
+	//used for generating the list of choices you have dynamically
 	private ArrayAdapter<String> adapterAttack, adapterMagic, adapterItem;
 
+	//
 	private static int[] imgMobs = new int[] { R.drawable.goblin,
 			R.drawable.skeleton, R.drawable.spider, R.drawable.bats,
 			R.drawable.dragon };
+	
+	//the image of the player
 	private ImageView imgPlayer;
 	
+	//used to generate to view of battle, used to call frame by frame animation
 	private ImageBattle imgBattle;
 
-	// gordon's variables for the game loop
-	// boolean playerTurn = true;
+	//true when the player is defending
 	boolean playerDefending = false;
+	
+	//true when to enemy is defending
 	boolean enemyDefending = false;
+	
+	//true when the player runs away
 	boolean ranAway = false;
+	
+	//stores the current values for stamina and mana you get from the player class
 	private int baseStm, baseMana;
+	
+	//the multiplier used for medium attack
 	final private double mediumRatio = 1.3;
+	
+	//the multiplier used heavy attack
 	final private int heavyRatio = 2;
+	
+	//the recent roll from the 10 sided dice
 	int d10Roll = 0;
+	
+	//the fully calculated value for an attack
 	int atkVal;
-	// Animation
-
+	
+	//an array that keeps track of the current potions in inventory
 	private Potion[] potions;
+	
+	//used to play the music
 	private MediaPlayer medplay;
+	
+	//used to generate dice rolls
 	private Random rand;
 
+	// Player Attack
+	private int baseDamage;
+
+	
+	int mobMaxHp, mobCurHp;
+
+
+	
+	//onCreate runs when the Battle Activity Start
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		
+		//not sure
 		super.onCreate(savedInstanceState);
+		
+		// finds the layout in Resources folder, called activity_batle_test
 		setContentView(R.layout.activity_battle_test);
+		
+		//instantiates the random number generator
 		rand = new Random();
+		
+		
 		setUpPlayer();
 		setUpMob();
 		setUpListView();
@@ -98,22 +149,27 @@ public class BattleTestActivity extends ActionBarActivity implements
 		setLoseDialog();
 		playMusic();
 		
+		
 		imgBattle = (ImageBattle) this
 				.findViewById(R.id.imagePlayer);
 	}
 
+	
 	private void setUpListView() {
 		listAbility = (ListView) this.findViewById(R.id.listViewAbilityOptions);
+		
+		//when you click on a list item
 		listAbility.setOnItemClickListener(this);
 	}
 
-	private int baseDamage;// Player Attack
+
 
 	private void setUpStringForListView() {
 	
 		// { "Heavy Attack 10DMG/10STM",
 		// "Medium Attack 15DMG/15STM",
 		// "Light Attack 20DMG/20STM" };
+		
 		//setting up description of regular attacks
 		baseDamage = player.getDamage();
 		baseStm = player.getMaxStm() / 10;
@@ -125,6 +181,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 		listAttack[2] = generateSkillDescription("Heavy Attack ", baseDamage * heavyRatio, baseStm
 				* heavyRatio, "STM");
 	
+		//takes the array of strings and generates a clickable list of buttons
 		adapterAttack = new ArrayAdapter<String>(getApplicationContext(),
 				android.R.layout.activity_list_item, android.R.id.text1,
 				listAttack);
@@ -147,6 +204,8 @@ public class BattleTestActivity extends ActionBarActivity implements
 				android.R.layout.activity_list_item, android.R.id.text1);
 
 		potions = new Potion[player.getInventoryCurSpace()];
+		
+		//loop that goes through the inventory and adds any potions to the clickable description list
 		for (int i = 0; i < player.getInventoryCurSpace(); ++i) {
 			if (player.getPlayerInventory()[i].getItemType() == Item.ITEM_HEALTH_POTION
 					|| player.getPlayerInventory()[i].getItemType() == Item.ITEM_STAMINA_POTION
@@ -165,6 +224,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 		return skillName + damage + "DMG / " + baseCost + resourceBeingSpent;
 	}
 
+	//makes buttons clickable
 	private void setUpButtonAction() {
 		this.findViewById(R.id.buttonAttack).setOnClickListener(this);
 		this.findViewById(R.id.buttonDefend).setOnClickListener(this);
@@ -173,6 +233,7 @@ public class BattleTestActivity extends ActionBarActivity implements
 		this.findViewById(R.id.buttonRun).setOnClickListener(this);
 	}
 
+	//enables or disables the buttons depending on the boolean passed to it
 	private void enableButton(boolean enabled) {
 		this.findViewById(R.id.buttonAttack).setClickable(enabled);
 		this.findViewById(R.id.buttonDefend).setClickable(enabled);
@@ -181,9 +242,12 @@ public class BattleTestActivity extends ActionBarActivity implements
 		this.findViewById(R.id.buttonRun).setClickable(enabled);
 	}
 
+	//if anything is clicked
 	public void onClick(View button) {
 		switch (button.getId()) {
 		case R.id.buttonAttack: //if attack button is pressed
+		
+			//load in text descriptions and set it to visible
 			listAbility.setAdapter(adapterAttack);
 			listAbility.setVisibility(View.VISIBLE);
 			// PlayerImage playerView =
@@ -201,7 +265,8 @@ public class BattleTestActivity extends ActionBarActivity implements
 						+ player.getMaxStm());
 
 			}
-
+			
+			//disables all the buttons
 			enableButton(false);
 
 			enemyTurn();// defending uses your turn
@@ -221,8 +286,6 @@ public class BattleTestActivity extends ActionBarActivity implements
 		}
 
 	}
-
-	int mobMaxHp, mobCurHp;
 
 	// Display what item is click on list view, such attack type, magic item, or
 	// item type.
